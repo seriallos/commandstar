@@ -6,13 +6,13 @@ Starbound Server Manager
 Features
 ========
 
-*Current*
+**Current**
 
 * Real-time display of active players
 * Real-time display of in-game chat
 * Real-time server up/down status
 
-*Upcoming*
+**Upcoming**
 
 * Coordinates of visited worlds
 * Shared notes of visited world (Captain's Log)
