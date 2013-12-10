@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "restify": "2.6.0",
+    "tail": "0.3.2",
+    "socket.io": "0.9.16"
+  }
+}

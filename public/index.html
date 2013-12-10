@@ -1,0 +1,62 @@
+<html>
+<head>
+  <title>Starbound on Raidbots</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://starbound.raidbots.com:9090/socket.io/socket.io.js"></script>
+  <script>
+    var apiBase = 'http://starbound.raidbots.com:9090';
+    var socket = io.connect(apiBase);
+    socket.on('chat',function(data){
+      $('#chatlog').append(
+        data.when + ": &lt;" + data.who + "&gt; " + data.what + "<br/>"
+      );
+    });
+    socket.on('playerCount',function(data){
+      $('#players').text(data.num)
+    });
+    $(document).ready(function(){
+      // load server status
+      $.get( apiBase + "/server/status", function( data ) {
+        $('#players').text(data.playersOnline)
+      });
+
+      // load chat
+      $.get( apiBase + "/server/chat", function( data ) {
+        msgs = data.length;
+        if( msgs < 10 ) {
+          start = 0;
+        } else {
+          start = msgs - 10;
+        }
+        for( i = start; i < msgs; i++ ) {
+          $('#chatlog').append(
+            data[i].when + ": &lt;" + data[i].who + "&gt; " + data[i].what + "<br/>"
+          );
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Raidbots Starbound</h1>
+
+  <ul>
+    <li>
+      <a href="http://www.hipchat.com/go3b2huWp">Public HipChat Room</a>
+    </li>
+  </ul>
+
+  <h2>API</h2>
+
+  <ul>
+    <li><a href="http://starbound.raidbots.com:9090/server/status">Server Status</a></li>
+    <li><a href="http://starbound.raidbots.com:9090/server/chat">Server Chat</a></li>
+  </ul>
+
+  <h2>Players Online: <span id="players">n/a</span></h2>
+
+  <h2>Recent/Live Chat Log</h2>
+  <div id="chatlog">
+  </div>
+</body>
+</html>
