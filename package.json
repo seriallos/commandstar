@@ -5,7 +5,7 @@
     "socket.io": "0.9.16",
     "node-hipchat": "0.2.0",
     "config": "0.4.33",
-    "yaml": "0.2.3",
+    "js-yaml": "latest",
     "coffee-script": "1.6.3"
   }
 }
