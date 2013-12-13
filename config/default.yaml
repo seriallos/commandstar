@@ -1,10 +1,14 @@
-# Hipchat defaults
-# You must define the 'token' field in an overlay config to enable this
+# Port for web server
+# If you use port 80, you'll need to run server.coffee using sudo.
+# This isn't super secure right now so be warned.
+
+listenPort: 8080
+
+# Default hipchat configs
+# To enable, you'll need to set the hipchat.token configuration to your API key
+
 hipchat:
   room: Starbound
   user: Server
   color: yellow
-
-# Port for the web server
-listenPort: 8080
-
+  notify: false
