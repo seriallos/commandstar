@@ -2,6 +2,10 @@
   "dependencies": {
     "restify": "2.6.0",
     "tail": "0.3.2",
-    "socket.io": "0.9.16"
+    "socket.io": "0.9.16",
+    "node-hipchat": "0.2.0",
+    "config": "0.4.33",
+    "yaml": "0.2.3",
+    "coffee-script": "1.6.3"
   }
 }

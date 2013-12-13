@@ -1,0 +1,10 @@
+# Hipchat defaults
+# You must define the 'token' field in an overlay config to enable this
+hipchat:
+  room: Starbound
+  user: Server
+  color: yellow
+
+# Port for the web server
+listenPort: 80
+

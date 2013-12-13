@@ -2,22 +2,42 @@
 <head>
   <title>Starbound on Raidbots</title>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="http://starbound.raidbots.com:9090/socket.io/socket.io.js"></script>
+  <script src="http://starbound.raidbots.com/socket.io/socket.io.js"></script>
   <script>
-    var apiBase = 'http://starbound.raidbots.com:9090';
+    var userNotes = {
+    };
+    var addChatRow = function( who, what, when ) {
+      $('#chatlog').append(
+        '<tr>'+
+          '<td>' + when + '</td>' +
+          '<td>' + who + '</td>' +
+          '<td>' + what + '</td>' +
+        '</tr>'
+      );
+    }
+    var setPlayersOnline = function( players ) {
+      $('#players li').remove();
+      $.each( players, function( key, val ) {
+        note = val;
+        if( userNotes[ val ] ) {
+          note += " ("+userNotes[val]+")";
+        }
+        $('#players').append('<li>'+note+'</li>');
+      });
+    };
+
+    var apiBase = 'http://starbound.raidbots.com';
     var socket = io.connect(apiBase);
     socket.on('chat',function(data){
-      $('#chatlog').append(
-        data.when + ": &lt;" + data.who + "&gt; " + data.what + "<br/>"
-      );
+      addChatRow( data.who, data.what, data.when );
     });
     socket.on('playerCount',function(data){
-      $('#players').text(data.num)
+      setPlayersOnline( data.playersOnline );
     });
     $(document).ready(function(){
       // load server status
       $.get( apiBase + "/server/status", function( data ) {
-        $('#players').text(data.playersOnline)
+        setPlayersOnline( data.playersOnline );
       });
 
       // load chat
@@ -29,9 +49,7 @@
           start = msgs - 10;
         }
         for( i = start; i < msgs; i++ ) {
-          $('#chatlog').append(
-            data[i].when + ": &lt;" + data[i].who + "&gt; " + data[i].what + "<br/>"
-          );
+          addChatRow( data[i].who, data[i].what, data[i].when );
         }
       });
     });
@@ -46,17 +64,19 @@
     </li>
   </ul>
 
+  <h2>Players Online:</h2>
+  <ul id="players">
+  </ul>
+
+  <h2>Recent/Live Chat Log</h2>
+  <table id="chatlog" border="1" cellspacing="0" cellpadding="4">
+  </table>
+
   <h2>API</h2>
 
   <ul>
-    <li><a href="http://starbound.raidbots.com:9090/server/status">Server Status</a></li>
-    <li><a href="http://starbound.raidbots.com:9090/server/chat">Server Chat</a></li>
+    <li><a href="http://starbound.raidbots.com/server/status">Server Status</a></li>
+    <li><a href="http://starbound.raidbots.com/server/chat">Server Chat</a></li>
   </ul>
-
-  <h2>Players Online: <span id="players">n/a</span></h2>
-
-  <h2>Recent/Live Chat Log</h2>
-  <div id="chatlog">
-  </div>
 </body>
 </html>

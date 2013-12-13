@@ -10,8 +10,13 @@ class ServerLog extends EventEmitter
   LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)$/
   LINE_SERVER_START_REGEX: /^Info: Done loading Star::Root/
   LINE_SERVER_STOP_REGEX: /^Info: Server shut down gracefully/
-  LINE_PLAYER_CONNECT_REGEX: /^Info: Client <([^>]+)> connected/
-  LINE_PLAYER_DISCONNECT_REGEX: /^Info: Client <([^>]+)> disconnected/
+  LINE_PLAYER_CONNECT_REGEX: /^Info: Client <[^>]+> <User: ([^>]+)> connected/
+  LINE_PLAYER_DISCONNECT_REGEX: /^Info: Client <[^>]+> <User: ([^>]+)> disconnected/
+  # Info: Loading world db for world alpha:90289876:-34372762:7547155:2
+  LINE_WORLD_LOAD_REGEX: /^Info: Loading world db for world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
+  # Info: Shutting down world alpha:90289876:-34372762:7547155:2
+  LINE_WORLD_UNLOAD_REGEX: /^Info: Shutting down world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
+
 
   constructor: ( opts ) ->
     if not opts
@@ -30,32 +35,46 @@ class ServerLog extends EventEmitter
       output: process.stdout
       terminal: false
     })
-    rd.on 'line', @onLogLine
+    rd.on 'line', (line) =>
+      @onLogLine line, false
 
   startWatching: ->
     @logTail = new Tail @logFile
 
-    @logTail.on 'line', @onLogLine
+    @logTail.on 'line', (line) =>
+      @onLogLine line, true
 
   stopWatching: ->
     @logTail.unwatch()
     @logTail = null
 
-  onLogLine: ( data ) =>
+  onLogLine: ( data, fromActiveLog ) =>
     whn = new Date()
     if @isChatLine data
       [ who, what ] = @parseChatLine data
-      @emit "chat", who, what, whn
+      @emit "chat", who, what, whn, fromActiveLog
+
     if @isServerStartLine data
-      @emit "serverStart", whn
+      @emit "serverStart", whn, fromActiveLog
+
     if @isServerStopLine data
-      @emit "serverStop", whn
+      @emit "serverStop", whn, fromActiveLog
+
     if @isPlayerConnectLine data
       playerId = @parsePlayerConnectLine data
-      @emit "playerConnect", playerId
+      @emit "playerConnect", playerId, fromActiveLog
+
     if @isPlayerDisconnectLine data
       playerId = @parsePlayerDisconnectLine data
-      @emit "playerDisconnect", playerId
+      @emit "playerDisconnect", playerId, fromActiveLog
+
+    worldLoad = @parseWorldLoadLine data
+    if worldLoad
+      @emit "worldLoad", worldLoad, fromActiveLog
+
+    worldUnload = @parseWorldUnloadLine data
+    if worldUnload
+      @emit "worldUnload", worldUnload, fromActiveLog
 
   isChatLine: ( line ) ->
     return line.match @LINE_CHAT_REGEX
@@ -75,14 +94,39 @@ class ServerLog extends EventEmitter
 
   parsePlayerConnectLine: ( line ) ->
     matches = line.match @LINE_PLAYER_CONNECT_REGEX
-    return parseInt matches[ 1 ]
+    return matches[ 1 ]
 
   isPlayerDisconnectLine: ( line ) ->
     return line.match @LINE_PLAYER_DISCONNECT_REGEX
 
   parsePlayerDisconnectLine: ( line ) ->
     matches = line.match @LINE_PLAYER_DISCONNECT_REGEX
-    return parseInt matches[ 1 ]
+    return matches[ 1 ]
 
+  parseWorldLoadLine: ( line ) ->
+    matches = line.match @LINE_WORLD_LOAD_REGEX
+    if matches
+      ret =
+        sector: matches[ 1 ]
+        x: matches[ 2 ]
+        y: matches[ 3 ]
+        group: matches[ 4 ]
+        planet: matches[ 5 ]
+      return ret
+    else
+      return false
+
+  parseWorldUnloadLine: ( line ) ->
+    matches = line.match @LINE_WORLD_UNLOAD_REGEX
+    if matches
+      ret =
+        sector: matches[ 1 ]
+        x: matches[ 2 ]
+        y: matches[ 3 ]
+        group: matches[ 4 ]
+        planet: matches[ 5 ]
+      return ret
+    else
+      return false
 
 root.ServerLog = ServerLog
