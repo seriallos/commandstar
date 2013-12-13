@@ -6,5 +6,5 @@ hipchat:
   color: yellow
 
 # Port for the web server
-listenPort: 80
+listenPort: 8080
 
