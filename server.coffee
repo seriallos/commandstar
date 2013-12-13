@@ -25,8 +25,15 @@ notifyHipchat = ( msg ) ->
       if error
         console.log "Hipchat notification error: #{error}"
 
-info = new ServerInfo()
-serverLog = new ServerLog( { logFile: "#{info.binPath}/starbound_server.log" } )
+info = new ServerInfo({
+  binPath: config.starbound.binPath
+  assetsPath: config.starbound.assetsPath
+  dataPath: config.starbound.dataPath
+})
+
+serverLog = new ServerLog( {
+  logFile: config.starbound.logFile
+} )
 
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []

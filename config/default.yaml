@@ -4,6 +4,13 @@
 
 listenPort: 8080
 
+starbound:
+  binPath: /opt/starbound/bin
+  assetsPath: /opt/starbound/assets
+  dataPath: /opt/starbound/bin/universe
+  logFile: /opt/starbound/bin/starbound_server.log
+
+
 # Default hipchat configs
 # To enable, you'll need to set the hipchat.token configuration to your API key
 
