@@ -13,3 +13,7 @@ results
 
 npm-debug.log
 node_modules
+
+# Ignore every config except for default.yaml
+config/
+!config/default.yaml
