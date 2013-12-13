@@ -1,8 +1,8 @@
 <html>
 <head>
-  <title>Starbound on Raidbots</title>
+  <title>CommandStar</title>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="http://starbound.raidbots.com/socket.io/socket.io.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     var userNotes = {
     };
@@ -26,7 +26,7 @@
       });
     };
 
-    var apiBase = 'http://starbound.raidbots.com';
+    var apiBase = '';
     var socket = io.connect(apiBase);
     socket.on('chat',function(data){
       addChatRow( data.who, data.what, data.when );
@@ -56,13 +56,7 @@
   </script>
 </head>
 <body>
-  <h1>Raidbots Starbound</h1>
-
-  <ul>
-    <li>
-      <a href="http://www.hipchat.com/go3b2huWp">Public HipChat Room</a>
-    </li>
-  </ul>
+  <h1>Starbound Server</h1>
 
   <h2>Players Online:</h2>
   <ul id="players">
@@ -75,8 +69,8 @@
   <h2>API</h2>
 
   <ul>
-    <li><a href="http://starbound.raidbots.com/server/status">Server Status</a></li>
-    <li><a href="http://starbound.raidbots.com/server/chat">Server Chat</a></li>
+    <li><a href="/server/status">Server Status</a></li>
+    <li><a href="/server/chat">Server Chat</a></li>
   </ul>
 </body>
 </html>
