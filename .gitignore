@@ -18,3 +18,5 @@ node_modules
 !config/
 config/*
 !config/default.yaml
+
+mynotes.txt
