@@ -15,6 +15,7 @@ class ServerInfo
     assetsPath: "/opt/starbound/assets"
     binPath: "/opt/starbound/bin"
     dataPath: "/opt/starbound/bin/universe"
+    serverDaemonName: "starbound"
 
   constructor: ( opts ) ->
 
@@ -28,22 +29,32 @@ class ServerInfo
     @assetsPath = opts.assetsPath ? @defaultOpts.assetsPath
     @binPath = opts.binPath ? @defaultOpts.binPath
     @dataPath = opts.dataPath ? @defaultOpts.dataPath
+    @configPath = opts.configPath ? @defaultOpts.binPath + "/starbound.config"
 
-    @__loadServerConfig()
+  init: ( next ) ->
+    @__loadServerConfig ( err ) =>
+      if err
+        next( err )
+      else
+        @__startServerMonitor next
 
-    @__startServerMonitor()
-
-  __loadServerConfig: ->
-    configFile = "#{@binPath}/starbound.config"
+  __loadServerConfig: ( next ) ->
+    configFile = @configPath
     fs.readFile configFile, 'utf8', ( err, data ) =>
       if err
-        throw new Error "Unable to read config file: #{err}"
-      @config = JSON.parse data
+        error = 
+          message: "Unable to read config file: #{err}"
+          cause: err
+        next( error )
+      else
+        @config = JSON.parse data
+        next( null )
 
   #### Server Process Monitoring
 
-  __startServerMonitor: ->
+  __startServerMonitor: ( next ) ->
     @serverRunningIntervalId = setInterval( @__checkRunning, 1000 )
+    next()
 
   __stopServerMonitor: ->
     clearInterval @serverRunningIntervalId
@@ -52,7 +63,7 @@ class ServerInfo
   __checkRunning: =>
     # fat arrow so class context is maintained in callback
     # maybe hacky
-    exec 'pgrep starbound', ( error, stdout, stderr ) =>
+    exec 'pgrep #{@serverDaemonName}', ( error, stdout, stderr ) =>
       if error
         console.log "Error getting server PID: #{error}"
         @status = @STATUS_ERROR

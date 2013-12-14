@@ -17,18 +17,24 @@ class ServerLog extends EventEmitter
   # Info: Shutting down world alpha:90289876:-34372762:7547155:2
   LINE_WORLD_UNLOAD_REGEX: /^Info: Shutting down world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
 
+  logTail = null
 
   constructor: ( opts ) ->
     if not opts
-      opts = {}
+      throw new Error "ServerLog requires options"
+    if not opts.logFile
+      throw new Error "ServerLog requires logFile in constructor options"
+
     @logFile = opts.logFile
-
-    @processCurrentLog()
-
+    @watchInterval = opts.watchInterval ? 100
     @logTail = null
-    @startWatching()
 
-  processCurrentLog: ->
+  init: ( next ) ->
+    @processCurrentLog ( ) =>
+      @logTail = null
+      @startWatching next
+
+  processCurrentLog: ( next ) ->
     console.log "Reading the entire log to get current state"
     rd = readline.createInterface({
       input: fs.createReadStream @logFile
@@ -37,16 +43,22 @@ class ServerLog extends EventEmitter
     })
     rd.on 'line', (line) =>
       @onLogLine line, false
+    rd.on 'close', ->
+      next()
 
-  startWatching: ->
-    @logTail = new Tail @logFile
+  startWatching: ( next ) ->
+    @logTail = new Tail @logFile, "\n", { interval: @watchInterval }
 
     @logTail.on 'line', (line) =>
       @onLogLine line, true
 
+    @logTail.on 'error', ( error ) =>
+      console.log error
+
+    next()
+
   stopWatching: ->
     @logTail.unwatch()
-    @logTail = null
 
   onLogLine: ( data, fromActiveLog ) =>
     whn = new Date()
