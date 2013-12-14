@@ -20,3 +20,5 @@ config/*
 !config/default.yaml
 
 mynotes.txt
+
+test/helpers/_mockserver
