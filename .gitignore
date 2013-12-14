@@ -21,4 +21,6 @@ config/*
 
 mynotes.txt
 
-test/helpers/_mockserver
+!test/helpers/_mockserver
+test/helpers/_mockserver/*
+!test/helpers/_mockserver/placeholder
