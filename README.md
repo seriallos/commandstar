@@ -3,6 +3,9 @@ commandstar
 
 Starbound Server Manager
 
+[![Build Status](https://travis-ci.org/seriallos/commandstar.png)](https://travis-ci.org/seriallos/commandstar)
+
+
 Features
 ========
 
