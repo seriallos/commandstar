@@ -24,6 +24,7 @@ describe 'ServerLog using MockServer', ->
   afterEach ( done ) ->
     mockserv.stop()
     mockserv = null
+    log = null
     done()
 
   it 'should emit events on player connect from previous log', ( done ) ->
@@ -48,6 +49,24 @@ describe 'ServerLog using MockServer', ->
       # but for this test, we're writing to the log after init is done which
       # means the playerConnect event won't fire until after init() is
       # completely finished which is why done() is here
+      done()
+
+  it 'should emit events on player disconnect from previous log', ( done ) ->
+    mockserv.disconnectPlayer 1, 'dave'
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      done()
+    log.on "playerDisconnect", ( playerId, fromActiveLog ) ->
+      playerId.should.equal 'dave'
+      fromActiveLog.should.be.false
+
+  it 'should emit events on player disconnect from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      mockserv.disconnectPlayer 1, 'dave'
+    log.on "playerDisconnect", ( playerId, fromActiveLog ) ->
+      playerId.should.equal 'dave'
+      fromActiveLog.should.be.true
       done()
 
 
