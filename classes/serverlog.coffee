@@ -26,7 +26,7 @@ class ServerLog extends EventEmitter
       throw new Error "ServerLog requires logFile in constructor options"
 
     @logFile = opts.logFile
-    @watchInterval = opts.watchInterval ? 100
+    @watchInterval = opts.watchInterval ? 200
     @logTail = null
 
   init: ( next ) ->
@@ -35,7 +35,7 @@ class ServerLog extends EventEmitter
       @startWatching next
 
   processCurrentLog: ( next ) ->
-    console.log "Reading the entire log to get current state"
+    #console.log "Reading the entire log to get current state"
     rd = readline.createInterface({
       input: fs.createReadStream @logFile
       output: process.stdout
