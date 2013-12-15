@@ -8,7 +8,7 @@ config = require 'config'
 HipChat = require 'node-hipchat'
 
 if config.hipchat?.token
-  console.log "Hipchat configuration detected, loading hipchat code"
+  #console.log "Hipchat configuration detected, loading hipchat code"
   hipchat = new HipChat config.hipchat.token
 
 # TODO: Pull this into a module or something
@@ -41,7 +41,7 @@ serverLog = new ServerLog( {
 } )
 
 serverLog.init ( ) ->
-  console.log "ServerLog started"
+  #console.log "ServerLog started"
 
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []
@@ -57,7 +57,7 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   recentChat.push msg
   if fromActiveLog
     io.sockets.emit 'chat', msg
-    notifyHipchat "GAME - #{who}: #{what}"
+    notifyHipchat "#{who}: #{what}"
 
 serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Started!', when: chatWhen }
@@ -77,6 +77,8 @@ serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
   playersOnline.push playerId
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
+    msg = { who: 'SERVER', what: playerId + ' joined the server.', when: new Date() }
+    io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} joined the server"
 
 serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
@@ -84,6 +86,8 @@ serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
   playersOnline.splice idx, 1
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
+    msg = { who: 'SERVER', what: playerId + ' left the server.', when: new Date() }
+    io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} left the server"
 
 serverLog.on "worldLoad", ( worldInfo, fromActiveLog ) ->
