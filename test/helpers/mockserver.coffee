@@ -11,6 +11,8 @@ class MockServer
   LINE_PLAYER_CONNECT: "Info: Client <%s> <User: %s> connected"
   LINE_PLAYER_DISCONNECT: "Info: Client <%s> <User: %s> disconnected"
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
+  LINE_SERVER_START: "Info: Done loading Star::Root"
+  LINE_SERVER_STOP: "Info: Server shut down gracefully"
 
   configData:
     "audioChannels" : 2,
@@ -102,5 +104,11 @@ class MockServer
   logChat: ( who, what ) ->
     msg = util.format @LINE_PLAYER_CHAT, who, what
     @writeLine msg
+
+  logServerStart: ( ) ->
+    @writeLine @LINE_SERVER_START
+
+  logServerStop: ( ) ->
+    @writeLine @LINE_SERVER_STOP
 
 exports.MockServer = MockServer
