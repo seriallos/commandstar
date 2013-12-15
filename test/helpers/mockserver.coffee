@@ -10,7 +10,10 @@ class MockServer
 
   # Info: Client 'Seriallos' <1> (209.6.253.90:61374) connected
   LINE_PLAYER_CONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) connected"
-  LINE_PLAYER_DISCONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) disconnected"
+
+  # Info: Reaping client 'Seriallos' <4> (209.6.253.90:49294) connection
+  LINE_PLAYER_DISCONNECT: "Info: Reaping client '%s' <%s> (0.0.0.0:0) connection"
+
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
   LINE_SERVER_START: "Info: Done loading Star::Root"
   LINE_SERVER_STOP: "Info: Server shutdown gracefully"
