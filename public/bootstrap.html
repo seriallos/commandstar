@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CommandStar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        Starbound Server
+      </h1>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="panel panel-primary">
+            <div class="panel-heading active">
+              <h3 class="panel-title">
+                Players
+                <span class="badge pull-right" id="numOnline">n/a</span>
+              </h3>
+            </div>
+            <ul id="players" class="list-group">
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">Game Chat</h3>
+            </div>
+            <table class="table">
+              <tbody id="chatlog" style="height: 380px; overflow-y: auto; display:block">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h2>API</h2>
+
+      <ul>
+        <li><a href="/server/status">Server Status</a></li>
+        <li><a href="/server/chat">Server Chat</a></li>
+      </ul>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var userNotes = {
+      };
+      var addChatRow = function( who, what, when ) {
+        d = new Date( when );
+        niceDate = '';
+        niceDate += d.getHours() + ':' + ( "0" + d.getMinutes() ).slice( -2 );
+        $('#chatlog').append(
+          '<tr>'+
+            '<td>' + niceDate + '</td>' +
+            '<td>' + who + '</td>' +
+            '<td>' + what + '</td>' +
+          '</tr>'
+        );
+        // keep chat scrolled to bottom
+        $('#chatlog').scrollTop( 9999 );
+      }
+      var setPlayersOnline = function( players ) {
+        $('#players li').remove();
+        $('#numOnline').html( players.length );
+        $.each( players, function( key, val ) {
+          note = val;
+          if( userNotes[ val ] ) {
+            note += " ("+userNotes[val]+")";
+          }
+          $('#players').append(
+            '<li class="list-group-item">'+note+'</li>'
+          );
+        });
+      };
+
+      var apiBase = '';
+      var socket = io.connect(apiBase);
+      socket.on('chat',function(data){
+        addChatRow( data.who, data.what, data.when );
+      });
+      socket.on('playerCount',function(data){
+        setPlayersOnline( data.playersOnline );
+      });
+      $(document).ready(function(){
+        // load server status
+        $.get( apiBase + "/server/status", function( data ) {
+          setPlayersOnline( data.playersOnline );
+        });
+
+        // load chat
+        $.get( apiBase + "/server/chat", function( data ) {
+          numToShow = 20
+          msgs = data.length;
+          if( msgs < numToShow ) {
+            start = 0;
+          } else {
+            start = msgs - numToShow;
+          }
+          for( i = start; i < msgs; i++ ) {
+            addChatRow( data[i].who, data[i].what, data[i].when );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -153,8 +153,28 @@ getChat = ( req, res, next ) ->
 server = restify.createServer()
 server.use restify.CORS()
 
+server.get /\/js\/?.*/, restify.serveStatic({
+  directory: './public'
+})
+server.get /\/css\/?.*/, restify.serveStatic({
+  directory: './public'
+})
+server.get /\/fonts\/?.*/, restify.serveStatic({
+  directory: './public'
+})
+
 server.get '/', ( req, res, next ) ->
   fs.readFile __dirname + '/public/index.html', (err, data ) ->
+    if err
+      next err
+      return
+    res.setHeader 'Content-Type', 'text/html'
+    res.writeHead 200
+    res.end data
+    next()
+
+server.get '/bootstrap', ( req, res, next ) ->
+  fs.readFile __dirname + '/public/bootstrap.html', (err, data ) ->
     if err
       next err
       return
