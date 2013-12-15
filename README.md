@@ -5,6 +5,7 @@ Starbound Server Manager
 
 [![Build Status](https://travis-ci.org/seriallos/commandstar.png)](https://travis-ci.org/seriallos/commandstar)
 
+Currently works for: **Offended Koala**
 
 Features
 ========
