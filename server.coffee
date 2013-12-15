@@ -173,16 +173,6 @@ server.get '/', ( req, res, next ) ->
     res.end data
     next()
 
-server.get '/bootstrap', ( req, res, next ) ->
-  fs.readFile __dirname + '/public/bootstrap.html', (err, data ) ->
-    if err
-      next err
-      return
-    res.setHeader 'Content-Type', 'text/html'
-    res.writeHead 200
-    res.end data
-    next()
-
 server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
 
