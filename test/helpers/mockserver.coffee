@@ -90,12 +90,13 @@ class MockServer
     fs.writeSync @logHandle, "#{line}\n"
     fs.fsync @logHandle
 
-  connectPlayer: ( playerId, playerName ) ->
+  logConnectPlayer: ( playerId, playerName ) ->
     msg = util.format @LINE_PLAYER_CONNECT, playerId, playerName
     @writeLine msg
 
-  disconnectPlayer: ( playerId, playerName ) ->
+  logDisconnectPlayer: ( playerId, playerName ) ->
     msg = util.format @LINE_PLAYER_DISCONNECT, playerId, playerName
     @writeLine msg
+
 
 exports.MockServer = MockServer

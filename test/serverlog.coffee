@@ -28,7 +28,7 @@ describe 'ServerLog using MockServer', ->
     done()
 
   it 'should emit events on player connect from previous log', ( done ) ->
-    mockserv.connectPlayer 1, 'dave'
+    mockserv.logConnectPlayer 1, 'dave'
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
       # for this test, the playerConnect event will happen while
@@ -42,7 +42,7 @@ describe 'ServerLog using MockServer', ->
   it 'should emit events on player connect from tailing the log', ( done ) ->
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
-      mockserv.connectPlayer 1, 'dave'
+      mockserv.logConnectPlayer 1, 'dave'
     log.on "playerConnect", ( playerId, fromActiveLog ) ->
       playerId.should.equal 'dave'
       fromActiveLog.should.be.true
@@ -52,7 +52,7 @@ describe 'ServerLog using MockServer', ->
       done()
 
   it 'should emit events on player disconnect from previous log', ( done ) ->
-    mockserv.disconnectPlayer 1, 'dave'
+    mockserv.logDisconnectPlayer 1, 'dave'
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
       done()
@@ -63,7 +63,7 @@ describe 'ServerLog using MockServer', ->
   it 'should emit events on player disconnect from the log tail', ( done ) ->
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
-      mockserv.disconnectPlayer 1, 'dave'
+      mockserv.logDisconnectPlayer 1, 'dave'
     log.on "playerDisconnect", ( playerId, fromActiveLog ) ->
       playerId.should.equal 'dave'
       fromActiveLog.should.be.true
