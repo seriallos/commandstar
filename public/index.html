@@ -7,13 +7,18 @@
     var userNotes = {
     };
     var addChatRow = function( who, what, when ) {
+      d = new Date( when );
+      niceDate = '';
+      niceDate += d.getHours() + ':' + ( "0" + d.getMinutes() ).slice( -2 );
       $('#chatlog').append(
         '<tr>'+
-          '<td>' + when + '</td>' +
+          '<td>' + niceDate + '</td>' +
           '<td>' + who + '</td>' +
           '<td>' + what + '</td>' +
         '</tr>'
       );
+      // keep chat scrolled to bottom
+      $('#chatlog').scrollTop( 9999 );
     }
     var setPlayersOnline = function( players ) {
       $('#players li').remove();
@@ -63,7 +68,9 @@
   </ul>
 
   <h2>Recent/Live Chat Log</h2>
-  <table id="chatlog" border="1" cellspacing="0" cellpadding="4">
+  <table border="1" cellspacing="0" cellpadding="4" style="width:700px">
+    <tbody id="chatlog" style="height: 200px; width: 700px; overflow-y: auto; display:block">
+    </tbody>
   </table>
 
   <h2>API</h2>
