@@ -14,6 +14,7 @@ Features
 
 * Real-time display of active players
 * Real-time display of in-game chat
+    * Relay game chat to HipChat
 * Real-time server up/down status
 
 **Upcoming**
