@@ -10,6 +10,7 @@ class MockServer
 
   LINE_PLAYER_CONNECT: "Info: Client <%s> <User: %s> connected"
   LINE_PLAYER_DISCONNECT: "Info: Client <%s> <User: %s> disconnected"
+  LINE_PLAYER_CHAT: "Info:  <%s> %s"
 
   configData:
     "audioChannels" : 2,
@@ -98,5 +99,8 @@ class MockServer
     msg = util.format @LINE_PLAYER_DISCONNECT, playerId, playerName
     @writeLine msg
 
+  logChat: ( who, what ) ->
+    msg = util.format @LINE_PLAYER_CHAT, who, what
+    @writeLine msg
 
 exports.MockServer = MockServer

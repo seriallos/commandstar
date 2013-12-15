@@ -69,5 +69,25 @@ describe 'ServerLog using MockServer', ->
       fromActiveLog.should.be.true
       done()
 
+  it 'should emit events on player chat from previous log', ( done ) ->
+    mockserv.logChat 'dave', 'hello world!'
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      done()
+    log.on "chat", ( who, what, whn, fromActiveLog ) ->
+      who.should.equal 'dave'
+      what.should.equal 'hello world!'
+      fromActiveLog.should.be.false
+
+  it 'should emit events on player chat from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      mockserv.logChat 'dave', 'hello world!'
+    log.on "chat", ( who, what, whn, fromActiveLog ) ->
+      who.should.equal 'dave'
+      what.should.equal 'hello world!'
+      fromActiveLog.should.be.true
+      done()
+
 
 
