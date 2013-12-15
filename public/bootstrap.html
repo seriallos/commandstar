@@ -38,10 +38,10 @@
             <div class="panel-heading">
               <h3 class="panel-title">Game Chat</h3>
             </div>
-            <table class="table">
-              <tbody id="chatlog" style="height: 380px; overflow-y: auto; display:block">
-              </tbody>
-            </table>
+            <div id="chatlog-wrap" style="height: 380px; overflow: auto;">
+              <table id="chatlog" class="table table-bordered">
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -62,20 +62,39 @@
     <script>
       var userNotes = {
       };
+
+      var chatNiceTime = function( date ) {
+        d = new Date( date );
+        hour = d.getHours();
+        if( hour < 12 ) {
+          ampm = 'am';
+        } else {
+          ampm = 'pm';
+        }
+        if ( hour == 0 ) {
+          hour = 12;
+        }
+        if ( hour > 12 ) {
+          hour = hour - 12;
+        }
+        minute = ( "0" + d.getMinutes() ).slice( -2 );
+        niceTime = '';
+        niceTime += hour + ':' + minute + ' ' + ampm ;
+        return niceTime;
+      };
+
       var addChatRow = function( who, what, when ) {
-        d = new Date( when );
-        niceDate = '';
-        niceDate += d.getHours() + ':' + ( "0" + d.getMinutes() ).slice( -2 );
         $('#chatlog').append(
           '<tr>'+
-            '<td>' + niceDate + '</td>' +
+            '<td>' + chatNiceTime( when ) + '</td>' +
             '<td>' + who + '</td>' +
             '<td>' + what + '</td>' +
           '</tr>'
         );
         // keep chat scrolled to bottom
-        $('#chatlog').scrollTop( 9999 );
+        $('#chatlog-wrap').scrollTop( 9999 );
       }
+
       var setPlayersOnline = function( players ) {
         $('#players li').remove();
         $('#numOnline').html( players.length );
