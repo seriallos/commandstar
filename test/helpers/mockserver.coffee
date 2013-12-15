@@ -8,11 +8,12 @@ class MockServer
   logFile:   null
   logHandle: null
 
-  LINE_PLAYER_CONNECT: "Info: Client <%s> <User: %s> connected"
-  LINE_PLAYER_DISCONNECT: "Info: Client <%s> <User: %s> disconnected"
+  # Info: Client 'Seriallos' <1> (209.6.253.90:61374) connected
+  LINE_PLAYER_CONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) connected"
+  LINE_PLAYER_DISCONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) disconnected"
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
   LINE_SERVER_START: "Info: Done loading Star::Root"
-  LINE_SERVER_STOP: "Info: Server shut down gracefully"
+  LINE_SERVER_STOP: "Info: Server shutdown gracefully"
 
   configData:
     "audioChannels" : 2,
@@ -94,11 +95,11 @@ class MockServer
     fs.fsync @logHandle
 
   logConnectPlayer: ( playerId, playerName ) ->
-    msg = util.format @LINE_PLAYER_CONNECT, playerId, playerName
+    msg = util.format @LINE_PLAYER_CONNECT, playerName, playerId
     @writeLine msg
 
   logDisconnectPlayer: ( playerId, playerName ) ->
-    msg = util.format @LINE_PLAYER_DISCONNECT, playerId, playerName
+    msg = util.format @LINE_PLAYER_DISCONNECT, playerName, playerId
     @writeLine msg
 
   logChat: ( who, what ) ->

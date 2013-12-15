@@ -9,9 +9,11 @@ class ServerLog extends EventEmitter
 
   LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)$/
   LINE_SERVER_START_REGEX: /^Info: Done loading Star::Root/
-  LINE_SERVER_STOP_REGEX: /^Info: Server shut down gracefully/
-  LINE_PLAYER_CONNECT_REGEX: /^Info: Client <[^>]+> <User: ([^>]+)> connected/
-  LINE_PLAYER_DISCONNECT_REGEX: /^Info: Client <[^>]+> <User: ([^>]+)> disconnected/
+  LINE_SERVER_STOP_REGEX: /^Info: Server shutdown gracefully/
+  # Info: Client 'Seriallos' <1> (209.6.253.90:61374) connected
+  LINE_PLAYER_CONNECT_REGEX: /^Info: Client '([^>]+)' <[^>]+> \(.*\) connected/
+  # Info: Client 'Seriallos' <1> (209.6.253.90:61374) disconnected
+  LINE_PLAYER_DISCONNECT_REGEX: /^Info: Client '([^>]+)' <[^>]+> \(.*\) disconnected/
   # Info: Loading world db for world alpha:90289876:-34372762:7547155:2
   LINE_WORLD_LOAD_REGEX: /^Info: Loading world db for world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
   # Info: Shutting down world alpha:90289876:-34372762:7547155:2
