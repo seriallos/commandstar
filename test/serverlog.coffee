@@ -105,5 +105,21 @@ describe 'ServerLog using MockServer', ->
       fromActiveLog.should.be.true
       done()
 
+  it 'should emit events on server stop from previous log', ( done ) ->
+    mockserv.logServerStop()
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      done()
+    log.on "serverStop", ( whn, fromActiveLog ) ->
+      fromActiveLog.should.be.false
+
+  it 'should emit events on server stop from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      mockserv.logServerStop()
+    log.on "serverStop", ( whn, fromActiveLog ) ->
+      fromActiveLog.should.be.true
+      done()
+
 
 
