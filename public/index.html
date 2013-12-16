@@ -32,6 +32,16 @@
             <ul id="players" class="list-group">
             </ul>
           </div>
+          <div class="panel panel-primary">
+            <div class="panel-heading active">
+              <h3 class="panel-title">
+                Server Version
+              </h3>
+            </div>
+            <div id="serverVersion" class="panel-body">
+              n/a
+            </div>
+          </div>
         </div>
         <div class="col-sm-9">
           <div class="panel panel-primary">
@@ -109,6 +119,10 @@
         });
       };
 
+      var setServerVersion = function( version ) {
+        $('#serverVersion').html( version );
+      };
+
       var apiBase = '';
       var socket = io.connect(apiBase);
       socket.on('chat',function(data){
@@ -121,6 +135,7 @@
         // load server status
         $.get( apiBase + "/server/status", function( data ) {
           setPlayersOnline( data.playersOnline );
+          setServerVersion( data.version );
         });
 
         // load chat

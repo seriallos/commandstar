@@ -23,6 +23,9 @@ class ServerLog extends EventEmitter
   # Info: Shutting down world alpha:90289876:-34372762:7547155:2
   LINE_WORLD_UNLOAD_REGEX: /^Info: Shutting down world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
 
+  # Info: Server version 'Beta v. Offended Koala' '623' '424'
+  LINE_SERVER_VERSION_REGEX: /^Info: Server version '([^']+)' '([^']+)' '([^']+)'/
+
   logTail = null
 
   constructor: ( opts ) ->
@@ -94,6 +97,10 @@ class ServerLog extends EventEmitter
     if worldUnload
       @emit "worldUnload", worldUnload, fromActiveLog
 
+    version = @parseServerVersion data
+    if version
+      @emit "serverVersion", version, fromActiveLog
+
   isChatLine: ( line ) ->
     return line.match @LINE_CHAT_REGEX
 
@@ -144,6 +151,13 @@ class ServerLog extends EventEmitter
         group: matches[ 4 ]
         planet: matches[ 5 ]
       return ret
+    else
+      return false
+
+  parseServerVersion: ( line ) ->
+    matches = line.match @LINE_SERVER_VERSION_REGEX
+    if matches
+      return matches[1]
     else
       return false
 

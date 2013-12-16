@@ -121,5 +121,21 @@ describe 'ServerLog using MockServer', ->
       fromActiveLog.should.be.true
       done()
 
+  it 'should emit events on server version from previous log', ( done ) ->
+    mockserv.logServerVersion "Beta v. Test Koala"
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      done()
+    log.on "serverVersion", ( version, fromActiveLog ) ->
+      fromActiveLog.should.be.false
+      version.should.be.equal "Beta v. Test Koala"
 
+  it 'should emit events on server version from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      mockserv.logServerVersion "Beta v. Test Koala"
+    log.on "serverVersion", ( version, fromActiveLog ) ->
+      fromActiveLog.should.be.true
+      version.should.be.equal "Beta v. Test Koala"
+      done()
 

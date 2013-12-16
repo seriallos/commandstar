@@ -49,6 +49,7 @@ recentChat = []
 playersOnline = []
 visitedWorlds = {}
 activeWorlds = {}
+serverVersion = null
 
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
@@ -73,6 +74,10 @@ serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
   if fromActiveLog
     io.sockets.emit 'chat', msg
     notifyHipchat "Server has stopped!"
+
+serverLog.on "serverVersion", ( version, fromActiveLog ) ->
+  serverVersion = version
+  io.sockets.emit 'serverVersion', serverVersion
 
 serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
   playersOnline.push playerId
@@ -144,6 +149,7 @@ getServerStatus = ( req, res, next ) ->
     gamePort: info.config.gamePort
     playersOnline: playersOnline
     activeWorlds: activeWorlds
+    version: serverVersion
   res.send resData
   return next()
 

@@ -18,6 +18,9 @@ class MockServer
   LINE_SERVER_START: "Info: Done loading Star::Root"
   LINE_SERVER_STOP: "Info: Server shutdown gracefully"
 
+  # Info: Server version 'Beta v. Offended Koala' '623' '424'
+  LINE_SERVER_VERSION: "Info: Server version '%s' '1' '2'"
+
   configData:
     "audioChannels" : 2,
     "authHostname" : "auth.playstarbound.com",
@@ -114,5 +117,9 @@ class MockServer
 
   logServerStop: ( ) ->
     @writeLine @LINE_SERVER_STOP
+
+  logServerVersion: ( version ) ->
+    msg = util.format @LINE_SERVER_VERSION, version
+    @writeLine msg
 
 exports.MockServer = MockServer
