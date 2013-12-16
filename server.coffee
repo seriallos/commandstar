@@ -29,6 +29,7 @@ info = new ServerInfo({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
   dataPath: config.starbound.dataPath
+  configPath: config.starbound.configFile
 })
 
 info.init ( err ) ->
@@ -41,7 +42,7 @@ serverLog = new ServerLog( {
 } )
 
 serverLog.init ( ) ->
-  #console.log "ServerLog started"
+  console.log "ServerLog started"
 
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []

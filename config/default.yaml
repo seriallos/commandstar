@@ -9,6 +9,7 @@ starbound:
   assetsPath: /opt/starbound/assets
   dataPath: /opt/starbound/bin/universe
   logFile: /opt/starbound/bin/starbound_server.log
+  configFile: /opt/starbound/bin/starbound.config
 
 
 # Default hipchat configs
