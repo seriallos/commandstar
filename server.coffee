@@ -51,26 +51,29 @@ visitedWorlds = {}
 activeWorlds = {}
 serverVersion = null
 
+pushRecentChat = ( message ) ->
+  recentChat.push message
+
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
     who: who
     what: what
     when: chatWhen
-  recentChat.push msg
+  pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'chat', msg
     notifyHipchat "#{who}: #{what}"
 
 serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Started!', when: chatWhen }
-  recentChat.push msg
+  pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'chat', msg
     notifyHipchat "Server has started!"
 
 serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Stopping!', when: chatWhen }
-  recentChat.push msg
+  pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'chat', msg
     notifyHipchat "Server has stopped!"
@@ -81,18 +84,20 @@ serverLog.on "serverVersion", ( version, fromActiveLog ) ->
 
 serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
   playersOnline.push playerId
+  msg = { who: 'SERVER', what: playerId + ' joined the server.', when: new Date() }
+  pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
-    msg = { who: 'SERVER', what: playerId + ' joined the server.', when: new Date() }
     io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} joined the server"
 
 serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
   idx = playersOnline.indexOf playerId
   playersOnline.splice idx, 1
+  msg = { who: 'SERVER', what: playerId + ' left the server.', when: new Date() }
+  pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
-    msg = { who: 'SERVER', what: playerId + ' left the server.', when: new Date() }
     io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} left the server"
 
