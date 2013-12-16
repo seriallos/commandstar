@@ -77,7 +77,7 @@ serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
 
 serverLog.on "serverVersion", ( version, fromActiveLog ) ->
   serverVersion = version
-  io.sockets.emit 'serverVersion', serverVersion
+  io.sockets.emit 'serverVersion', { version: serverVersion }
 
 serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
   playersOnline.push playerId

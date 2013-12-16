@@ -131,6 +131,9 @@
       socket.on('playerCount',function(data){
         setPlayersOnline( data.playersOnline );
       });
+      socket.on('serverVersion', function( data ) {
+        setServerVersion( data.version );
+      });
       $(document).ready(function(){
         // load server status
         $.get( apiBase + "/server/status", function( data ) {
