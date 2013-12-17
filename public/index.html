@@ -172,7 +172,7 @@
 
         // load chat
         $.get( apiBase + "/server/chat", function( data ) {
-          numToShow = 20
+          numToShow = 50
           msgs = data.length;
           if( msgs < numToShow ) {
             start = 0;
