@@ -67,15 +67,21 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
 serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Started!', when: chatWhen }
   pushRecentChat msg
+  playersOnline = []
+  activeWorlds = {}
   if fromActiveLog
     io.sockets.emit 'chat', msg
+    io.sockets.emit 'serverStatus', { status: 1 }
     notifyHipchat "Server has started!"
 
 serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Stopping!', when: chatWhen }
   pushRecentChat msg
+  playersOnline = []
+  activeWorlds = {}
   if fromActiveLog
     io.sockets.emit 'chat', msg
+    io.sockets.emit 'serverStatus', { status: 0 }
     notifyHipchat "Server has stopped!"
 
 serverLog.on "serverVersion", ( version, fromActiveLog ) ->

@@ -17,6 +17,7 @@
   <body>
     <div class="container">
       <h1>
+        <span id="serverStatus" class="label label-warning">N/A</span>
         Starbound Server
       </h1>
 
@@ -123,6 +124,22 @@
         $('#serverVersion').html( version );
       };
 
+      var setServerStatus = function( status ) {
+        $('#serverStatus').removeClass();
+        $('#serverStatus').addClass('label');
+        statusName = 'N/A';
+        statusClass = 'label-warning';
+        if( status > 0 ) {
+          statusName = 'Online';
+          statusClass = 'label-success';
+        } else {
+          statusName = 'Offline';
+          statusClass = 'label-danger';
+        }
+        $('#serverStatus').addClass( statusClass );
+        $('#serverStatus').html( statusName );
+      };
+
       var apiBase = '';
       var socket = io.connect(apiBase);
       socket.on('chat',function(data){
@@ -134,11 +151,15 @@
       socket.on('serverVersion', function( data ) {
         setServerVersion( data.version );
       });
+      socket.on('serverStatus', function( data ) {
+        setServerStatus( data.status );
+      });
       $(document).ready(function(){
         // load server status
         $.get( apiBase + "/server/status", function( data ) {
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
+          setServerStatus( data.status );
         });
 
         // load chat
