@@ -132,6 +132,9 @@
         if( status > 0 ) {
           statusName = 'Online';
           statusClass = 'label-success';
+        } else if ( status == -1 ) {
+          statusName = 'N/A';
+          statusClass = 'label-warning';
         } else {
           statusName = 'Offline';
           statusClass = 'label-danger';
