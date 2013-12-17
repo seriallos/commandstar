@@ -44,7 +44,6 @@ class ServerLog extends EventEmitter
       @startWatching next
 
   processCurrentLog: ( next ) ->
-    #console.log "Reading the entire log to get current state"
     rd = readline.createInterface({
       input: fs.createReadStream @logFile
       output: process.stdout

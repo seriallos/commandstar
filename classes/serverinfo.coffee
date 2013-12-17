@@ -13,7 +13,7 @@ class ServerInfo extends EventEmitter
   STATUS_UP:       1
   STATUS_MULTIPLE: 2
 
-  socketCheckMs:   5000
+  socketCheckMs:   10000
 
   defaultOpts:
     assetsPath: "/opt/starbound/assets"
@@ -40,7 +40,9 @@ class ServerInfo extends EventEmitter
       if err
         next( err )
       else
-        @__startServerMonitor next
+        # TODO: Server bug makes monitoring eventually cause a crash
+        #@__startServerMonitor next
+        next()
 
   __loadServerConfig: ( next ) ->
     configFile = @configPath
@@ -74,14 +76,14 @@ class ServerInfo extends EventEmitter
     # maybe hacky
     socket = net.createConnection @config.gamePort, 'localhost'
 
-    socket.on 'error', ( error ) =>
-      socket.destroy()
-      console.log "Server status check FAILED"
-      console.log error
-      @setStatus @STATUS_DOWN
-
     socket.on 'connect', =>
+      socket.end()
       socket.destroy()
       @setStatus @STATUS_UP
+
+    socket.on 'error', ( error ) =>
+      socket.end()
+      socket.destroy()
+      @setStatus @STATUS_DOWN
 
 root.ServerInfo = ServerInfo
