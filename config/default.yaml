@@ -1,3 +1,6 @@
+
+serverName: CommandStar!
+
 # Port for web server
 # If you use port 80, you'll need to run server.coffee using sudo.
 # This isn't super secure right now so be warned.

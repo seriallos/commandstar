@@ -163,6 +163,7 @@ serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
 
 getServerStatus = ( req, res, next ) ->
   resData =
+    serverName: config.serverName
     status: info.status
     gamePort: info.config.gamePort
     playersOnline: playersOnline

@@ -18,7 +18,7 @@
     <div class="container">
       <h1>
         <!-- <span id="serverStatus" class="label label-warning">N/A</span> -->
-        Starbound Server
+        <span id="serverName">Starbound Server</span>
       </h1>
 
       <div class="row">
@@ -143,6 +143,10 @@
         $('#serverStatus').html( statusName );
       };
 
+      var setServerName = function( name ) {
+        $('#serverName').html( name );
+      };
+
       var apiBase = '';
       var socket = io.connect(apiBase);
       socket.on('chat',function(data){
@@ -163,6 +167,7 @@
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
           setServerStatus( data.status );
+          setServerName( data.serverName );
         });
 
         // load chat
