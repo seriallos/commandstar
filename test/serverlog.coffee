@@ -15,7 +15,7 @@ describe 'ServerLog using MockServer', ->
 
   mockserv = null
   log = null
-  writeDelay = 1
+  writeDelay = 5
 
   beforeEach ( done ) ->
     mockserv = new MockServer()
