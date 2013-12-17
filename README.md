@@ -67,6 +67,10 @@ You can also download a release tgz or ZIP and skip the github clone process.
 Configuration
 =============
 
+**serverName**
+
+Name to display as the title of the page.
+
 **listenPort**
 
 Port that the HTTP server binds to.  Defaults to 8080.
@@ -87,11 +91,15 @@ starbound.dataPath: Starbound server universe directory
 
 starbound.logFile: Full path to 'starbound_server.log'
 
+starbound.configFile: Full path to 'starbound.config'
+
 **hipchat**
 
-These are only used if you provide hipchat.token
+These are only used if you provide hipchat.token.  HipChat is a chat service
+sort of like IRC.  You must have your own account set up at www.hipchat.com
 
-hipchat.token: API Token for your HipChat (default to NULL)
+hipchat.token: API Token for your HipChat (default to NULL) *Wrap your token in
+double quotes*
 hipchat.user: Username to relay in-game chat (defaults to Server)
 hipchat.room: Room to speak in (defaults to Starbound)
 hipchat.notify: Whether to cause a notification alert or not (defaults to false)

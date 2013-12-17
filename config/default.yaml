@@ -21,10 +21,12 @@ starbound:
 #  dataPath: C:\Games\Steam\SteamApps\common\Starbound\universe
 #  logFile: C:\Games\Steam\SteamApps\common\Starbound\starbound_server.log
 #  configFile: C:\Games\Steam\SteamApps\common\Starbound\starbound.config
-  
 
 # Default hipchat configs
 # To enable, you'll need to set the hipchat.token configuration to your API key
+# This is only for relaying in-game chat to a HipChat room.  The web chat
+# works without this.
+# For more info, check out their website: https://www.hipchat.com/
 
 hipchat:
   room: Starbound
