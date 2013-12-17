@@ -64,6 +64,14 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
     io.sockets.emit 'chat', msg
     notifyHipchat "#{who}: #{what}"
 
+info.on 'statusChange', ( status ) ->
+  console.log 'info.serverStatus event'
+  io.sockets.emit 'serverStatus', { status: status }
+  # reset global state if server has gone down
+  if status <= 0
+    playersOnline = []
+    activeWorlds = {}
+
 serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Started!', when: chatWhen }
   pushRecentChat msg
