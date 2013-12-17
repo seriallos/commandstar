@@ -27,8 +27,7 @@ Features
 Requirements
 ============
 
-Only tested on Ubuntu 12.04 64-bit so far.  Out of the box it will not support
-Windows or OS X.
+Tested on Ubuntu 12.04 and Windows 7
 
 * Starbound server
 * NodeJS 0.10.x
@@ -37,15 +36,31 @@ Windows or OS X.
 Installation
 ============
 
-**This is super duper alpha and really only intended for nodejs hackers /
-knowledgable sysadmins.**
+This is still very early stuff!
 
-It's super rough.
+**Ubuntu**
 
     git clone https://github.com/seriallos/commandstar
     cd commandstar
+    sudo npm install -g coffee-script
     npm install
+    # make your own config file
+    touch config/`hostname`.yaml
     coffee server.coffee
+
+You can also download a release tgz or ZIP and skip the github clone process.
+
+**Windows**
+
+* Download and Install NodeJS: http://nodejs.org/download/
+* Download the latest release of CommandStar: https://github.com/seriallos/commandstar/releases/
+* Extract the archive
+* Double click setup.bat once to install dependency libraries
+* Edit config/default.yaml
+    * Add a nice server name
+    * Set up the starbound paths and files for your machine.
+* Double click runServer.bat to start the CommandStar process
+* Visit http://localhost:8080/
 
 Configuration
 =============
