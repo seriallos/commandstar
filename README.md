@@ -44,11 +44,11 @@ This is still very early stuff!
 
     git clone https://github.com/seriallos/commandstar
     cd commandstar
-    sudo npm install -g coffee-script
     npm install
     # make your own config file
     touch config/`hostname`.yaml
-    coffee server.coffee
+    chmod u+x runServer.sh
+    ./runServer.sh
 
 You can also download a release tgz or ZIP and skip the github clone process.
 
