@@ -7,6 +7,8 @@ Starbound Server Manager
 
 Currently works for: **Offended Koala**
 
+![](https://raw.github.com/seriallos/commandstar/master/commandstar.png)
+
 Features
 ========
 
