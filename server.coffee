@@ -42,7 +42,7 @@ serverLog = new ServerLog( {
 } )
 
 serverLog.init ( ) ->
-  console.log "ServerLog started"
+  # nothing to do here
 
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []
