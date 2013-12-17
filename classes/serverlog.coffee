@@ -7,7 +7,7 @@ readline = require 'readline'
 
 class ServerLog extends EventEmitter
 
-  LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)$/
+  LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)/
   LINE_SERVER_START_REGEX: /^Info: Done loading Star::Root/
   LINE_SERVER_STOP_REGEX: /^Info: Server shutdown gracefully/
 
