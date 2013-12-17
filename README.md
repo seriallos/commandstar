@@ -57,7 +57,6 @@ You can also download a release tgz or ZIP and skip the github clone process.
 * Download and Install NodeJS: http://nodejs.org/download/
 * Download the latest release of CommandStar: https://github.com/seriallos/commandstar/releases/
 * Extract the archive
-* Double click setup.bat once to install dependency libraries
 * Edit config/default.yaml
     * Add a nice server name
     * Set up the starbound paths and files for your machine.
