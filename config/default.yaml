@@ -14,6 +14,14 @@ starbound:
   logFile: /opt/starbound/bin/starbound_server.log
   configFile: /opt/starbound/bin/starbound.config
 
+# Use something like this for Windows instead of the above lines
+#
+#  binPath: C:\Games\Steam\SteamApps\common\Starbound\win32
+#  assetsPath: C:\Games\Steam\SteamApps\common\Starbound\assets
+#  dataPath: C:\Games\Steam\SteamApps\common\Starbound\universe
+#  logFile: C:\Games\Steam\SteamApps\common\Starbound\starbound_server.log
+#  configFile: C:\Games\Steam\SteamApps\common\Starbound\starbound.config
+  
 
 # Default hipchat configs
 # To enable, you'll need to set the hipchat.token configuration to your API key
