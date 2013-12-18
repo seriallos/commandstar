@@ -18,13 +18,12 @@ Features
 * Real-time display of in-game chat
     * Relay game chat to HipChat
 * Real-time server up/down status
+* Active solar systems: sector, X, and Y
 
 **Upcoming**
 
-* Coordinates of visited worlds
-* Shared notes of visited world (Captain's Log)
+* "Captain's Log" - Shared notes of visited world
 * User notes
-* Out-of-game chat / lightweight discussion
 
 Requirements
 ============
