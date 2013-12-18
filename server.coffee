@@ -54,15 +54,18 @@ pushRecentChat = ( message ) ->
   recentChat.push message
 
 getActiveWorlds = ->
-   worlds = _.where gWorlds, { active: true }
-   sectorOrder = {
+  worlds = _.where gWorlds, { active: true }
+  # TODO: This limits to active SYSTEMS, not planets/satellites
+  worlds = _.uniq worlds, ( item, key, list ) ->
+    JSON.stringify( _.pick item, 'sector', 'x', 'y' )
+  sectorOrder = {
     'alpha': 1
     'beta':  2
     'gamma': 3
     'delta': 4
     'sectorx': 5
-   }
-   t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
+  }
+  t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
 
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
