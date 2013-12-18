@@ -1,0 +1,38 @@
+CHANGELOG
+=========
+
+0.1.2
+-----
+
+**New**
+
+* Added "Active Systems" display
+    * Will show solar system coordinates that players are visiting
+    * Known Issues:
+        * Sometimes the server keeps systems open when there aren't players
+          on it.
+        * Cannot currently determine *which* players are in which system.
+        * Systems can be "active" for 30 seconds after a player leaves.
+
+**Fixes/Tweaks**
+
+* Show 50 chat messages on page load instead of 20
+* One script to run the server for both Linux and Windows
+    * Also keeps dependencies up-to-date
+* Fixed chat scroll bug when there were lots of messages
+* Player list now scrolls when it becomes too big
+* Minor tweaks to display (padding and things like that)
+
+**Technical**
+
+* Removed dependency on global coffee-script
+* Removed dependency on global mocha for testing
+* Removed in-line styles, moved into public/css/commandstar.css
+
+Previously, on CommandStar
+--------------------------
+
+I didn't take as good notes.  So maybe I'll fill this out later based on commit
+messages.
+
+
