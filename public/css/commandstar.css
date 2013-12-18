@@ -1,0 +1,13 @@
+#chatlog-wrap {
+  height: 560px;
+  overflow: auto;
+}
+
+#players {
+  max-height: 575px;
+  overflow: auto;
+}
+
+#players li.list-group-item {
+  padding: 7px 15px 7px 15px;
+}
