@@ -17,11 +17,28 @@ class ServerLog extends EventEmitter
   # Info: Reaping client 'Seriallos' <4> (209.6.253.90:49294) connection
   LINE_PLAYER_DISCONNECT_REGEX: /^Info: Reaping client '([^']+)' <[^>]+> \(.*\) connection/
 
-  # Info: Loading world db for world alpha:90289876:-34372762:7547155:2
-  LINE_WORLD_LOAD_REGEX: /^Info: Loading world db for world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
+  # Info: Loading world db for world delta:-35537062:25816799:-18582281:11:6
 
-  # Info: Shutting down world alpha:90289876:-34372762:7547155:2
-  LINE_WORLD_UNLOAD_REGEX: /^Info: Shutting down world ([^:]+):([^:]+):([^:]+):([^:]+):([^: ]+)/
+  LINE_WORLD_LOAD_REGEX: ///
+    ^Info:\sLoading\sworld\sdb\sfor\sworld\s+
+    ([^:]+):      # sector
+    ([^:]+):      # x
+    ([^:]+):      # y
+    ([^:]+):      # z
+    ([^:]+):      # planet
+    ([^:\s]+)      # satellite
+  ///
+
+  # Info: Shutting down world delta:-35537062:25816799:-18582281:11:6
+  LINE_WORLD_UNLOAD_REGEX: ///
+    ^Info:\sShutting\sdown\sworld\s+
+    ([^:]+):      # sector
+    ([^:]+):      # x
+    ([^:]+):      # y
+    ([^:]+):      # z
+    ([^:]+):      # planet
+    ([^:\s]+)      # satellite
+  ///
 
   # Info: Server version 'Beta v. Offended Koala' '623' '424'
   LINE_SERVER_VERSION_REGEX: /^Info: Server version '([^']+)' '([^']+)' '([^']+)'/
@@ -134,8 +151,9 @@ class ServerLog extends EventEmitter
         sector: matches[ 1 ]
         x: matches[ 2 ]
         y: matches[ 3 ]
-        group: matches[ 4 ]
+        z: matches[ 4 ]
         planet: matches[ 5 ]
+        satellite: matches[ 6 ]
       return ret
     else
       return false
@@ -147,8 +165,9 @@ class ServerLog extends EventEmitter
         sector: matches[ 1 ]
         x: matches[ 2 ]
         y: matches[ 3 ]
-        group: matches[ 4 ]
+        z: matches[ 4 ]
         planet: matches[ 5 ]
+        satellite: matches[ 6 ]
       return ret
     else
       return false

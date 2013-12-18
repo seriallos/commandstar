@@ -24,6 +24,7 @@
 
       <div class="row">
         <div class="col-sm-3">
+
           <div class="panel panel-primary">
             <div class="panel-heading active">
               <h3 class="panel-title">
@@ -34,6 +35,18 @@
             <ul id="players" class="list-group">
             </ul>
           </div>
+
+          <div class="panel panel-primary">
+            <div class="panel-heading active">
+              <h3 class="panel-title">
+                Active Systems
+                <span class="badge pull-right" id="numWorlds">n/a</span>
+              </h3>
+            </div>
+            <ul id="worlds" class="list-group">
+            </ul>
+          </div>
+
           <div class="panel panel-primary">
             <div class="panel-heading active">
               <h3 class="panel-title">
@@ -44,8 +57,10 @@
               n/a
             </div>
           </div>
+
         </div>
         <div class="col-sm-9">
+
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h3 class="panel-title">Game Chat</h3>
@@ -55,6 +70,7 @@
               </table>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -149,6 +165,34 @@
         $('#serverName').html( name );
       };
 
+      var setActiveWorlds = function( worlds ) {
+        $('#numWorlds').html( worlds.length );
+        $('#worlds li').remove();
+        sectorNames = {
+          'alpha': 'Alpha',
+          'beta':  'Beta',
+          'gamma': 'Gamma',
+          'delta': 'Delta',
+          'sectorx': 'Sector X'
+        };
+        $.each( worlds, function( k, world ) {
+          out = '<li class="list-group-item">';
+          out += sectorNames[ world.sector ];
+          out += ': ';
+          out += world.x;
+          out += ', ';
+          out += world.y;
+          /*
+          // Planet and satellite number don't make any sense to me right now
+          out += '<br/>';
+          out += 'Planet ' + world.planet + ', ';
+          out += 'Satellite ' + world.satellite;
+          */
+          out += '</li>';
+          $('#worlds').append( out );
+        });
+      };
+
       var apiBase = '';
       var socket = io.connect(apiBase);
       socket.on('chat',function(data){
@@ -163,6 +207,9 @@
       socket.on('serverStatus', function( data ) {
         setServerStatus( data.status );
       });
+      socket.on('worlds', function( data ) {
+        setActiveWorlds( data.worlds );
+      });
       $(document).ready(function(){
         // load server status
         $.get( apiBase + "/server/status", function( data ) {
@@ -170,6 +217,7 @@
           setServerVersion( data.version );
           setServerStatus( data.status );
           setServerName( data.serverName );
+          setActiveWorlds( data.activeWorlds );
         });
 
         // load chat
