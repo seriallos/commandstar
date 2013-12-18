@@ -6,6 +6,7 @@
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="/css/commandstar.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -49,8 +50,8 @@
             <div class="panel-heading">
               <h3 class="panel-title">Game Chat</h3>
             </div>
-            <div id="chatlog-wrap" style="height: 375px; overflow: auto;">
-              <table id="chatlog" class="table table-bordered">
+            <div id="chatlog-wrap">
+              <table id="chatlog" class="table table-bordered table-condensed">
               </table>
             </div>
           </div>
@@ -103,7 +104,8 @@
           '</tr>'
         );
         // keep chat scrolled to bottom
-        $('#chatlog-wrap').scrollTop( 9999 );
+        var h = $('#chatlog-wrap').prop('scrollHeight');
+        $('#chatlog-wrap').scrollTop( h );
       }
 
       var setPlayersOnline = function( players ) {
