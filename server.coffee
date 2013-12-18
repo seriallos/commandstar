@@ -2,13 +2,13 @@ restify = require 'restify'
 socketio = require 'socket.io'
 fs = require 'fs'
 config = require 'config'
+_ = require 'underscore'
 
 {ServerInfo} = require './classes/serverinfo.coffee'
 {ServerLog} = require './classes/serverlog.coffee'
 HipChat = require 'node-hipchat'
 
 if config.hipchat?.token
-  #console.log "Hipchat configuration detected, loading hipchat code"
   hipchat = new HipChat config.hipchat.token
 
 # TODO: Pull this into a module or something
@@ -47,12 +47,25 @@ serverLog.init ( ) ->
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []
 playersOnline = []
-visitedWorlds = {}
-activeWorlds = {}
+gWorlds = []
 serverVersion = null
 
 pushRecentChat = ( message ) ->
   recentChat.push message
+
+getActiveWorlds = ->
+  worlds = _.where gWorlds, { active: true }
+  # TODO: This limits to active SYSTEMS, not planets/satellites
+  worlds = _.uniq worlds, ( item, key, list ) ->
+    JSON.stringify( _.pick item, 'sector', 'x', 'y' )
+  sectorOrder = {
+    'alpha': 1
+    'beta':  2
+    'gamma': 3
+    'delta': 4
+    'sectorx': 5
+  }
+  t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
 
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
@@ -115,51 +128,34 @@ serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
     notifyHipchat "#{playerId} left the server"
 
 serverLog.on "worldLoad", ( worldInfo, fromActiveLog ) ->
-  sector = worldInfo.sector
-  systemX = worldInfo.x
-  systemY = worldInfo.y
-  group = worldInfo.group
-  planet = worldInfo.planet
 
-  # TODO: This is terrible.  Wrap this in something reasonable
-  if not visitedWorlds[sector]
-    visitedWorlds[sector] = {}
-  if not visitedWorlds[sector][systemX]
-    visitedWorlds[sector][systemX] = {}
-  if not visitedWorlds[sector][systemX][systemY]
-    visitedWorlds[sector][systemX][systemY] = {}
-  if not visitedWorlds[sector][systemX][systemY][group]
-    visitedWorlds[sector][systemX][systemY][group] = {}
-  visitedWorlds[ sector ][ systemX ][ systemY ][ group ][ planet ] = true
+  world = _.findWhere gWorlds, worldInfo
 
-  # TODO: This is terrible.  Wrap this in something reasonable
-  if not activeWorlds[sector]
-    activeWorlds[sector] = {}
-  if not activeWorlds[sector][systemX]
-    activeWorlds[sector][systemX] = {}
-  if not activeWorlds[sector][systemX][systemY]
-    activeWorlds[sector][systemX][systemY] = {}
-  if not activeWorlds[sector][systemX][systemY][group]
-    activeWorlds[sector][systemX][systemY][group] = {}
-  activeWorlds[ sector ][ systemX ][ systemY ][ group ][ planet ] = true
+  if not world
+    world = _.clone worldInfo
+    world.active = true
+    gWorlds.push world
+  else
+    world.active = true
+
+  if fromActiveLog
+    data = { worlds: getActiveWorlds() }
+    io.sockets.emit 'worlds', data
 
 serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
-  sector = worldInfo.sector
-  systemX = worldInfo.x
-  systemY = worldInfo.y
-  group = worldInfo.group
-  planet = worldInfo.planet
 
-  # TODO: This is terrible.  Wrap this in something reasonable
-  if not activeWorlds[sector]
-    activeWorlds[sector] = {}
-  if not activeWorlds[sector][systemX]
-    activeWorlds[sector][systemX] = {}
-  if not activeWorlds[sector][systemX][systemY]
-    activeWorlds[sector][systemX][systemY] = {}
-  if not activeWorlds[sector][systemX][systemY][group]
-    activeWorlds[sector][systemX][systemY][group] = {}
-  activeWorlds[ sector ][ systemX ][ systemY ][ group ][ planet ] = false
+  world = _.findWhere gWorlds, worldInfo
+
+  if world
+    # remove the world from the list
+    gWorlds = _.without( gWorlds, world )
+    # re-add with active false
+    world.active = false
+    gWorlds.push world
+
+  if fromActiveLog
+    data = { worlds: getActiveWorlds() }
+    io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
   resData =
@@ -167,7 +163,7 @@ getServerStatus = ( req, res, next ) ->
     status: info.status
     gamePort: info.config.gamePort
     playersOnline: playersOnline
-    activeWorlds: activeWorlds
+    activeWorlds: getActiveWorlds()
     version: serverVersion
   res.send resData
   return next()

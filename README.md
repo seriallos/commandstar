@@ -45,8 +45,10 @@ This is still very early stuff!
     git clone https://github.com/seriallos/commandstar
     cd commandstar
     npm install
-    # make your own config file
-    touch config/`hostname`.yaml
+    
+    # make your own config file and update values
+    vim config/`hostname`.yaml
+    
     chmod u+x runServer.sh
     ./runServer.sh
 
@@ -57,7 +59,7 @@ You can also download a release tgz or ZIP and skip the github clone process.
 * Download and Install NodeJS: http://nodejs.org/download/
 * Download the latest release of CommandStar: https://github.com/seriallos/commandstar/releases/
 * Extract the archive
-* Edit config/default.yaml
+* Edit config/default.yaml (or create config/{YOUR-MACHINENAME-HERE}.yaml)
     * Add a nice server name
     * Set up the starbound paths and files for your machine.
 * Double click runServer.bat to start the CommandStar process
