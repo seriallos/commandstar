@@ -21,23 +21,23 @@ class ServerLog extends EventEmitter
 
   LINE_WORLD_LOAD_REGEX: ///
     ^Info:\sLoading\sworld\sdb\sfor\sworld\s+
-    ([^:]+):      # sector
-    ([^:]+):      # x
-    ([^:]+):      # y
-    ([^:]+):      # z
-    ([^:]+):      # planet
-    ([^:\s]+)      # satellite
+    ([^:]+)         # sector
+    :([^:]+)        # x
+    :([^:]+)        # y
+    :([^:]+)        # z
+    :([^:\s]+)        # planet
+    (:([^:\s]+))?   # satellite (not always present)
   ///
 
   # Info: Shutting down world delta:-35537062:25816799:-18582281:11:6
   LINE_WORLD_UNLOAD_REGEX: ///
     ^Info:\sShutting\sdown\sworld\s+
-    ([^:]+):      # sector
-    ([^:]+):      # x
-    ([^:]+):      # y
-    ([^:]+):      # z
-    ([^:]+):      # planet
-    ([^:\s]+)      # satellite
+    ([^:]+)         # sector
+    :([^:]+)        # x
+    :([^:]+)        # y
+    :([^:]+)        # z
+    :([^:\s]+)        # planet
+    (:([^:\s]+))?   # satellite (not always present)
   ///
 
   # Info: Server version 'Beta v. Offended Koala' '623' '424'
@@ -153,7 +153,7 @@ class ServerLog extends EventEmitter
         y: matches[ 3 ]
         z: matches[ 4 ]
         planet: matches[ 5 ]
-        satellite: matches[ 6 ]
+        satellite: matches[ 7 ]
       return ret
     else
       return false
@@ -167,7 +167,7 @@ class ServerLog extends EventEmitter
         y: matches[ 3 ]
         z: matches[ 4 ]
         planet: matches[ 5 ]
-        satellite: matches[ 6 ]
+        satellite: matches[ 7 ]
       return ret
     else
       return false
