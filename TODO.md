@@ -1,6 +1,7 @@
 * Additional config data
     * Max players
     * public / password protected
+* Hide / commands in chat
 * UUID location from clientcontext files
 * Persist state to local JSON files to handle restarts
 * Captain's Log
