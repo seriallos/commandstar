@@ -172,7 +172,7 @@ getServerStatus = ( req, res, next ) ->
     playersOnline: playersOnline
     activeWorlds: getActiveWorlds()
     version: serverVersion
-    maxPlayers: info.config.maxPlayers
+    maxPlayers: info.config.maxPlayers ? 8 # guess at default?
     public: isPublic
   res.send resData
   return next()
