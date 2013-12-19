@@ -7,6 +7,8 @@ serverName: CommandStar!
 
 listenPort: 8080
 
+maxRecentChatMessages: 100
+
 starbound:
   binPath: /opt/starbound/bin
   assetsPath: /opt/starbound/assets
