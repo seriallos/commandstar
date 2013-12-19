@@ -6,3 +6,6 @@
 * Captain's Log
 * User notes
 * Chat colors?  Either hide them or use them
+* Decompose server.coffee
+    * Tests for server state maintenance
+    * Tests for REST endpoints
