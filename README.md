@@ -98,9 +98,11 @@ starbound.configFile: Full path to 'starbound.config'
 These are only used if you provide hipchat.token.  HipChat is a chat service
 sort of like IRC.  You must have your own account set up at www.hipchat.com
 
-hipchat.token: API Token for your HipChat (default to NULL) *Wrap your token in
-double quotes*
-hipchat.user: Username to relay in-game chat (defaults to Server)
-hipchat.room: Room to speak in (defaults to Starbound)
-hipchat.notify: Whether to cause a notification alert or not (defaults to false)
-hipchat.color: Background color for the message (defaults to yellow)
+* hipchat.token: API Token for your HipChat (default to NULL)
+    * Wrap your token in double quotes
+    * Requires a *version 1* token.
+* hipchat.user: Username to relay in-game chat (defaults to Server)
+* hipchat.room: Room to speak in (defaults to Starbound)
+    * This room must *already* exist.  It will not be created automatically
+* hipchat.notify: Whether to cause a notification alert or not (defaults to false)
+* hipchat.color: Background color for the message (defaults to yellow)
