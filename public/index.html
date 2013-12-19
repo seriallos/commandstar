@@ -29,7 +29,9 @@
             <div class="panel-heading active">
               <h3 class="panel-title">
                 Players
-                <span class="badge pull-right" id="numOnline">n/a</span>
+                <span class="badge pull-right">
+                  <span id="numOnline"></span> / <span id="maxPlayers"></span>
+                </span>
               </h3>
             </div>
             <ul id="players" class="list-group">
@@ -50,7 +52,7 @@
           <div class="panel panel-primary">
             <div class="panel-heading active">
               <h3 class="panel-title">
-                Server Version
+                Server Info
               </h3>
             </div>
             <div id="serverVersion" class="panel-body">
@@ -137,6 +139,9 @@
           );
         });
       };
+      var setMaxPlayers = function( maxPlayers ) {
+        $('#maxPlayers').html( maxPlayers );
+      };
 
       var setServerVersion = function( version ) {
         $('#serverVersion').html( version );
@@ -218,6 +223,7 @@
           setServerStatus( data.status );
           setServerName( data.serverName );
           setActiveWorlds( data.activeWorlds );
+          setMaxPlayers( data.maxPlayers );
         });
 
         // load chat
