@@ -51,6 +51,8 @@ gWorlds = []
 serverVersion = null
 
 pushRecentChat = ( message ) ->
+  if recentChat.length > config.maxRecentChatMessages
+    recentChat = recentChat.slice -(config.maxRecentChatMessages - 1)
   recentChat.push message
 
 getActiveWorlds = ->

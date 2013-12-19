@@ -79,6 +79,13 @@ If you want to serve this over port 80, I recommend having a real web server
 like apache or nginx in front of node.  You *can* run server.coffee as root to
 use port 80 but it's not recommended.
 
+**maxRecentChatMessages**
+
+Number of chat messages to keep (default 100)
+
+Setting this too high can vastly increase initial page load time and bloat
+memory usage.
+
 **starbound**
 
 Paths for assets, executables, and whatnot.
