@@ -158,6 +158,10 @@ serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
     io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
+  isPublic = false
+  for password in info.config.serverPasswords
+    if '' == password
+      isPublic = true
   resData =
     serverName: config.serverName
     status: info.status
@@ -165,6 +169,8 @@ getServerStatus = ( req, res, next ) ->
     playersOnline: playersOnline
     activeWorlds: getActiveWorlds()
     version: serverVersion
+    maxPlayers: info.config.maxPlayers
+    public: isPublic
   res.send resData
   return next()
 
