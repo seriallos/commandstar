@@ -1,4 +1,6 @@
 {
+  "version": "1.0.0",
+  "name": "starboundweb",
   "dependencies": {
     "restify": "2.6.0",
     "tail": "0.3.2",
