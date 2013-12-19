@@ -9,3 +9,4 @@
 * Decompose server.coffee
     * Tests for server state maintenance
     * Tests for REST endpoints
+* Paging for chat logs (server/chat).  Gets REAL big otherwise
