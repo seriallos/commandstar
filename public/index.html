@@ -55,9 +55,16 @@
                 Server Info
               </h3>
             </div>
-            <div id="serverVersion" class="panel-body">
-              n/a
-            </div>
+            <table class="table table-bordered table-condensed">
+              <tr>
+                <td>Version</td>
+                <td id="serverVersion"></td>
+              </tr>
+              <tr>
+                <td>Access</td>
+                <td id="serverAccess"></td>
+              </tr>
+            </table>
           </div>
 
         </div>
@@ -147,6 +154,12 @@
         $('#serverVersion').html( version );
       };
 
+      var setServerAccess = function( public ) {
+        $('#serverAccess').html( 
+          public ? 'Open' : 'Password Required'
+        );
+      };
+
       var setServerStatus = function( status ) {
         $('#serverStatus').removeClass();
         $('#serverStatus').addClass('label');
@@ -220,6 +233,7 @@
         $.get( apiBase + "/server/status", function( data ) {
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
+          setServerAccess( data.public );
           setServerStatus( data.status );
           setServerName( data.serverName );
           setActiveWorlds( data.activeWorlds );
