@@ -6,6 +6,7 @@ Things I can possibly do
 * Captain's Log
 * User notes
 * Chat colors?  Either hide them or use them
+* Rewrite spaghetti jQuery frontend using Angular/Ember/etc
 * Decompose server.coffee
     * Tests for server state maintenance
     * Tests for REST endpoints
@@ -13,6 +14,8 @@ Things I can possibly do
 * Relay chat to IRC
 * upstart / init.d scripts
 * modPath, display mods running on the server using standard format
+* Config for custom JS/CSS that won't get blown away by git pull
+* Server MOTD / description
 
 Things when tech exists
 
