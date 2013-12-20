@@ -12,6 +12,7 @@ Things I can possibly do
 * Paging for chat log API (server/chat).  Gets REAL big otherwise
 * Relay chat to IRC
 * upstart / init.d scripts
+* modPath, display mods running on the server using standard format
 
 Things when tech exists
 
