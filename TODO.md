@@ -16,6 +16,7 @@ Things I can possibly do
 * modPath, display mods running on the server using standard format
 * Config for custom JS/CSS that won't get blown away by git pull
 * Server MOTD / description
+* Watch config file for changes, emit changes to frontend
 
 Things when tech exists
 
