@@ -120,7 +120,17 @@
         return niceTime;
       };
 
+      // from http://stackoverflow.com/questions/1219860/html-encoding-in-javascript-jquery
+      function htmlEncode(value){
+        //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+        //then grab the encoded contents back out.  The div never exists on the page.
+        return $('<div/>').text(value).html();
+      }
+
       var addChatRow = function( who, what, when ) {
+        // encode who and what
+        who = htmlEncode( who );
+        what = htmlEncode( what );
         $('#chatlog').append(
           '<tr>'+
             '<td>' + chatNiceTime( when ) + '</td>' +
