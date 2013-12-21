@@ -5,8 +5,14 @@ serverName: CommandStar!
 # Description of your server.
 # HTML tags are supported.
 # Leave empty to hide the Server Description panel
-serverDescription: "<strong>Welcome!</strong> Enter information about your server here!"
+# Tip: The > operator lets you write multiline configuration without
+#   worrying about quotes.
+serverDescription: >
+  <strong>Welcome!</strong><br/>
+  Enter information about your server here!
 
+# empty serverDescription example:
+#serverDescription:
 
 # --- Server Paths and Files ---
 starbound:
@@ -40,9 +46,14 @@ maxRecentChatMessages: 100
 # list of additional CSS files to load
 # These must live in public/css/
 # They are loaded dynamically after the DOM has loaded so things might flash.
+# Additional files must have the - before them, this is a YAML array
 customCss:
   - bootstrap-theme.min.css
 
+# Multiple CSS files should follow this format:
+#customCss:
+#  - theme1.css
+#  - theme2.css
 
 # --- HipChat ---
 # To enable, you'll need to set the hipchat.token configuration to your API key
@@ -52,6 +63,7 @@ customCss:
 # For more info, check out their website: https://www.hipchat.com/
 
 hipchat:
+  token:
   # This room must already exist!
   room: Starbound
   user: Server
