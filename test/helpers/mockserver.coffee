@@ -12,7 +12,8 @@ class MockServer
   LINE_PLAYER_CONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) connected"
 
   # Info: Reaping client 'Seriallos' <4> (209.6.253.90:49294) connection
-  LINE_PLAYER_DISCONNECT: "Info: Reaping client '%s' <%s> (0.0.0.0:0) connection"
+  LINE_PLAYER_DISCONNECT: "Info: Reaping client '%s' <%s> (0.0.0.0:0) "+
+                          "connection"
 
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
   LINE_SERVER_START: "Info: Done loading Star::Root"
@@ -28,7 +29,18 @@ class MockServer
     "clearUniverseFiles" : false,
     "musicVol" : 100,
     "checkAssetsDigest" : false,
-    "rootKey" : "MIICCgKCAgEAuuxHOxa47eCix12TeI1KiDuSvu6Yculxl3yOzXDGG3OfS3A1sUioUy5wM8YZwoI0jpiVxsyZgsFZtzbO948H/v47I6YXwfGJ0ciw0RrHfxgPpeoTEEBOckWYJAFYWmF0xh5tN7RxMkVwFcGSFImgsA83h4xNvC9m+eiLs741sCfs36qD5Ka0ApI2RzeruKbGDZ/lBy/E/3HfLWOituTu37WZEbkFSruc0zu6aNAeEJB7vV4pun4BaEX7MtMzIokvGfzxRYJNlp6+T7McMAcNHQShkWx7cVd8TPzEUe7oafmrw0EM77Ja5PIil0w0Zr3Z1ITKI+G1zGSeAvjdO6N4hMUEthcT5H7YDuVZVb/pSPGAojIjh7lhoFZBI+2k9mOFMV+D6ysWbfScfaczRW9W6Gs5Kt/Gqa+iLGR6P4Xa9pOfjVz/mIW1HzYjPcjXqhC4rsiur1wlkqljowcK5dyufb79eeULUgq9j7g2lBDkEuvzm83plrwvSKKRFToB8D4nFW01c+HAbpNZdEW1r+J+NdV8Meoo4sB9+8wEfnQadS/eGEqNwh6CPVIXTubpzqgXiLCowFjRQ0O9m5GjrsnC8vGbNZOxvxp/gM6uhoYEVm2QvZPFRjsBiOEWi6/Z5YXs3fa2528JPBe/bGOb+QA8NUiyIFfPl/c4muFoR81yixkCAwEAAQ==",
+    "rootKey" : "MIICCgKCAgEAuuxHOxa47eCix12TeI1KiDuSvu6Yculxl3yOzXDGG3OfS3A"+
+                "1sUioUy5wM8YZwoI0jpiVxsyZgsFZtzbO948H/v47I6YXwfGJ0ciw0RrHfx"+
+                "gPpeoTEEBOckWYJAFYWmF0xh5tN7RxMkVwFcGSFImgsA83h4xNvC9m+eiLs"+
+                "741sCfs36qD5Ka0ApI2RzeruKbGDZ/lBy/E/3HfLWOituTu37WZEbkFSruc"+
+                "0zu6aNAeEJB7vV4pun4BaEX7MtMzIokvGfzxRYJNlp6+T7McMAcNHQShkWx"+
+                "7cVd8TPzEUe7oafmrw0EM77Ja5PIil0w0Zr3Z1ITKI+G1zGSeAvjdO6N4hM"+
+                "UEthcT5H7YDuVZVb/pSPGAojIjh7lhoFZBI+2k9mOFMV+D6ysWbfScfaczR"+
+                "W9W6Gs5Kt/Gqa+iLGR6P4Xa9pOfjVz/mIW1HzYjPcjXqhC4rsiur1wlkqlj"+
+                "owcK5dyufb79eeULUgq9j7g2lBDkEuvzm83plrwvSKKRFToB8D4nFW01c+H"+
+                "AbpNZdEW1r+J+NdV8Meoo4sB9+8wEfnQadS/eGEqNwh6CPVIXTubpzqgXiL"+
+                "CowFjRQ0O9m5GjrsnC8vGbNZOxvxp/gM6uhoYEVm2QvZPFRjsBiOEWi6/Z5"+
+                "YXs3fa2528JPBe/bGOb+QA8NUiyIFfPl/c4muFoR81yixkCAwEAAQ==",
     "serverPasswords" : [ "", "duckies", "swordfish" ],
     "maximizedResolution" : [ 1000, 600 ],
     "maxFrameskip" : 5,
