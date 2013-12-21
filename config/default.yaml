@@ -19,6 +19,7 @@ starbound:
 # --- Windows paths ---
 # Use something like this for Windows instead of the above lines
 #
+#starbound:
 #  binPath: C:\Games\Steam\SteamApps\common\Starbound\win32
 #  assetsPath: C:\Games\Steam\SteamApps\common\Starbound\assets
 #  dataPath: C:\Games\Steam\SteamApps\common\Starbound\universe
