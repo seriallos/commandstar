@@ -1,6 +1,30 @@
 CHANGELOG
 =========
 
+0.1.3
+-----
+
+**New**
+
+* Configurable server description
+* Display max number of players
+* Display Open/Password Protected server status
+* Configurable Custom CSS support
+
+**Fixes/Tweaks**
+
+* Slash commands are ignored
+* Chat color tokens are ignored
+* Long player names no longer break layout
+* Various chat display tweaks (table style, HTML encoding, etc)
+* Configurable number of chat messages to retain
+  * Fixes long initial page load and memory issues
+
+**Technical**
+
+* Project passes coffeelint
+* doTests.sh script to easily run all tests
+
 0.1.2
 -----
 
