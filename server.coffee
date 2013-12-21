@@ -193,6 +193,16 @@ getChat = ( req, res, next ) ->
   res.send recentChat
   return next()
 
+getPlayerList = (req, res, next) ->
+  plist = []
+  for i of playersOnline
+    plist.push(nickname: playersOnline[i])
+  resData =
+    playercount: playersOnline.length
+    playerlist: plist
+  res.send resData
+  next()
+
 server = restify.createServer()
 server.name = "CommandStar"
 server.use restify.CORS()
@@ -219,6 +229,7 @@ server.get '/', ( req, res, next ) ->
 
 server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
+server.get( '/server/playerList', getPlayerList )
 
 ioOpts =
   'log level': 1
