@@ -70,15 +70,20 @@ getActiveWorlds = ->
   }
   t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
 
+isSlashCommand = ( message ) ->
+  message[0] == '/'
+
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
     who: who
     what: what
     when: chatWhen
-  pushRecentChat msg
-  if fromActiveLog
-    io.sockets.emit 'chat', msg
-    notifyHipchat "#{who}: #{what}"
+  # ignore slash commands
+  if not isSlashCommand what
+    pushRecentChat msg
+    if fromActiveLog
+      io.sockets.emit 'chat', msg
+      notifyHipchat "#{who}: #{what}"
 
 info.on 'statusChange', ( status ) ->
   io.sockets.emit 'serverStatus', { status: status }
