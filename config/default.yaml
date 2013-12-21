@@ -1,6 +1,10 @@
 # Name of the server, displayed as the header of the page
+# If this is empty, it won't display the header at the top of the page at all
 serverName: CommandStar!
 
+# Description of your server.
+# HTML tags are supported.
+# Leave empty to hide the Server Description panel
 serverDescription: "<strong>Welcome!</strong> Enter information about your server here!"
 
 

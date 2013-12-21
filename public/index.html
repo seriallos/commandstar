@@ -240,7 +240,11 @@
         });
       };
       var setServerDescription = function( desc ) {
-        $('#serverDesc').html( desc );
+        if( desc ) {
+          $('#serverDesc').html( desc );
+        } else {
+          $('#serverDescPanel').hide();
+        }
       };
 
       var apiBase = '';
