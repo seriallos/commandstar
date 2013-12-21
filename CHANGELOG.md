@@ -12,6 +12,7 @@ CHANGELOG
 
 **Fixes/Tweaks**
 
+* Player list is sorted by name
 * Reduced logging from server.coffee
 * Player names surrounded by <brackets> in chat log
 * Properly remove multiple color codes in player names and chat messages
