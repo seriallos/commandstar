@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="/css/commandstar.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -19,7 +18,7 @@
     <div class="container">
       <h1>
         <!-- <span id="serverStatus" class="label label-warning">N/A</span> -->
-        <span id="serverName">Starbound Server</span>
+        <span id="serverName">&nbsp;</span>
       </h1>
 
       <div class="row">
@@ -134,7 +133,6 @@
 
       function removeColorCodes( str ) {
         newStr = str.replace(/\^#[0-9a-fA-F]+;/,'');
-        console.log( newStr );
         return newStr;
       };
 
@@ -261,6 +259,13 @@
           setServerName( data.serverName );
           setActiveWorlds( data.activeWorlds );
           setMaxPlayers( data.maxPlayers );
+
+          // apply custom CSS
+          $.each( data.css, function ( key, cssFile ) {
+            url = '/css/'+cssFile;
+            link = '<link rel="stylesheet" type="text/css" href='+url+'>';
+            $(link).appendTo('head');
+          });
         });
 
         // load chat
