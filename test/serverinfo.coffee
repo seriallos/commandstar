@@ -13,7 +13,8 @@ describe 'ServerInfo', ->
     info.should.have.property "binPath", "/opt/starbound/bin"
     info.should.have.property "assetsPath", "/opt/starbound/assets"
     info.should.have.property "dataPath", "/opt/starbound/bin/universe"
-    info.should.have.property "configPath", "/opt/starbound/bin/starbound.config"
+    defaultConfigPath =  "/opt/starbound/bin/starbound.config"
+    info.should.have.property "configPath", defaultConfigPath
 
   it 'should allow option overrides', ->
     info = new ServerInfo badOpts
