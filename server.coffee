@@ -181,6 +181,7 @@ getServerStatus = ( req, res, next ) ->
     version: serverVersion
     maxPlayers: info.config.maxPlayers ? 8 # guess at default?
     public: isPublic
+    css: config.customCss
   res.send resData
   return next()
 
