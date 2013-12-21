@@ -217,7 +217,7 @@ server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
 
 ioOpts =
-  'log level': 2
+  'log level': 1
 
 io = socketio.listen server, ioOpts
 
