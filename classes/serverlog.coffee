@@ -15,7 +15,9 @@ class ServerLog extends EventEmitter
   LINE_PLAYER_CONNECT_REGEX: /^Info: Client '([^>]+)' <[^>]+> \(.*\) connected/
 
   # Info: Reaping client 'Seriallos' <4> (209.6.253.90:49294) connection
-  LINE_PLAYER_DISCONNECT_REGEX: /^Info: Reaping client '([^']+)' <[^>]+> \(.*\) connection/
+  LINE_PLAYER_DISCONNECT_REGEX: ///
+    ^Info:\sReaping\sclient\s'([^']+)'\s<[^>]+>\s\(.*\)\sconnection
+  ///
 
   # Info: Loading world db for world delta:-35537062:25816799:-18582281:11:6
 
@@ -41,7 +43,9 @@ class ServerLog extends EventEmitter
   ///
 
   # Info: Server version 'Beta v. Offended Koala' '623' '424'
-  LINE_SERVER_VERSION_REGEX: /^Info: Server version '([^']+)' '([^']+)' '([^']+)'/
+  LINE_SERVER_VERSION_REGEX: ///
+    ^Info:\sServer\sversion\s'([^']+)'\s'([^']+)'\s'([^']+)'
+  ///
 
   logTail = null
 
