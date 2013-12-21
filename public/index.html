@@ -169,6 +169,7 @@
       var setPlayersOnline = function( players ) {
         $('#players li').remove();
         $('#numOnline').html( players.length );
+        players = players.sort();
         $.each( players, function( key, val ) {
           note = removeColorCodes( val );
           if( userNotes[ val ] ) {
