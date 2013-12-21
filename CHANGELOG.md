@@ -16,9 +16,9 @@ CHANGELOG
 
 * Player list is sorted by name
 * Reduced logging from server.coffee
-* Player names surrounded by <brackets> in chat log
+* Player names surrounded by &glt;brackets&lt; in chat log
 * Properly remove multiple color codes in player names and chat messages
-* Tweaks to default player list and system list (thanks *malobre*!)
+* Tweaks to default player list and system list (thanks **malobre**!)
 
 **Technical**
 
