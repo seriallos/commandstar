@@ -48,7 +48,7 @@ class ServerInfo extends EventEmitter
     configFile = @configPath
     fs.readFile configFile, 'utf8', ( err, data ) =>
       if err
-        error = 
+        error =
           message: "Unable to read config file: #{err}"
           cause: err
         next( error )
