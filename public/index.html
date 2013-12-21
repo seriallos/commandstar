@@ -127,9 +127,17 @@
         return $('<div/>').text(value).html();
       }
 
+      function removeColorCodes( str ) {
+        newStr = str.replace(/\^#[0-9a-fA-F]+;/,'');
+        console.log( newStr );
+        return newStr;
+      };
+
       var addChatRow = function( who, what, when ) {
         // encode who and what
+        who = removeColorCodes( who );
         who = htmlEncode( who );
+        what = removeColorCodes( what );
         what = htmlEncode( what );
         $('#chatlog').append(
           '<tr>'+
@@ -147,7 +155,7 @@
         $('#players li').remove();
         $('#numOnline').html( players.length );
         $.each( players, function( key, val ) {
-          note = val;
+          note = removeColorCodes( val );
           if( userNotes[ val ] ) {
             note += " ("+userNotes[val]+")";
           }
