@@ -1,14 +1,18 @@
-
+# Name of the server, displayed as the header of the page
 serverName: CommandStar!
 
-# Port for web server
+
+# --- Web Server Port ---
 # If you use port 80, you'll need to run server.coffee using sudo.
 # This isn't super secure right now so be warned.
-
 listenPort: 8080
 
+
+# Number of chat messages to keep in memory
 maxRecentChatMessages: 100
 
+
+# --- Server Paths and Files ---
 starbound:
   binPath: /opt/starbound/bin
   assetsPath: /opt/starbound/assets
@@ -16,6 +20,7 @@ starbound:
   logFile: /opt/starbound/bin/starbound_server.log
   configFile: /opt/starbound/bin/starbound.config
 
+# --- Windows paths ---
 # Use something like this for Windows instead of the above lines
 #
 #  binPath: C:\Games\Steam\SteamApps\common\Starbound\win32
@@ -24,7 +29,16 @@ starbound:
 #  logFile: C:\Games\Steam\SteamApps\common\Starbound\starbound_server.log
 #  configFile: C:\Games\Steam\SteamApps\common\Starbound\starbound.config
 
-# Default hipchat configs
+
+# --- Custom CSS ---
+# list of additional CSS files to load
+# These must live in public/css/
+# They are loaded dynamically after the DOM has loaded so things might flash.
+customCss:
+  - bootstrap-theme.min.css
+
+
+# --- HipChat ---
 # To enable, you'll need to set the hipchat.token configuration to your API key
 # This is only for relaying in-game chat to a HipChat room.  The web chat
 # works without this.
