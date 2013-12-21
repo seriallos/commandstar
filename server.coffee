@@ -191,6 +191,7 @@ getChat = ( req, res, next ) ->
   return next()
 
 server = restify.createServer()
+server.name = "CommandStar"
 server.use restify.CORS()
 
 server.get /\/js\/?.*/, restify.serveStatic({
