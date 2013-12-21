@@ -1,7 +1,9 @@
 commandstar
 ===========
 
-Starbound Server Manager
+Starbound Server Status Website
+
+The best server resource for your players!
 
 [![Build Status](https://travis-ci.org/seriallos/commandstar.png)](https://travis-ci.org/seriallos/commandstar)
 
@@ -19,6 +21,9 @@ Features
     * Relay game chat to HipChat
 * Real-time server up/down status
 * Active solar systems: sector, X, and Y
+* Server Description
+* Easy to install, easy to run
+* Mobile-friendly design
 
 **Upcoming**
 
@@ -32,7 +37,6 @@ Tested on Ubuntu 12.04 and Windows 7
 
 * Starbound server
 * NodeJS 0.10.x
-    * Coffeescript 1.6.3
 
 Installation
 ============
@@ -40,6 +44,12 @@ Installation
 This is still very early stuff!
 
 **Ubuntu**
+
+**Make sure you have NodeJS 0.10.x!**
+
+You will likely need to install the latest version from the chris-lea PPA.
+
+https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 
     git clone https://github.com/seriallos/commandstar
     cd commandstar
@@ -59,7 +69,7 @@ You can also download a release tgz or ZIP and skip the github clone process.
 * Download the latest release of CommandStar: https://github.com/seriallos/commandstar/releases/
 * Extract the archive
 * Edit config/default.yaml (or create config/{YOUR-MACHINENAME-HERE}.yaml)
-    * Add a nice server name
+    * Add a nice server name and description
     * Set up the starbound paths and files for your machine.
 * Double click runServer.bat to start the CommandStar process
 * Visit http://localhost:8080/
@@ -70,6 +80,24 @@ Configuration
 **serverName**
 
 Name to display as the title of the page.
+
+**serverDescription**
+
+Long description of your server.  Include whatever you want or use it as a
+message of the day area.
+
+* HTML tags supported
+* An empty description will hide the Server Description panel completely.
+
+**starbound**
+
+Paths for assets, executables, and whatnot.
+
+* starbound.binPath: Directory that contains the executable
+* starbound.assetsPath: Starbound assets directory
+* starbound.dataPath: Starbound server universe directory
+* starbound.logFile: Full path to 'starbound_server.log'
+* starbound.configFile: Full path to 'starbound.config'
 
 **listenPort**
 
@@ -86,19 +114,12 @@ Number of chat messages to keep (default 100)
 Setting this too high can vastly increase initial page load time and bloat
 memory usage.
 
-**starbound**
+**customCss**
 
-Paths for assets, executables, and whatnot.
+List of custom CSS files to use on the page.
 
-starbound.binPath: Directory that contains the executable
-
-starbound.assetsPath: Starbound assets directory
-
-starbound.dataPath: Starbound server universe directory
-
-starbound.logFile: Full path to 'starbound_server.log'
-
-starbound.configFile: Full path to 'starbound.config'
+* Files must exist in public/css/
+* CSS is dynamically loaded after the DOM is ready
 
 **hipchat**
 
