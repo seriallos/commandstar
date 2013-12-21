@@ -138,34 +138,36 @@ serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
     notifyHipchat "#{playerId} left the server"
 
 serverLog.on "worldLoad", ( worldInfo, fromActiveLog ) ->
+  # gate all system functionality on a feature flag
+  if config.features.activeSystems
+    world = _.findWhere gWorlds, worldInfo
 
-  world = _.findWhere gWorlds, worldInfo
+    if not world
+      world = _.clone worldInfo
+      world.active = true
+      gWorlds.push world
+    else
+      world.active = true
 
-  if not world
-    world = _.clone worldInfo
-    world.active = true
-    gWorlds.push world
-  else
-    world.active = true
-
-  if fromActiveLog
-    data = { worlds: getActiveWorlds() }
-    io.sockets.emit 'worlds', data
+    if fromActiveLog
+      data = { worlds: getActiveWorlds() }
+      io.sockets.emit 'worlds', data
 
 serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
+  # gate all system functionality on a feature flag
+  if config.features.activeSystems
+    world = _.findWhere gWorlds, worldInfo
 
-  world = _.findWhere gWorlds, worldInfo
+    if world
+      # remove the world from the list
+      gWorlds = _.without( gWorlds, world )
+      # re-add with active false
+      world.active = false
+      gWorlds.push world
 
-  if world
-    # remove the world from the list
-    gWorlds = _.without( gWorlds, world )
-    # re-add with active false
-    world.active = false
-    gWorlds.push world
-
-  if fromActiveLog
-    data = { worlds: getActiveWorlds() }
-    io.sockets.emit 'worlds', data
+    if fromActiveLog
+      data = { worlds: getActiveWorlds() }
+      io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
   isPublic = false
@@ -183,6 +185,7 @@ getServerStatus = ( req, res, next ) ->
     maxPlayers: info.config.maxPlayers ? 8 # guess at default?
     public: isPublic
     css: config.customCss
+    features: config.features
   res.send resData
   return next()
 

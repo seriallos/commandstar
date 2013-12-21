@@ -212,32 +212,36 @@
         $('#serverName').html( name );
       };
 
-      var setActiveWorlds = function( worlds ) {
-        $('#numWorlds').html( worlds.length );
-        $('#worlds li').remove();
-        sectorNames = {
-          'alpha': 'Alpha',
-          'beta':  'Beta',
-          'gamma': 'Gamma',
-          'delta': 'Delta',
-          'sectorx': 'Sector X'
-        };
-        $.each( worlds, function( k, world ) {
-          out = '<li class="list-group-item">';
-          out += sectorNames[ world.sector ];
-          out += ': ';
-          out += world.x;
-          out += ', ';
-          out += world.y;
-          /*
-          // Planet and satellite number don't make any sense to me right now
-          out += '<br/>';
-          out += 'Planet ' + world.planet + ', ';
-          out += 'Satellite ' + world.satellite;
-          */
-          out += '</li>';
-          $('#worlds').append( out );
-        });
+      var setActiveWorlds = function( worlds, active ) {
+        if( active ) {
+          $('#numWorlds').html( worlds.length );
+          $('#worlds li').remove();
+          sectorNames = {
+            'alpha': 'Alpha',
+            'beta':  'Beta',
+            'gamma': 'Gamma',
+            'delta': 'Delta',
+            'sectorx': 'Sector X'
+          };
+          $.each( worlds, function( k, world ) {
+            out = '<li class="list-group-item">';
+            out += sectorNames[ world.sector ];
+            out += ': ';
+            out += world.x;
+            out += ', ';
+            out += world.y;
+            /*
+            // Planet and satellite number don't make any sense to me right now
+            out += '<br/>';
+            out += 'Planet ' + world.planet + ', ';
+            out += 'Satellite ' + world.satellite;
+            */
+            out += '</li>';
+            $('#worlds').append( out );
+          });
+        } else {
+          $('#activeSystemsPanel').hide();
+        }
       };
       var setServerDescription = function( desc ) {
         if( desc ) {
@@ -273,7 +277,7 @@
           setServerAccess( data.public );
           setServerStatus( data.status );
           setServerName( data.serverName );
-          setActiveWorlds( data.activeWorlds );
+          setActiveWorlds( data.activeWorlds, data.features.activeSystems );
           setMaxPlayers( data.maxPlayers );
 
           // apply custom CSS
