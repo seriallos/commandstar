@@ -12,7 +12,7 @@
 }
 
 #chatlog.table .chat-when {
-  width: 15%;
+  width: 10%;
   white-space: nowrap;
 }
 
@@ -21,10 +21,11 @@
   overflow: hidden;
   white-space: nowrap;
   word-wrap: break-word;
+  text-align: right;
 }
 
 #chatlog.table .chat-what {
-  width: 67%;
+  width: 72%;
   word-wrap: break-word;
 }
 
