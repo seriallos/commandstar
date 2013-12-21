@@ -15,6 +15,7 @@ Things I can possibly do
 * upstart / init.d scripts
 * modPath, display mods running on the server using standard format
 * Watch config file for changes, emit changes to frontend
+* Config validation
 
 Things when tech exists
 
