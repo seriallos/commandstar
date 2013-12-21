@@ -9,6 +9,8 @@ The best server resource for your players!
 
 Currently works for: **Offended Koala**
 
+Visit the [Demo Server!](http://commandstar.munshot.com:8080/)
+
 ![](https://raw.github.com/seriallos/commandstar/master/commandstar.png)
 
 Features
