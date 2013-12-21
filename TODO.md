@@ -16,6 +16,8 @@ Things I can possibly do
 * modPath, display mods running on the server using standard format
 * Watch config file for changes, emit changes to frontend
 * Config validation
+* Crash detection - watch logs for segfaults
+  * Clear status on crash
 
 Things when tech exists
 
