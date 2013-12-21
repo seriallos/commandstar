@@ -1,6 +1,5 @@
 Things I can possibly do
 
-* Server MOTD / description
 * Toggle active systems on/off
 * Relay chat to IRC
 * Persist state to local JSON files to handle restarts
