@@ -7,6 +7,8 @@ CHANGELOG
 **New**
 
 * Configuration flag to enable/disable active systems display
+* /server/players API endpoint (thanks https://github.com/malobre !)
+    * Alias: /server/playerList
 
 **Fixes/Tweaks**
 
