@@ -26,6 +26,7 @@ Features
 * Server Description
 * Easy to install, easy to run
 * Mobile-friendly design
+* API-compatible with starbound-servers.net
 
 **Upcoming**
 
