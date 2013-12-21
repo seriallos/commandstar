@@ -1,7 +1,34 @@
+
+/* Chatlog */
+
 #chatlog-wrap {
+  width: auto;
   height: 560px;
   overflow: auto;
 }
+
+#chatlog.table {
+  table-layout: fixed;
+}
+
+#chatlog.table .chat-when {
+  width: 15%;
+  white-space: nowrap;
+}
+
+#chatlog.table .chat-who {
+  width: 18%;
+  overflow: hidden;
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+#chatlog.table .chat-what {
+  width: 67%;
+  word-wrap: break-word;
+}
+
+/* Player list */
 
 #players {
   max-height: 575px;
@@ -11,3 +38,5 @@
 #players li.list-group-item {
   padding: 7px 15px 7px 15px;
 }
+
+

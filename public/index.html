@@ -76,6 +76,11 @@
             </div>
             <div id="chatlog-wrap">
               <table id="chatlog" class="table table-bordered table-condensed">
+                <colgroup>
+                  <col class="chat-when">
+                  <col class="chat-who">
+                  <col class="chat-what">
+                </colgroup>
               </table>
             </div>
           </div>
@@ -141,9 +146,9 @@
         what = htmlEncode( what );
         $('#chatlog').append(
           '<tr>'+
-            '<td>' + chatNiceTime( when ) + '</td>' +
-            '<td>' + who + '</td>' +
-            '<td>' + what + '</td>' +
+            '<td class="chat-when">' + chatNiceTime( when ) + '</td>' +
+            '<td class="chat-who">' + who + '</td>' +
+            '<td class="chat-what">' + what + '</td>' +
           '</tr>'
         );
         // keep chat scrolled to bottom
