@@ -189,6 +189,8 @@ getServerStatus = ( req, res, next ) ->
   res.send resData
   return next()
 
+# Used by starbound-servers.net.  Don't change data output without confirming
+# change with malobre
 getPlayerList = (req, res, next) ->
   plist = []
   for i of playersOnline
@@ -230,6 +232,7 @@ server.get '/', ( req, res, next ) ->
 server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
 server.get( '/server/playerList', getPlayerList )
+server.get( '/server/players', getPlayerList )
 
 ioOpts =
   'log level': 1
