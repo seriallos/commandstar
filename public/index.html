@@ -140,7 +140,7 @@
       }
 
       function removeColorCodes( str ) {
-        newStr = str.replace(/\^#[0-9a-fA-F]+;/,'');
+        newStr = str.replace(/\^#[0-9a-fA-F]+;/,'','g');
         return newStr;
       };
 
