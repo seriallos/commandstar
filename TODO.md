@@ -1,7 +1,5 @@
 Things I can possibly do
 
-* Toggle active systems on/off
-* Relay chat to IRC
 * Persist state to local JSON files to handle restarts
 * Chat colors?  Either hide them or use them
 * UUID location from clientcontext files
@@ -17,7 +15,9 @@ Things I can possibly do
 * Watch config file for changes, emit changes to frontend
 * Config validation
 * Crash detection - watch logs for segfaults
-  * Clear status on crash
+    * Clear status on crash
+* Adapter system for notifications
+    * Don't want to load hipchat/IRC for admins not using them
 
 Things when tech exists
 

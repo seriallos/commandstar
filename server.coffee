@@ -7,9 +7,28 @@ _ = require 'underscore'
 {ServerInfo} = require './classes/serverinfo.coffee'
 {ServerLog} = require './classes/serverlog.coffee'
 HipChat = require 'node-hipchat'
+irc = require 'irc'
 
 if config.hipchat?.token
   hipchat = new HipChat config.hipchat.token
+  console.log "HipChat integration enabled"
+
+if config.irc
+  ircClient = new irc.Client(
+    config.irc.server,
+    config.irc.nick,
+    {
+      userName: config.irc.user
+      password: config.irc.password
+    }
+  )
+  ircClient.addListener 'error', (message) ->
+    console.log "IRC Relay Error"
+    console.log message
+  ircClient.addListener 'registered', (message) ->
+    console.log "Connected to IRC #{config.irc.server}:#{config.irc.channel}"
+    ircClient.join config.irc.channel
+
 
 # TODO: Pull this into a module or something
 notifyHipchat = ( msg ) ->
@@ -24,6 +43,10 @@ notifyHipchat = ( msg ) ->
     hipchat.postMessage options, ( response, error ) ->
       if error
         console.log "Hipchat notification error: #{error}"
+
+notifyIrc = ( msg ) ->
+  if ircClient
+    ircClient.say config.irc.channel, msg
 
 info = new ServerInfo({
   binPath: config.starbound.binPath
@@ -84,6 +107,7 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
     if fromActiveLog
       io.sockets.emit 'chat', msg
       notifyHipchat "#{who}: #{what}"
+      notifyIrc "#{who}: #{what}"
 
 info.on 'statusChange', ( status ) ->
   io.sockets.emit 'serverStatus', { status: status }
@@ -101,6 +125,7 @@ serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
     io.sockets.emit 'chat', msg
     io.sockets.emit 'serverStatus', { status: 1 }
     notifyHipchat "Server has started!"
+    notifyIrc "Server has started!"
 
 serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
   msg = { who: 'SERVER', what: 'Stopping!', when: chatWhen }
@@ -111,6 +136,7 @@ serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
     io.sockets.emit 'chat', msg
     io.sockets.emit 'serverStatus', { status: 0 }
     notifyHipchat "Server has stopped!"
+    notifyIrc "Server has stopped!"
 
 serverLog.on "serverVersion", ( version, fromActiveLog ) ->
   serverVersion = version
@@ -125,6 +151,7 @@ serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
     io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} joined the server"
+    notifyIrc "#{playerId} joined the server"
 
 serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
   idx = playersOnline.indexOf playerId
@@ -136,6 +163,7 @@ serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
     io.sockets.emit 'chat', msg
     notifyHipchat "#{playerId} left the server"
+    notifyIrc "#{playerId} left the server"
 
 serverLog.on "worldLoad", ( worldInfo, fromActiveLog ) ->
   # gate all system functionality on a feature flag

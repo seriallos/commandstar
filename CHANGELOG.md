@@ -6,6 +6,7 @@ CHANGELOG
 
 **New**
 
+* Relay in-game chat to IRC. See config/default.yaml for details on configuring
 * Configuration flag to enable/disable active systems display
 * /server/players API endpoint (thanks https://github.com/malobre !)
     * Alias: /server/playerList

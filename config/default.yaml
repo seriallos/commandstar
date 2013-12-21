@@ -74,3 +74,19 @@ hipchat:
   user: Server
   color: yellow
   notify: false
+
+# --- IRC ---
+# If you uncomment the IRC block or put it in your server-specific config,
+# CommandStar will attempt to connect to that server/channel and relay in-game
+# messages to IRC.
+# Very early code without hooks into all the configuration possible.  Please
+# let me know if you need deeper functionality.
+# More docs on the IRC module at
+# https://node-irc.readthedocs.org/en/latest/index.html
+
+#irc:
+#  server:
+#  nick: "StarboundBot"
+#  channel: "#starbound"
+#  user:
+#  password:

@@ -137,3 +137,14 @@ sort of like IRC.  You must have your own account set up at www.hipchat.com
     * This room must *already* exist.  It will not be created automatically
 * hipchat.notify: Whether to cause a notification alert or not (defaults to false)
 * hipchat.color: Background color for the message (defaults to yellow)
+
+**IRC**
+
+Used to have CommandStar connect to an IRC channel and relay in-game chat.
+This chat is **one-way**, from the game to IRC.
+
+* irc.server: IRC host. Defaults to *empty*
+* irc.nick: Nickname the bot should use. Defaults to StarboundBot
+* irc.channel: Channel to connect to.  Defaults to "#starbound"
+* irc.user: Username to connect to the server as.  Defaults to empty.
+* irc.password: Password to use when connected.  Defaults to empty.
