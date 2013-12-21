@@ -118,7 +118,8 @@ serverLog.on "serverVersion", ( version, fromActiveLog ) ->
 
 serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
   playersOnline.push playerId
-  msg = { who: 'SERVER', what: playerId + ' joined the server.', when: new Date() }
+  txt = playerId + ' joined the server.'
+  msg = { who: 'SERVER', what: txt, when: new Date() }
   pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
@@ -128,7 +129,8 @@ serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
 serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
   idx = playersOnline.indexOf playerId
   playersOnline.splice idx, 1
-  msg = { who: 'SERVER', what: playerId + ' left the server.', when: new Date() }
+  txt = playerId + ' left the server.'
+  msg = { who: 'SERVER', what: txt, when: new Date() }
   pushRecentChat msg
   if fromActiveLog
     io.sockets.emit 'playerCount', { playersOnline: playersOnline }
