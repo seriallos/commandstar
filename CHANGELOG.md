@@ -1,6 +1,24 @@
 CHANGELOG
 =========
 
+0.1.4 - In Progress
+-----
+
+**New**
+
+* Configuration flag to enable/disable active systems display
+
+**Fixes/Tweaks**
+
+* Reduced logging from server.coffee
+* Player names surrounded by <brackets> in chat log
+* Properly remove multiple color codes in player names and chat messages
+
+**Technical**
+
+* No longer install testing dependencies by default
+
+
 0.1.3
 -----
 
