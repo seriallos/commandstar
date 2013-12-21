@@ -174,6 +174,7 @@ getServerStatus = ( req, res, next ) ->
       isPublic = true
   resData =
     serverName: config.serverName
+    serverDesc: config.serverDescription
     status: info.status
     gamePort: info.config.gamePort
     playersOnline: playersOnline

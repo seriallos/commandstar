@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col-sm-3">
 
-          <div class="panel panel-primary">
+          <div class="panel panel-primary" id="playersPanel">
             <div class="panel-heading active">
               <h3 class="panel-title">
                 Players
@@ -37,7 +37,7 @@
             </ul>
           </div>
 
-          <div class="panel panel-primary">
+          <div class="panel panel-primary" id="activeSystemsPanel">
             <div class="panel-heading active">
               <h3 class="panel-title">
                 Active Systems
@@ -48,7 +48,7 @@
             </ul>
           </div>
 
-          <div class="panel panel-primary">
+          <div class="panel panel-primary" id="serverInfoPanel">
             <div class="panel-heading active">
               <h3 class="panel-title">
                 Server Info
@@ -69,7 +69,15 @@
         </div>
         <div class="col-sm-9">
 
-          <div class="panel panel-primary">
+          <div class="panel panel-primary" id="serverDescPanel">
+            <div class="panel-heading">
+              <h3 class="panel-title">Server Description</h3>
+            </div>
+            <div class="panel-body" id="serverDesc">
+            </div>
+          </div>
+
+          <div class="panel panel-primary" id="chatlog-panel">
             <div class="panel-heading">
               <h3 class="panel-title">Game Chat</h3>
             </div>
@@ -231,6 +239,9 @@
           $('#worlds').append( out );
         });
       };
+      var setServerDescription = function( desc ) {
+        $('#serverDesc').html( desc );
+      };
 
       var apiBase = '';
       var socket = io.connect(apiBase);
@@ -252,6 +263,7 @@
       $(document).ready(function(){
         // load server status
         $.get( apiBase + "/server/status", function( data ) {
+          setServerDescription( data.serverDesc );
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
           setServerAccess( data.public );
