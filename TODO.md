@@ -1,6 +1,5 @@
 Things I can possibly do
 
-* Config for custom JS/CSS that won't get blown away by git pull
 * Server MOTD / description
 * Relay chat to IRC
 * Persist state to local JSON files to handle restarts
