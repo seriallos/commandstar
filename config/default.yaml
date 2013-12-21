@@ -37,6 +37,7 @@ starbound:
 # Toggle various features on and off
 features:
   activeSystems: true
+  apiFooter: true
 
 # --- Web Server Port ---
 # If you use port 80, you'll need to run server.coffee using sudo.

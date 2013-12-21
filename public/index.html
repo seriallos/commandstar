@@ -95,16 +95,18 @@
         </div>
       </div>
 
-      <h2>API</h2>
+      <div id="apiFooter">
+        <h2>API</h2>
 
-      <ul>
-        <li><a href="/server/status">Server Status</a></li>
-        <li><a href="/server/chat">Server Chat</a></li>
-        <li>
-          <a href="/server/playerList">Player List</a>
-            (for <a href="http://starbound-servers.net">starbound-servers.net</a>)
-          </li>
-      </ul>
+        <ul>
+          <li><a href="/server/status">Server Status</a></li>
+          <li><a href="/server/chat">Server Chat</a></li>
+          <li>
+            <a href="/server/playerList">Player List</a>
+              (for <a href="http://starbound-servers.net">starbound-servers.net</a>)
+            </li>
+        </ul>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -255,6 +257,13 @@
           $('#serverDescPanel').hide();
         }
       };
+      var setDisplayApiFooter = function( active ) {
+        if( active ) {
+          $('#apiFooter').show();
+        } else {
+          $('#apiFooter').hide();
+        }
+      };
 
       var apiBase = '';
       var socket = io.connect(apiBase);
@@ -284,6 +293,7 @@
           setServerName( data.serverName );
           setActiveWorlds( data.activeWorlds, data.features.activeSystems );
           setMaxPlayers( data.maxPlayers );
+          setDisplayApiFooter( data.features.apiFooter );
 
           // apply custom CSS
           $.each( data.css, function ( key, cssFile ) {

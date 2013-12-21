@@ -44,3 +44,9 @@
   max-height: 204px;
   overflow: auto;
 }
+
+/* API Footer */
+
+#apiFooter {
+  display: none;
+}
