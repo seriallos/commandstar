@@ -303,7 +303,9 @@
         setServerStatus( data.status );
       });
       socket.on('worlds', function( data ) {
-        setActiveWorlds( data.worlds );
+        // this is only called if the server has this feature set to true so
+        // just assume that active is true.
+        setActiveWorlds( data.worlds, true );
       });
       $(document).ready(function(){
         // load server status
