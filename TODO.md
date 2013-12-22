@@ -16,6 +16,9 @@ Things I can possibly do
 * modPath, display mods running on the server using standard format
 * Watch config file for changes, emit changes to frontend
 * Config validation
+* Error reports back to the mothership
+  * Opt-in
+  * Collect errors, non-private configurations, etc
 
 Things when tech exists
 
