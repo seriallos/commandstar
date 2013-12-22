@@ -157,11 +157,23 @@
         what = removeColorCodes( what );
         what = htmlEncode( what );
 
-        if(($("#chatlog").height() - $("#chatlog-wrap").scrollTop() - 558) == 0){
-          var goToBottom = true;
-        }
-        else{
-          var goToBottom = false;
+        // get a bunch of positional/height information
+        var tableHeight = $('#chatlog').height();
+        var wrapHeight = $('#chatlog-wrap').height();
+        var scrollHeight = $('#chatlog-wrap').prop('scrollHeight');
+        var scrollTop = $('#chatlog-wrap').scrollTop();
+
+        // determine if we're at the bottom.
+        // this works when the table hasn't yet filled up the wrap div
+        // TODO: test with weird wrap heights to see if this it always adds up
+        var atBottom = ( wrapHeight + scrollTop == scrollHeight );
+
+        // by default, scroll to bottom
+        var goToBottom = true;
+
+        // keep position at bottom if we're already there.
+        if( !atBottom ) {
+          goToBottom = false;
         }
 
         $('#chatlog').append(
@@ -172,9 +184,8 @@
           '</tr>'
         );
 
-        //If the scroll is already at bottom before we have added msg
         if(goToBottom){
-          // keep chat scrolled to bottom
+          // get the scrollHeight again since a new chat row will change it
           var h = $('#chatlog-wrap').prop('scrollHeight');
           $('#chatlog-wrap').scrollTop( h );
         }
