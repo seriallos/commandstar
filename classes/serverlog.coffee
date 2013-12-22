@@ -9,6 +9,7 @@ class ServerLog extends EventEmitter
 
   LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)/
   LINE_SERVER_START_REGEX: /^Info: Done loading Star::Root/
+  LINE_SERVER_CRASHSTART_REGEX: /^Info: Done loading Star::Root[\s]Error:/
   LINE_SERVER_STOP_REGEX: /^Info: Server shutdown gracefully/
 
   # Info: Client 'Seriallos' <1> (209.6.253.90:61374) connected
@@ -101,6 +102,9 @@ class ServerLog extends EventEmitter
     if @isServerStopLine data
       @emit "serverStop", whn, fromActiveLog
 
+    if @isServerCrashAtStartLine data
+      @emit "serverCrashAtStart", whn, fromActiveLog
+
     if @isPlayerConnectLine data
       playerId = @parsePlayerConnectLine data
       @emit "playerConnect", playerId, fromActiveLog
@@ -133,6 +137,9 @@ class ServerLog extends EventEmitter
 
   isServerStopLine: ( line ) ->
     return line.match @LINE_SERVER_STOP_REGEX
+
+  isServerCrashAtStartLine: ( line ) ->
+    return line.match @LINE_SERVER_CRASHSTART_REGEX
 
   isPlayerConnectLine: ( line ) ->
     return line.match @LINE_PLAYER_CONNECT_REGEX
