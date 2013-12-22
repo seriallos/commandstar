@@ -156,14 +156,14 @@
         who = htmlEncode( who );
         what = removeColorCodes( what );
         what = htmlEncode( what );
-        
+
         if(($("#chatlog").height() - $("#chatlog-wrap").scrollTop() - 558) == 0){
-        	var goToBottom = true;
+          var goToBottom = true;
         }
         else{
-        	var goToBottom = false;
+          var goToBottom = false;
         }
-        
+
         $('#chatlog').append(
           '<tr>'+
             '<td class="chat-when">' + chatNiceTime( when ) + '</td>' +
@@ -171,7 +171,7 @@
             '<td class="chat-what">' + what + '</td>' +
           '</tr>'
         );
-        
+
         //If the scroll is already at bottom before we have added msg
         if(goToBottom){
           // keep chat scrolled to bottom
