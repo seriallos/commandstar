@@ -8,6 +8,7 @@
 
 #chatlog.table {
   table-layout: fixed;
+  margin-bottom: 0px;
 }
 
 #chatlog.table .chat-when {
