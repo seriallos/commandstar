@@ -1,7 +1,7 @@
 Things I can possibly do
 
-* Toggle active systems on/off
-* Relay chat to IRC
+* Crash detection - watch logs for segfaults
+    * Clear status on crash
 * Persist state to local JSON files to handle restarts
 * Chat colors?  Either hide them or use them
 * UUID location from clientcontext files
@@ -19,6 +19,8 @@ Things I can possibly do
 * Error reports back to the mothership
   * Opt-in
   * Collect errors, non-private configurations, etc
+* Adapter system for notifications
+    * Don't want to load hipchat/IRC for admins not using them
 
 Things when tech exists
 

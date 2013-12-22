@@ -5,8 +5,14 @@ serverName: CommandStar!
 # Description of your server.
 # HTML tags are supported.
 # Leave empty to hide the Server Description panel
-serverDescription: "<strong>Welcome!</strong> Enter information about your server here!"
+# Tip: The > operator lets you write multiline configuration without
+#   worrying about quotes.
+serverDescription: >
+  <strong>Welcome!</strong><br/>
+  Enter information about your server here!
 
+# empty serverDescription example:
+#serverDescription:
 
 # --- Server Paths and Files ---
 starbound:
@@ -19,12 +25,19 @@ starbound:
 # --- Windows paths ---
 # Use something like this for Windows instead of the above lines
 #
+#starbound:
 #  binPath: C:\Games\Steam\SteamApps\common\Starbound\win32
 #  assetsPath: C:\Games\Steam\SteamApps\common\Starbound\assets
 #  dataPath: C:\Games\Steam\SteamApps\common\Starbound\universe
 #  logFile: C:\Games\Steam\SteamApps\common\Starbound\starbound_server.log
 #  configFile: C:\Games\Steam\SteamApps\common\Starbound\starbound.config
 
+
+# --- Features ---
+# Toggle various features on and off
+features:
+  activeSystems: true
+  apiFooter: true
 
 # --- Web Server Port ---
 # If you use port 80, you'll need to run server.coffee using sudo.
@@ -39,9 +52,14 @@ maxRecentChatMessages: 100
 # list of additional CSS files to load
 # These must live in public/css/
 # They are loaded dynamically after the DOM has loaded so things might flash.
+# Additional files must have the - before them, this is a YAML array
 customCss:
   - bootstrap-theme.min.css
 
+# Multiple CSS files should follow this format:
+#customCss:
+#  - theme1.css
+#  - theme2.css
 
 # --- HipChat ---
 # To enable, you'll need to set the hipchat.token configuration to your API key
@@ -51,8 +69,25 @@ customCss:
 # For more info, check out their website: https://www.hipchat.com/
 
 hipchat:
+  token:
   # This room must already exist!
   room: Starbound
   user: Server
   color: yellow
   notify: false
+
+# --- IRC ---
+# If you uncomment the IRC block or put it in your server-specific config,
+# CommandStar will attempt to connect to that server/channel and relay in-game
+# messages to IRC.
+# Very early code without hooks into all the configuration possible.  Please
+# let me know if you need deeper functionality.
+# More docs on the IRC module at
+# https://node-irc.readthedocs.org/en/latest/index.html
+
+#irc:
+#  server:
+#  nick: "StarboundBot"
+#  channel: "#starbound"
+#  user:
+#  password:

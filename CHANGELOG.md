@@ -1,6 +1,30 @@
 CHANGELOG
 =========
 
+0.1.4 - In Progress
+-----
+
+**New**
+
+* Relay in-game chat to IRC. See config/default.yaml for details on configuring
+* Configuration flag to enable/disable active systems display
+* Configuration flag to enable/disable the API list in the footer
+* /server/players API endpoint (thanks https://github.com/malobre !)
+    * Alias: /server/playerList
+
+**Fixes/Tweaks**
+
+* Player list is sorted by name
+* Reduced logging from server.coffee
+* Player names surrounded by &lt;brackets&gt; in chat log
+* Properly remove multiple color codes in player names and chat messages
+* Tweaks to default player list and system list (thanks **malobre**!)
+
+**Technical**
+
+* No longer install testing dependencies by default
+
+
 0.1.3
 -----
 
