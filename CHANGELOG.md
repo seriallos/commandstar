@@ -10,6 +10,7 @@ CHANGELOG
 
 * Reading old chat is easier now.  You won't get bounced to new messages when
   they show up. (Thanks to **malobre** for initial code!)
+* Fixes bug where active systems would disappear on change
 
 **Technical**
 
