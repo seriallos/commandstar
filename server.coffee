@@ -138,6 +138,17 @@ serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
     notifyHipchat "Server has stopped!"
     notifyIrc "Server has stopped!"
 
+serverLog.on 'serverCrash', ( crashLine, whn, fromActiveLog ) ->
+  msg = { who: 'SERVER', what: 'Crashed!', when: chatWhen }
+  pushRecentChat msg
+  playersOnline = []
+  activeWorlds = {}
+  if fromActiveLog
+    io.sockets.emit 'chat', msg
+    io.sockets.emit 'serverStatus', { status: 0 }
+    notifyHipchat "Server has crashed!"
+    notifyIrc "Server has crashed!"
+
 serverLog.on "serverVersion", ( version, fromActiveLog ) ->
   serverVersion = version
   io.sockets.emit 'serverVersion', { version: serverVersion }
@@ -196,6 +207,7 @@ serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
     if fromActiveLog
       data = { worlds: getActiveWorlds() }
       io.sockets.emit 'worlds', data
+
 
 getServerStatus = ( req, res, next ) ->
   isPublic = false

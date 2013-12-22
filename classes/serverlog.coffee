@@ -47,6 +47,8 @@ class ServerLog extends EventEmitter
     ^Info:\sServer\sversion\s'([^']+)'\s'([^']+)'\s'([^']+)'
   ///
 
+  LINE_SERVER_SEGFAULT: /^Error: Segfault Encountered!/
+
   logTail = null
 
   constructor: ( opts ) ->
@@ -121,6 +123,9 @@ class ServerLog extends EventEmitter
     if version
       @emit "serverVersion", version, fromActiveLog
 
+    if @isServerCrashLine data
+      @emit 'serverCrash', data, whn, fromActiveLog
+
   isChatLine: ( line ) ->
     return line.match @LINE_CHAT_REGEX
 
@@ -175,6 +180,9 @@ class ServerLog extends EventEmitter
       return ret
     else
       return false
+
+  isServerCrashLine: ( data ) ->
+    return data.match @LINE_SERVER_SEGFAULT
 
   parseServerVersion: ( line ) ->
     matches = line.match @LINE_SERVER_VERSION_REGEX

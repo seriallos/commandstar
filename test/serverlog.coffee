@@ -155,3 +155,19 @@ describe 'ServerLog using MockServer', ->
       f = ( ) -> mockserv.logServerVersion "Beta v. Test Koala"
       setTimeout f, writeDelay
 
+  it 'should emit events on server segfault from previous log', ( done ) ->
+    mockserv.logSegfault()
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      done()
+    log.on "serverCrash", ( crashLine, whn, fromActiveLog ) ->
+      fromActiveLog.should.be.false
+
+  it 'should emit events on server segfault from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.on "serverCrash", ( crashLine, whn, fromActiveLog ) ->
+      fromActiveLog.should.be.true
+      done()
+    log.init ( ) ->
+      f = ( ) -> mockserv.logSegfault()
+      setTimeout f, writeDelay

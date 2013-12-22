@@ -22,6 +22,8 @@ class MockServer
   # Info: Server version 'Beta v. Offended Koala' '623' '424'
   LINE_SERVER_VERSION: "Info: Server version '%s' '1' '2'"
 
+  LINE_SEGFAULT: "Error: Segfault Encountered!"
+
   configData:
     "audioChannels" : 2,
     "authHostname" : "auth.playstarbound.com",
@@ -133,5 +135,8 @@ class MockServer
   logServerVersion: ( version ) ->
     msg = util.format @LINE_SERVER_VERSION, version
     @writeLine msg
+
+  logSegfault: ->
+    @writeLine @LINE_SEGFAULT
 
 exports.MockServer = MockServer
