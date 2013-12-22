@@ -4,21 +4,21 @@ Things I can possibly do
     * Tests for server state maintenance
     * Tests for REST endpoints
 * Persist state to local JSON files to handle restarts
-* Chat colors?  Either hide them or use them
+* Config validation
+* Error reports back to the mothership
+  * Opt-in
+  * Collect errors, non-private configurations, etc
 * UUID location from clientcontext files
-* Rewrite spaghetti jQuery frontend using Angular/Ember/etc
 * Captain's Log
+* Rewrite spaghetti jQuery frontend using Angular/Ember/etc
 * User notes
 * Paging for chat log API (server/chat).  Gets REAL big otherwise
 * upstart / init.d scripts
 * modPath, display mods running on the server using standard format
 * Watch config file for changes, emit changes to frontend
-* Config validation
-* Error reports back to the mothership
-  * Opt-in
-  * Collect errors, non-private configurations, etc
 * Adapter system for notifications
     * Don't want to load hipchat/IRC for admins not using them
+* Look into showing colors in commandstar output
 
 Things when tech exists
 
