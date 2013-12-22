@@ -1,14 +1,12 @@
 Things I can possibly do
 
-* Crash detection - watch logs for segfaults
-    * Clear status on crash
+* Decompose server.coffee
+    * Tests for server state maintenance
+    * Tests for REST endpoints
 * Persist state to local JSON files to handle restarts
 * Chat colors?  Either hide them or use them
 * UUID location from clientcontext files
 * Rewrite spaghetti jQuery frontend using Angular/Ember/etc
-* Decompose server.coffee
-    * Tests for server state maintenance
-    * Tests for REST endpoints
 * Captain's Log
 * User notes
 * Paging for chat log API (server/chat).  Gets REAL big otherwise
