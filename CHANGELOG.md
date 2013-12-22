@@ -9,7 +9,7 @@ CHANGELOG
 **Fixes/Tweaks**
 
 * Reading old chat is easier now.  You won't get bounced to new messages when
-  they show up.
+  they show up. (Thanks to **malobre** for initial code!)
 
 **Technical**
 
