@@ -197,6 +197,17 @@ serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
       data = { worlds: getActiveWorlds() }
       io.sockets.emit 'worlds', data
 
+serverLog.on "serverCrashAtStart", ( chatWhen, fromActiveLog ) ->
+  msg = { who: 'SERVER', what: 'Server has stopped (crash on start)!', when: chatWhen }
+  pushRecentChat msg
+  playersOnline = []
+  activeWorlds = {}
+  if fromActiveLog
+    io.sockets.emit 'chat', msg
+    io.sockets.emit 'serverStatus', { status: 0 }
+    notifyHipchat "Server has stopped (crash on start)!"
+    notifyIrc "Server has stopped (crash on start)!"
+
 getServerStatus = ( req, res, next ) ->
   isPublic = false
   for password in info.config.serverPasswords
@@ -269,4 +280,3 @@ io = socketio.listen server, ioOpts
 
 server.listen config.listenPort, ->
   console.log "%s listening on port %s", server.name, server.url
-
