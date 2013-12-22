@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-0.1.4 - In Progress
+0.1.4
 -----
 
 **New**
@@ -11,6 +11,7 @@ CHANGELOG
 * Configuration flag to enable/disable the API list in the footer
 * /server/players API endpoint (thanks https://github.com/malobre !)
     * Alias: /server/playerList
+* Detect crashes caused by segfaults
 
 **Fixes/Tweaks**
 
