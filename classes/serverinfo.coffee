@@ -13,13 +13,13 @@ class ServerInfo extends EventEmitter
   STATUS_UP:       1
   STATUS_MULTIPLE: 2
 
-  socketCheckMs:   10000
-
   defaultOpts:
     assetsPath: "/opt/starbound/assets"
     binPath: "/opt/starbound/bin"
     dataPath: "/opt/starbound/bin/universe"
     serverDaemonName: "starbound"
+    checkStatus: false
+    checkFrequency: 60
 
   constructor: ( opts ) ->
 
@@ -34,15 +34,23 @@ class ServerInfo extends EventEmitter
     @binPath = opts.binPath ? @defaultOpts.binPath
     @dataPath = opts.dataPath ? @defaultOpts.dataPath
     @configPath = opts.configPath ? @defaultOpts.binPath + "/starbound.config"
+    @checkStatus = opts.checkStatus ? @defaultOpts.checkStatus
+    # convert seconds to milliseconds
+    @checkFrequency = opts.checkFrequency ? @defaultOpts.checkFrequency
+
+    #if @checkFrequency < 1
+    #  throw new Error "checkFrequency cannot be lower than 1 second."
 
   init: ( next ) ->
     @__loadServerConfig ( err ) =>
       if err
         next( err )
       else
-        # TODO: Server bug makes monitoring eventually cause a crash
-        #@__startServerMonitor next
-        next()
+        if @checkStatus
+          console.log "Starting server monitor"
+          @__startServerMonitor next
+        else
+          next()
 
   __loadServerConfig: ( next ) ->
     configFile = @configPath
@@ -59,7 +67,8 @@ class ServerInfo extends EventEmitter
   #### Server Process Monitoring
 
   __startServerMonitor: ( next ) ->
-    @serverRunningIntervalId = setInterval( @__checkRunning, @socketCheckMs )
+    timeoutMs = @checkFrequency * 1000
+    @serverRunningIntervalId = setInterval( @__checkRunning, timeoutMs )
     next()
 
   __stopServerMonitor: ->

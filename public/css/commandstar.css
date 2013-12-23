@@ -51,3 +51,9 @@
 #apiFooter {
   display: none;
 }
+
+/* Server Status */
+
+#serverStatusRow {
+  display: none;
+}

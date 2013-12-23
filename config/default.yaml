@@ -36,6 +36,9 @@ starbound:
 # --- Features ---
 # Toggle various features on and off
 features:
+  # WARNING: starbound server bug can cause crashes after enough time on linux
+  # Recommend you leave this off unless you understand managing ulimit
+  serverStatus: false
   activeSystems: true
   apiFooter: true
 
@@ -47,6 +50,16 @@ listenPort: 8080
 # Number of chat messages to keep in memory
 maxRecentChatMessages: 100
 
+
+# --- Server Status ---
+
+serverStatus:
+  # how often to check server status, in seconds
+  # WARNING: At least on Ubuntu, the starbound server leaks socket file
+  # descriptors. This can crash the server after enough time.
+  # You can increase the file limit of your starbound server with ulimit to
+  # extend the time to crash.
+  checkFrequency: 300
 
 # --- Custom CSS ---
 # list of additional CSS files to load

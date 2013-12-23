@@ -17,12 +17,36 @@
   <body>
     <div class="container">
       <h1>
-        <!-- <span id="serverStatus" class="label label-warning">N/A</span> -->
         <span id="serverName">&nbsp;</span>
       </h1>
 
       <div class="row">
         <div class="col-sm-3">
+
+          <div class="panel panel-primary" id="serverInfoPanel">
+            <div class="panel-heading active">
+              <h3 class="panel-title">
+                Server Info
+              </h3>
+            </div>
+            <table class="table table-bordered table-condensed">
+
+              <tr id="serverStatusRow">
+                <td>Status</td>
+                <td>
+                  <span id="serverStatus" class="badge label-warning">N/A</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Version</td>
+                <td id="serverVersion"></td>
+              </tr>
+              <tr>
+                <td>Access</td>
+                <td id="serverAccess"></td>
+              </tr>
+            </table>
+          </div>
 
           <div class="panel panel-primary" id="playersPanel">
             <div class="panel-heading active">
@@ -48,23 +72,6 @@
             </ul>
           </div>
 
-          <div class="panel panel-primary" id="serverInfoPanel">
-            <div class="panel-heading active">
-              <h3 class="panel-title">
-                Server Info
-              </h3>
-            </div>
-            <table class="table table-bordered table-condensed">
-              <tr>
-                <td>Version</td>
-                <td id="serverVersion"></td>
-              </tr>
-              <tr>
-                <td>Access</td>
-                <td id="serverAccess"></td>
-              </tr>
-            </table>
-          </div>
 
         </div>
         <div class="col-sm-9">
@@ -219,23 +226,28 @@
         );
       };
 
-      var setServerStatus = function( status ) {
-        $('#serverStatus').removeClass();
-        $('#serverStatus').addClass('label');
-        statusName = 'N/A';
-        statusClass = 'label-warning';
-        if( status > 0 ) {
-          statusName = 'Online';
-          statusClass = 'label-success';
-        } else if ( status == -1 ) {
+      var setServerStatus = function( status, featureActive ) {
+        if( featureActive ) {
+          $('#serverStatus').removeClass();
+          $('#serverStatus').addClass('label');
           statusName = 'N/A';
           statusClass = 'label-warning';
+          if( status > 0 ) {
+            statusName = 'Online';
+            statusClass = 'label-success';
+          } else if ( status == -1 ) {
+            statusName = 'N/A';
+            statusClass = 'label-warning';
+          } else {
+            statusName = 'Offline';
+            statusClass = 'label-danger';
+          }
+          $('#serverStatus').addClass( statusClass );
+          $('#serverStatus').html( statusName );
+          $('#serverStatusRow').show();
         } else {
-          statusName = 'Offline';
-          statusClass = 'label-danger';
-        }
-        $('#serverStatus').addClass( statusClass );
-        $('#serverStatus').html( statusName );
+          $('#serverStatusRow').hide();
+      }
       };
 
       var setServerName = function( name ) {
@@ -300,7 +312,7 @@
         setServerVersion( data.version );
       });
       socket.on('serverStatus', function( data ) {
-        setServerStatus( data.status );
+        setServerStatus( data.status, true );
       });
       socket.on('worlds', function( data ) {
         // this is only called if the server has this feature set to true so
@@ -314,7 +326,7 @@
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
           setServerAccess( data.public );
-          setServerStatus( data.status );
+          setServerStatus( data.status, data.features.serverStatus );
           setServerName( data.serverName );
           setActiveWorlds( data.activeWorlds, data.features.activeSystems );
           setMaxPlayers( data.maxPlayers );

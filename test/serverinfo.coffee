@@ -7,6 +7,8 @@ describe 'ServerInfo', ->
     assetsPath: "/foo/assets"
     dataPath: "/foo/data"
     configPath: "/foo/config"
+    checkStatus: true
+    checkFrequency: 999
 
   it 'should use sane defaults', ->
     info = new ServerInfo()
@@ -15,6 +17,8 @@ describe 'ServerInfo', ->
     info.should.have.property "dataPath", "/opt/starbound/bin/universe"
     defaultConfigPath =  "/opt/starbound/bin/starbound.config"
     info.should.have.property "configPath", defaultConfigPath
+    info.should.have.property "checkStatus", false
+    info.should.have.property "checkFrequency", 60
 
   it 'should allow option overrides', ->
     info = new ServerInfo badOpts
@@ -22,12 +26,21 @@ describe 'ServerInfo', ->
     info.should.have.property "assetsPath", badOpts.assetsPath
     info.should.have.property "dataPath", badOpts.dataPath
     info.should.have.property "configPath", badOpts.configPath
+    info.should.have.property "checkStatus", badOpts.checkStatus
+    info.should.have.property "checkFrequency", badOpts.checkFrequency
 
     opts =
       binPath: "/foo/bin"
     info = new ServerInfo opts
     info.should.have.property "binPath", opts.binPath
     info.should.have.property "assetsPath", "/opt/starbound/assets"
+
+  it 'should not allow check frequency lower than 1 second', ->
+    opts =
+      checkFrequency: 0.1
+    ( ->
+      info = new ServerInfo opts
+    ).should.throw
 
   it 'should return an error if it cannot find config file', ( done ) ->
     info = new ServerInfo badOpts

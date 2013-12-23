@@ -53,6 +53,8 @@ info = new ServerInfo({
   assetsPath: config.starbound.assetsPath
   dataPath: config.starbound.dataPath
   configPath: config.starbound.configFile
+  checkStatus: config.features.serverStatus
+  checkFrequency: config.serverStatus.checkFrequency
 })
 
 info.init ( err ) ->
