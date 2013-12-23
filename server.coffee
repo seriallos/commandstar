@@ -4,8 +4,8 @@ fs = require 'fs'
 config = require 'config'
 _ = require 'underscore'
 
-{ServerInfo} = require './classes/serverinfo.coffee'
-{ServerLog} = require './classes/serverlog.coffee'
+{ServerInfo} = require './lib/serverinfo.coffee'
+{ServerLog} = require './lib/serverlog.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
 

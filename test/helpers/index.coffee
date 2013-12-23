@@ -1,4 +1,4 @@
-classDir = "../../classes"
+classDir = "../../lib"
 
 {ServerInfo} = require "#{classDir}/serverinfo.coffee"
 {ServerLog} = require "#{classDir}/serverlog.coffee"
