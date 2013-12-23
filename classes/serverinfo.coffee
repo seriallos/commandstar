@@ -68,6 +68,9 @@ class ServerInfo extends EventEmitter
 
   __startServerMonitor: ( next ) ->
     timeoutMs = @checkFrequency * 1000
+    # call once immediately
+    @__checkRunning()
+    # schedule recurring call based on the timeout
     @serverRunningIntervalId = setInterval( @__checkRunning, timeoutMs )
     next()
 
