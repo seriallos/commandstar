@@ -1,0 +1,53 @@
+serverName: CommandStar!
+
+serverDescription: >
+  <strong>Welcome!</strong><br/>
+  Enter information about your server here!
+
+starbound:
+  binPath: /opt/starbound/bin
+  assetsPath: /opt/starbound/assets
+  dataPath: /opt/starbound/bin/universe
+  logFile: /opt/starbound/bin/starbound_server.log
+  configFile: /opt/starbound/bin/starbound.config
+
+#starbound:
+#  binPath: C:\Games\Steam\SteamApps\common\Starbound\win32
+#  assetsPath: C:\Games\Steam\SteamApps\common\Starbound\assets
+#  dataPath: C:\Games\Steam\SteamApps\common\Starbound\universe
+#  logFile: C:\Games\Steam\SteamApps\common\Starbound\starbound_server.log
+#  configFile: C:\Games\Steam\SteamApps\common\Starbound\starbound.config
+
+
+features:
+  # WARNING: starbound server bug can cause crashes after enough time on linux
+  serverStatus: false
+  activeSystems: true
+  apiFooter: true
+
+ignoreChatPrefixes: "/#"
+
+listenPort: 8080
+
+maxRecentChatMessages: 100
+
+serverStatus:
+  checkFrequency: 300
+
+customCss:
+  - bootstrap-theme.min.css
+
+hipchat:
+  token:
+  # This room must already exist!
+  room: Starbound
+  user: Server
+  color: yellow
+  notify: false
+
+#irc:
+#  server:
+#  nick: "StarboundBot"
+#  channel: "#starbound"
+#  user:
+#  password:
