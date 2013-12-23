@@ -1,7 +1,7 @@
-classDir = "../../lib"
+codeDir = "../../lib"
 
-{ServerInfo} = require "#{classDir}/serverinfo.coffee"
-{ServerLog} = require "#{classDir}/serverlog.coffee"
+{ServerInfo} = require "#{codeDir}/starboundserver/server.coffee"
+{ServerLog} = require "#{codeDir}/starboundserver/log.coffee"
 {MockServer} = require "./mockserver.coffee"
 
 root = exports ? this
