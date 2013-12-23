@@ -42,6 +42,10 @@ features:
   activeSystems: true
   apiFooter: true
 
+# --- Chat Ignores ---
+# Ignore slash commands and Starlight admin channels by default
+ignoreChatPrefixes: "/#"
+
 # --- Web Server Port ---
 # If you use port 80, you'll need to run server.coffee using sudo.
 # This isn't super secure right now so be warned.
