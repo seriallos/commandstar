@@ -4,8 +4,8 @@ fs = require 'fs'
 config = require 'config'
 _ = require 'underscore'
 
-{ServerInfo} = require './lib/serverinfo.coffee'
-{ServerLog} = require './lib/serverlog.coffee'
+{ServerInfo} = require './serverinfo.coffee'
+{ServerLog} = require './serverlog.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
 
@@ -262,7 +262,7 @@ server.get /\/fonts\/?.*/, restify.serveStatic({
 })
 
 server.get '/', ( req, res, next ) ->
-  fs.readFile __dirname + '/public/index.html', (err, data ) ->
+  fs.readFile __dirname + '/../public/index.html', (err, data ) ->
     if err
       next err
       return

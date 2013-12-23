@@ -7,4 +7,4 @@ echo "Installing/updating dependencies..."
 npm install --production --loglevel error
 
 # run the server using the local coffee-script
-./node_modules/coffee-script/bin/coffee server.coffee
+./node_modules/coffee-script/bin/coffee lib/commandstar.coffee

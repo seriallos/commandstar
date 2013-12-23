@@ -7,9 +7,9 @@ cd %~dp0
 )
 
 @IF EXIST "%~dp0\node.exe" (
-  "%~dp0\node.exe"  "%~dp0\node_modules\coffee-script\bin\coffee" server.coffee
+  "%~dp0\node.exe"  "%~dp0\node_modules\coffee-script\bin\coffee" lib\comandstar.coffee
 ) ELSE (
-  node  "%~dp0\node_modules\coffee-script\bin\coffee" server.coffee
+  node  "%~dp0\node_modules\coffee-script\bin\coffee" lib\commandstar.coffee
 )
 
 PAUSE

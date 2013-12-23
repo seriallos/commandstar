@@ -14,6 +14,10 @@ CHANGELOG
 
 **Technical**
 
+* Moved a bunch of files/dirs around for better organization
+    * server.coffee is now lib/commandstar.coffee
+    * classes/ is now lib/
+
 0.1.4
 -----
 

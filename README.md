@@ -107,7 +107,7 @@ Paths for assets, executables, and whatnot.
 Port that the HTTP server binds to.  Defaults to 8080.
 
 If you want to serve this over port 80, I recommend having a real web server
-like apache or nginx in front of node.  You *can* run server.coffee as root to
+like apache or nginx in front of node.  You *can* run runServer.sh as root to
 use port 80 but it's not recommended.
 
 **maxRecentChatMessages**

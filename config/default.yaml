@@ -43,7 +43,7 @@ features:
   apiFooter: true
 
 # --- Web Server Port ---
-# If you use port 80, you'll need to run server.coffee using sudo.
+# If you use port 80, you'll need to run runServer.sh as sudo.
 # This isn't super secure right now so be warned.
 listenPort: 8080
 
