@@ -82,6 +82,8 @@ class MockServer
     @serverId = Math.floor( Math.random() * 100000 )
     # pick a random port, 10000-20000
     @gamePort = 10000 + Math.floor( Math.random() * 10000 )
+    # make sure we write the random port to the config
+    @configData.gamePort = @gamePort
     @serverDir = "#{__dirname}/_mockserver/#{@serverId}"
     @logFile = "#{@serverDir}/server.log"
     @configFile = "#{@serverDir}/server.config"
@@ -94,12 +96,14 @@ class MockServer
       dataPath: '/tmp'
       configPath: @configFile
       logFile: @logFile
-      watchInterval: 10
+      watchInterval: 1
+      checkFrequency: 0.001
+      checkStatus: true
       gamePort: @gamePort
 
   start: ( next = null ) ->
     fs.mkdirSync @serverDir
-    @logHandle = fs.openSync @logFile, 'w'
+    @logHandle = fs.openSync @logFile, 'a'
     fs.writeFileSync @configFile, JSON.stringify( @configData )
     @running = true
     @server = net.createServer()
@@ -109,11 +113,11 @@ class MockServer
 
   stop: ( next = null ) ->
     if @running
+      @running = false
       fs.closeSync @logHandle
       @server.close =>
         @server.unref()
         @cleanup()
-        @running = false
         if next
           next()
     else

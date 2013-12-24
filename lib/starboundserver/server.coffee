@@ -7,6 +7,8 @@ net = require 'net'
 
 class StarboundServer extends EventEmitter
 
+  monitor: null
+
   defaultOpts:
     assetsPath: "/opt/starbound/assets"
     binPath: "/opt/starbound/bin"
@@ -20,8 +22,6 @@ class StarboundServer extends EventEmitter
       opts = {}
 
     @config = {}
-    @status = @STATUS_UNKNOWN
-    @serverRunningIntervalId = null
 
     @assetsPath = opts.assetsPath ? @defaultOpts.assetsPath
     @binPath = opts.binPath ? @defaultOpts.binPath
@@ -31,21 +31,21 @@ class StarboundServer extends EventEmitter
     # convert seconds to milliseconds
     @checkFrequency = opts.checkFrequency ? @defaultOpts.checkFrequency
 
-    #if @checkFrequency < 1
-    #  throw new Error "checkFrequency cannot be lower than 1 second."
-
   init: ( next ) ->
-    @__loadServerConfig ( err ) =>
+    @loadServerConfig ( err ) =>
       if err
         next( err )
       else
-        if @checkStatus
-          console.log "Starting server monitor"
-          @__startServerMonitor next
-        else
+        @loadServerMonitor ->
           next()
 
-  __loadServerConfig: ( next ) ->
+  reset: ->
+    # make sure to clear out the monitor and stop watching
+    if @monitor
+      @monitor.unwatch()
+      @monitor = null
+
+  loadServerConfig: ( next ) ->
     configFile = @configPath
     fs.readFile configFile, 'utf8', ( err, data ) =>
       if err
@@ -57,38 +57,21 @@ class StarboundServer extends EventEmitter
         @config = JSON.parse data
         next( null )
 
-  #### Server Process Monitoring
+  loadServerMonitor: ( next ) ->
+    monitorOpts =
+      gamePort: @config.gamePort
+      gameHost: 'localhost'
+      checkFrequency: @checkFrequency
+    @monitor = new ServerMonitor monitorOpts
+    @setupMonitorEvents @monitor
+    if @checkStatus
+      @monitor.watch ->
+        next()
+    else
+      next()
 
-  __startServerMonitor: ( next ) ->
-    timeoutMs = @checkFrequency * 1000
-    # call once immediately
-    @__checkRunning()
-    # schedule recurring call based on the timeout
-    @serverRunningIntervalId = setInterval( @__checkRunning, timeoutMs )
-    next()
-
-  __stopServerMonitor: ->
-    clearInterval @serverRunningIntervalId
-
-  setStatus: ( status ) ->
-    if @status != status
+  setupMonitorEvents: ( monitor ) ->
+    monitor.on 'statusChange', ( status ) =>
       @emit 'statusChange', status
-    @status = status
-
-  # fat arrow to avoid the interval context
-  __checkRunning: =>
-    # fat arrow so class context is maintained in callback
-    # maybe hacky
-    socket = net.createConnection @config.gamePort, 'localhost'
-
-    socket.on 'connect', =>
-      socket.end()
-      socket.destroy()
-      @setStatus @STATUS_UP
-
-    socket.on 'error', ( error ) =>
-      socket.end()
-      socket.destroy()
-      @setStatus @STATUS_DOWN
 
 root.StarboundServer = StarboundServer

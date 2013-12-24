@@ -35,13 +35,6 @@ describe 'StarboundServer', ->
     server.should.have.property "binPath", opts.binPath
     server.should.have.property "assetsPath", "/opt/starbound/assets"
 
-  it 'should not allow check frequency lower than 1 second', ->
-    opts =
-      checkFrequency: 0.1
-    ( ->
-      server = new StarboundServer opts
-    ).should.throw
-
   it 'should return an error if it cannot find config file', ( done ) ->
     server = new StarboundServer badOpts
     server.init ( err ) ->
@@ -49,9 +42,26 @@ describe 'StarboundServer', ->
       err.message.should.startWith "Unable to read config file"
       done()
 
-  it 'should parse the config JSON file', ( done ) ->
+describe 'StarboundServer - MockServer Tests', ->
+
+  mockserv = null
+  server = null
+
+  beforeEach ( done ) ->
     mockserv = new MockServer()
-    mockserv.start()
+    mockserv.start ->
+      done()
+
+  afterEach ( done ) ->
+    # make sure watch is cleared if it was started
+    if server
+      server.reset()
+    server = null
+    mockserv.stop ->
+      mockserv = null
+      done()
+
+  it 'should parse the config JSON file', ( done ) ->
     server = new StarboundServer mockserv.getOpts()
     server.init ( err ) ->
       server.config.gamePort.should.equal mockserv.configData.gamePort
@@ -59,5 +69,27 @@ describe 'StarboundServer', ->
       server.config.sampleRate.should.equal mockserv.configData.sampleRate
       mockserv.stop()
       done()
+
+  # MockServer may not be structured to make this work without a lot of
+  # fighting
+  #
+  #it 'should emit statusChange events on server startup', ( done ) ->
+  #  # stop the server when we start
+  #  server = new StarboundServer mockserv.getOpts()
+  #  server.on 'statusChange', (status) ->
+  #    status.should.equal server.monitor.STATUS_UP
+  #    done()
+  #  server.init ( err ) ->
+  #    mockserv.start()
+
+  it 'should emit statusChange events on server shutdown', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      server.on 'statusChange', (status) ->
+        status.should.equal server.monitor.STATUS_DOWN
+        done()
+      mockserv.stop()
+
+
 
 
