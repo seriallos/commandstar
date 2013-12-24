@@ -4,7 +4,7 @@ fs = require 'fs'
 config = require 'config'
 _ = require 'underscore'
 
-{ServerInfo} = require './starboundserver/server.coffee'
+{StarboundServer} = require './starboundserver/server.coffee'
 {ServerLog} = require './starboundserver/log.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
@@ -48,7 +48,7 @@ notifyIrc = ( msg ) ->
   if ircClient
     ircClient.say config.irc.channel, msg
 
-info = new ServerInfo({
+info = new StarboundServer({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
   dataPath: config.starbound.dataPath
@@ -69,7 +69,7 @@ serverLog = new ServerLog( {
 serverLog.init ( ) ->
   # nothing to do here
 
-# TODO: wrap all this state tracking in ServerInfo or some other module
+# TODO: wrap all this state tracking in StarboundServer or some other module
 recentChat = []
 playersOnline = []
 gWorlds = []

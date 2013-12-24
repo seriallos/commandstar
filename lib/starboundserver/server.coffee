@@ -5,13 +5,7 @@ net = require 'net'
 
 {ServerMonitor} = require './monitor.coffee'
 
-class ServerInfo extends EventEmitter
-
-  STATUS_ERROR:   -2
-  STATUS_UNKNOWN: -1
-  STATUS_DOWN:     0
-  STATUS_UP:       1
-  STATUS_MULTIPLE: 2
+class StarboundServer extends EventEmitter
 
   defaultOpts:
     assetsPath: "/opt/starbound/assets"
@@ -97,4 +91,4 @@ class ServerInfo extends EventEmitter
       socket.destroy()
       @setStatus @STATUS_DOWN
 
-root.ServerInfo = ServerInfo
+root.StarboundServer = StarboundServer
