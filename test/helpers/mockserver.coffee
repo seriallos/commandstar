@@ -1,5 +1,6 @@
 fs = require 'fs'
 util = require 'util'
+net = require 'net'
 
 class MockServer
 
@@ -79,9 +80,12 @@ class MockServer
 
   constructor: ( ) ->
     @serverId = Math.floor( Math.random() * 100000 )
+    # pick a random port, 10000-20000
+    @gamePort = 10000 + Math.floor( Math.random() * 10000 )
     @serverDir = "#{__dirname}/_mockserver/#{@serverId}"
     @logFile = "#{@serverDir}/server.log"
     @configFile = "#{@serverDir}/server.config"
+    @server = null
 
   getOpts: ( ) ->
     opts =
@@ -91,17 +95,30 @@ class MockServer
       configPath: @configFile
       logFile: @logFile
       watchInterval: 10
+      gamePort: @gamePort
 
-  start: ( ) ->
+  start: ( next = null ) ->
     fs.mkdirSync @serverDir
     @logHandle = fs.openSync @logFile, 'w'
     fs.writeFileSync @configFile, JSON.stringify( @configData )
     @running = true
+    @server = net.createServer()
+    @server.listen @gamePort, =>
+      if next
+        next()
 
-  stop: ( ) ->
-    fs.closeSync @logHandle
-    @cleanup()
-    @running = true
+  stop: ( next = null ) ->
+    if @running
+      fs.closeSync @logHandle
+      @server.close =>
+        @server.unref()
+        @cleanup()
+        @running = false
+        if next
+          next()
+    else
+      if next
+        next()
 
   cleanup: ( ) ->
     fs.unlinkSync @logFile

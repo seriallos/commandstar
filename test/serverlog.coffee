@@ -19,14 +19,14 @@ describe 'ServerLog using MockServer', ->
 
   beforeEach ( done ) ->
     mockserv = new MockServer()
-    mockserv.start()
-    done()
+    mockserv.start ->
+      done()
 
   afterEach ( done ) ->
-    mockserv.stop()
-    mockserv = null
-    log = null
-    done()
+    mockserv.stop ->
+      mockserv = null
+      log = null
+      done()
 
   it 'should emit events on player connect from previous log', ( done ) ->
     mockserv.logConnectPlayer 1, 'dave'

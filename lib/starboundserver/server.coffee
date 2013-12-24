@@ -3,7 +3,7 @@ fs = require 'fs'
 net = require 'net'
 {EventEmitter} = require 'events'
 
-{exec} = require 'child_process'
+{ServerMonitor} = require './monitor.coffee'
 
 class ServerInfo extends EventEmitter
 
@@ -17,7 +17,6 @@ class ServerInfo extends EventEmitter
     assetsPath: "/opt/starbound/assets"
     binPath: "/opt/starbound/bin"
     dataPath: "/opt/starbound/bin/universe"
-    serverDaemonName: "starbound"
     checkStatus: false
     checkFrequency: 60
 
