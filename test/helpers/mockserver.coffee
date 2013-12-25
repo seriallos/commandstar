@@ -20,6 +20,11 @@ class MockServer
   LINE_SERVER_START: "Info: Done loading Star::Root"
   LINE_SERVER_STOP: "Info: Server shutdown gracefully"
 
+  LINE_WORLD_LOAD: "Info: Loading world db for world %s:%s:%s:%s:%s%s"
+
+  # Info: Shutting down world delta:-35537062:25816799:-18582281:11:6
+  LINE_WORLD_UNLOAD: "Info: Shutting down world %s:%s:%s:%s:%s%s"
+
   # Info: Server version 'Beta v. Offended Koala' '623' '424'
   LINE_SERVER_VERSION: "Info: Server version '%s' '1' '2'"
 
@@ -159,5 +164,21 @@ class MockServer
 
   logSegfault: ->
     @writeLine @LINE_SEGFAULT
+
+  loadWorld: ( sector, x, y, z, planet, satellite ) ->
+    if satellite
+      satellite = ":#{satellite}"
+    else
+      satellite = ""
+    msg = util.format @LINE_WORLD_LOAD, sector, x, y, z, planet, satellite
+    @writeLine msg
+
+  unloadWorld: ( sector, x, y, z, planet, satellite ) ->
+    if satellite
+      satellite = ":#{satellite}"
+    else
+      satellite = ""
+    msg = util.format @LINE_WORLD_UNLOAD, sector, x, y, z, planet, satellite
+    @writeLine msg
 
 exports.MockServer = MockServer
