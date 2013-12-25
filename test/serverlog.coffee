@@ -17,6 +17,14 @@ describe 'ServerLog using MockServer', ->
   log = null
   writeDelay = 5
 
+  testWorld =
+    sector: 'foo'
+    x: '99'
+    y: '100'
+    z: '-88'
+    planet: '1'
+    satellite: '2'
+
   beforeEach ( done ) ->
     mockserv = new MockServer()
     mockserv.start ->
@@ -25,18 +33,22 @@ describe 'ServerLog using MockServer', ->
   afterEach ( done ) ->
     mockserv.stop ->
       mockserv = null
+      log.stopWatching()
       log = null
       done()
 
   it 'should emit events on player connect from previous log', ( done ) ->
+    eventFired = false
     mockserv.logConnectPlayer 1, 'dave'
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
       # for this test, the playerConnect event will happen while
       # init is running so we need to wait to call done() until init
       # has finished
+      eventFired.should.be.true
       done()
     log.on "playerConnect", ( playerId, fromActiveLog ) ->
+      eventFired = true
       playerId.should.equal 'dave'
       fromActiveLog.should.be.false
 
@@ -63,11 +75,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on player disconnect from previous log', ( done ) ->
+    eventFired = false
     mockserv.logDisconnectPlayer 1, 'dave'
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "playerDisconnect", ( playerId, fromActiveLog ) ->
+      eventFired = true
       playerId.should.equal 'dave'
       fromActiveLog.should.be.false
 
@@ -82,11 +97,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on player chat from previous log', ( done ) ->
+    eventFired = false
     mockserv.logChat 'dave', 'hello world!'
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "chat", ( who, what, whn, fromActiveLog ) ->
+      eventFired = true
       who.should.equal 'dave'
       what.should.equal 'hello world!'
       fromActiveLog.should.be.false
@@ -103,11 +121,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on server start from previous log', ( done ) ->
+    eventFired = false
     mockserv.logServerStart()
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "serverStart", ( whn, fromActiveLog ) ->
+      eventFired = true
       fromActiveLog.should.be.false
 
   it 'should emit events on server start from the log tail', ( done ) ->
@@ -120,11 +141,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on server stop from previous log', ( done ) ->
+    eventFired = false
     mockserv.logServerStop()
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "serverStop", ( whn, fromActiveLog ) ->
+      eventFired = true
       fromActiveLog.should.be.false
 
   it 'should emit events on server stop from the log tail', ( done ) ->
@@ -137,11 +161,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on server version from previous log', ( done ) ->
+    eventFired = false
     mockserv.logServerVersion "Beta v. Test Koala"
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "serverVersion", ( version, fromActiveLog ) ->
+      eventFired = true
       fromActiveLog.should.be.false
       version.should.be.equal "Beta v. Test Koala"
 
@@ -156,11 +183,14 @@ describe 'ServerLog using MockServer', ->
       setTimeout f, writeDelay
 
   it 'should emit events on server segfault from previous log', ( done ) ->
+    eventFired = false
     mockserv.logSegfault()
     log = new ServerLog mockserv.getOpts()
     log.init ( ) ->
+      eventFired.should.be.true
       done()
     log.on "serverCrash", ( crashLine, whn, fromActiveLog ) ->
+      eventFired = true
       fromActiveLog.should.be.false
 
   it 'should emit events on server segfault from the log tail', ( done ) ->
@@ -170,4 +200,96 @@ describe 'ServerLog using MockServer', ->
       done()
     log.init ( ) ->
       f = ( ) -> mockserv.logSegfault()
+      setTimeout f, writeDelay
+
+  it 'should emit events on world load from previous log', ( done ) ->
+    eventFired = false
+    mockserv.loadWorld(
+      testWorld.sector,
+      testWorld.x,
+      testWorld.y,
+      testWorld.z,
+      testWorld.planet,
+      testWorld.satellite
+    )
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      eventFired.should.be.true
+      done()
+    log.on "worldLoad", ( world, fromActiveLog ) ->
+      eventFired = true
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      fromActiveLog.should.be.false
+
+  it 'should emit events on world load from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.on "worldLoad", ( world, fromActiveLog ) ->
+      fromActiveLog.should.be.true
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      done()
+    log.init ( ) ->
+      f = ( ) -> mockserv.loadWorld(
+        testWorld.sector,
+        testWorld.x,
+        testWorld.y,
+        testWorld.z,
+        testWorld.planet,
+        testWorld.satellite
+      )
+      setTimeout f, writeDelay
+
+  it 'should emit events on world unload from previous log', ( done ) ->
+    eventFired = false
+    mockserv.unloadWorld(
+      testWorld.sector,
+      testWorld.x,
+      testWorld.y,
+      testWorld.z,
+      testWorld.planet,
+      testWorld.satellite
+    )
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      eventFired.should.be.true
+      done()
+    log.on "worldUnload", ( world, fromActiveLog ) ->
+      eventFired = true
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      fromActiveLog.should.be.false
+
+  it 'should emit events on world unload from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.on "worldUnload", ( world, fromActiveLog ) ->
+      fromActiveLog.should.be.true
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      done()
+    log.init ( ) ->
+      f = ( ) -> mockserv.unloadWorld(
+        testWorld.sector,
+        testWorld.x,
+        testWorld.y,
+        testWorld.z,
+        testWorld.planet,
+        testWorld.satellite
+      )
       setTimeout f, writeDelay
