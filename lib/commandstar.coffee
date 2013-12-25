@@ -48,16 +48,17 @@ notifyIrc = ( msg ) ->
   if ircClient
     ircClient.say config.irc.channel, msg
 
-info = new StarboundServer({
+starserver = new StarboundServer({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
   dataPath: config.starbound.dataPath
   configPath: config.starbound.configFile
+  logFile: config.starbound.logFile
   checkStatus: config.features.serverStatus
   checkFrequency: config.serverStatus.checkFrequency
 })
 
-info.init ( err ) ->
+starserver.init ( err ) ->
   if err
     console.log err
     process.exit( 1 )
@@ -111,7 +112,7 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
       notifyHipchat "#{who}: #{what}"
       notifyIrc "#{who}: #{what}"
 
-info.on 'statusChange', ( status ) ->
+starserver.on 'statusChange', ( status ) ->
   io.sockets.emit 'serverStatus', { status: status }
   # reset global state if server has gone down
   if status <= 0
@@ -213,18 +214,18 @@ serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
 
 getServerStatus = ( req, res, next ) ->
   isPublic = false
-  for password in info.config.serverPasswords
+  for password in starserver.config.serverPasswords
     if '' == password
       isPublic = true
   resData =
     serverName: config.serverName
     serverDesc: config.serverDescription
-    status: info.status
-    gamePort: info.config.gamePort
+    status: starserver.status
+    gamePort: starserver.config.gamePort
     playersOnline: playersOnline
     activeWorlds: getActiveWorlds()
     version: serverVersion
-    maxPlayers: info.config.maxPlayers ? 8 # guess at default?
+    maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
     public: isPublic
     css: config.customCss
     features: config.features
