@@ -7,6 +7,7 @@ describe 'StarboundServer', ->
     assetsPath: "/foo/assets"
     dataPath: "/foo/data"
     configPath: "/foo/config"
+    logFile: '/tmp/log'
     checkStatus: true
     checkFrequency: 999
 
@@ -15,6 +16,8 @@ describe 'StarboundServer', ->
     server.should.have.property "binPath", "/opt/starbound/bin"
     server.should.have.property "assetsPath", "/opt/starbound/assets"
     server.should.have.property "dataPath", "/opt/starbound/bin/universe"
+    defaultLogFile =  "/opt/starbound/bin/starbound_server.log"
+    server.should.have.property "logFile", defaultLogFile
     defaultConfigPath =  "/opt/starbound/bin/starbound.config"
     server.should.have.property "configPath", defaultConfigPath
     server.should.have.property "checkStatus", false
@@ -26,6 +29,7 @@ describe 'StarboundServer', ->
     server.should.have.property "assetsPath", badOpts.assetsPath
     server.should.have.property "dataPath", badOpts.dataPath
     server.should.have.property "configPath", badOpts.configPath
+    server.should.have.property "logFile", badOpts.logFile
     server.should.have.property "checkStatus", badOpts.checkStatus
     server.should.have.property "checkFrequency", badOpts.checkFrequency
 
@@ -42,10 +46,19 @@ describe 'StarboundServer', ->
       err.message.should.startWith "Unable to read config file"
       done()
 
-describe 'StarboundServer - MockServer Tests', ->
+describe 'StarboundServer Events - MockServer Tests', ->
 
   mockserv = null
   server = null
+  writeDelay = 5
+
+  testWorld =
+    sector: 'grabble'
+    x: '-777'
+    y: '6666'
+    z: '321'
+    planet: '9'
+    satellite: '11'
 
   beforeEach ( done ) ->
     mockserv = new MockServer()
@@ -76,20 +89,205 @@ describe 'StarboundServer - MockServer Tests', ->
   #it 'should emit statusChange events on server startup', ( done ) ->
   #  # stop the server when we start
   #  server = new StarboundServer mockserv.getOpts()
-  #  server.on 'statusChange', (status) ->
-  #    status.should.equal server.monitor.STATUS_UP
+  #  server.on 'start', (status) ->
   #    done()
   #  server.init ( err ) ->
   #    mockserv.start()
 
-  it 'should emit statusChange events on server shutdown', ( done ) ->
+  it 'should emit "stop" event on server port going dead', ( done ) ->
     server = new StarboundServer mockserv.getOpts()
     server.init ( err ) ->
-      server.on 'statusChange', (status) ->
-        status.should.equal server.monitor.STATUS_DOWN
+      server.on 'stop', ( whn ) ->
         done()
       mockserv.stop()
 
+  it 'should emit "playerConnect" event on player connect', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "playerConnect", ( playerId ) ->
+      playerId.should.equal 'dave'
+      done()
+    server.init ( err ) ->
+      f = ( ) -> mockserv.logConnectPlayer 1, 'dave'
+      setTimeout f, writeDelay
 
+  it 'should emit "playerDisconnect" event on player disconnect', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "playerDisconnect", ( playerId ) ->
+      playerId.should.equal 'dave'
+      done()
+    server.init ( err ) ->
+      f = ( ) -> mockserv.logDisconnectPlayer 1, 'dave'
+      setTimeout f, writeDelay
+
+  it 'should emit "chat" event on live player chat', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "chat", ( who, what, whn ) ->
+      who.should.equal 'dave'
+      what.should.equal 'hello world!'
+      done()
+    server.init ( err ) ->
+      f = ( ) -> mockserv.logChat 'dave', 'hello world!'
+      setTimeout f, writeDelay
+
+  it 'should emit "version" event on live server version', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "version", ( version ) ->
+      version.should.be.equal "Beta v. Test Koala"
+      done()
+    server.init ( err ) ->
+      f = ( ) -> mockserv.logServerVersion "Beta v. Test Koala"
+      setTimeout f, writeDelay
+
+  it 'should emit "crash" event on live server segfault', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "crash", ( crashLine, whn ) ->
+      done()
+    server.init ( ) ->
+      f = ( ) -> mockserv.logSegfault()
+      setTimeout f, writeDelay
+
+  it 'should emit "worldLoad" event on live world load', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "worldLoad", ( world ) ->
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      done()
+    server.init ( ) ->
+      f = ( ) -> mockserv.loadWorld(
+        testWorld.sector,
+        testWorld.x,
+        testWorld.y,
+        testWorld.z,
+        testWorld.planet,
+        testWorld.satellite
+      )
+      setTimeout f, writeDelay
+
+  it 'should emit "worldUnload" event on live world unload', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "worldUnload", ( world ) ->
+      world.sector.should.equal testWorld.sector
+      world.x.should.equal testWorld.x
+      world.y.should.equal testWorld.y
+      world.z.should.equal testWorld.z
+      world.planet.should.equal testWorld.planet
+      world.satellite.should.equal testWorld.satellite
+      done()
+    server.init ( ) ->
+      f = ( ) -> mockserv.unloadWorld(
+        testWorld.sector,
+        testWorld.x,
+        testWorld.y,
+        testWorld.z,
+        testWorld.planet,
+        testWorld.satellite
+      )
+      setTimeout f, writeDelay
+
+  it 'should emit one stop event on shutdown message and port DC', ( done ) ->
+    eventsFired = 0
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      server.on 'stop', ( whn ) ->
+        eventsFired += 1
+      mockserv.logServerStop()
+      mockserv.stop()
+      f = ( ) ->
+        eventsFired.should.equal 1
+        done()
+      setTimeout f, 10
+
+describe 'StarboundServer State - MockServer Tests', ->
+  mockserv = null
+  server = null
+  testDelay = 5
+
+  beforeEach ( done ) ->
+    mockserv = new MockServer()
+    mockserv.start ->
+      done()
+
+  afterEach ( done ) ->
+    # make sure watch is cleared if it was started
+    if server
+      server.reset()
+    server = null
+    mockserv.stop ->
+      mockserv = null
+      done()
+
+  it 'should know server is down on port disconnect', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      mockserv.stop()
+      f = ( ) ->
+        server.status.should.equal server.monitor.STATUS_DOWN
+        done()
+      setTimeout f, testDelay
+
+  it 'should know server is down on shutdown message', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      mockserv.logServerStop()
+      f = ( ) ->
+        server.status.should.equal server.monitor.STATUS_DOWN
+        done()
+      setTimeout f, testDelay
+
+  it 'should track online players', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      mockserv.logConnectPlayer 1, 'alice'
+      mockserv.logConnectPlayer 2, 'bob'
+      f = ( ) ->
+        # make sure players logged in are tracked
+        server.players.should.have.length 2
+        server.players.should.include 'alice'
+        server.players.should.include 'bob'
+
+        mockserv.logDisconnectPlayer 1, 'alice'
+        mockserv.logConnectPlayer 3, 'charlie'
+        mockserv.logConnectPlayer 4, 'dave'
+        ff = ( ) ->
+          server.players.should.have.length 3
+          server.players.should.not.include 'alice'
+          server.players.should.include 'bob'
+          server.players.should.include 'charlie'
+          server.players.should.include 'dave'
+          done()
+        setTimeout ff, testDelay
+      setTimeout f, testDelay
+
+  it 'should clear players after server status change', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      mockserv.logConnectPlayer 1, 'alice'
+      mockserv.logConnectPlayer 2, 'bob'
+      mockserv.logServerStop()
+      f = ( ) ->
+        # make sure players logged in are tracked
+        server.players.should.have.length 0
+        server.players.should.not.include 'alice'
+        server.players.should.not.include 'bob'
+        done()
+      setTimeout f, testDelay
+
+  it 'should clear players after server crash', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      mockserv.logConnectPlayer 1, 'alice'
+      mockserv.logConnectPlayer 2, 'bob'
+      mockserv.logSegfault()
+      f = ( ) ->
+        # make sure players logged in are tracked
+        server.players.should.have.length 0
+        server.players.should.not.include 'alice'
+        server.players.should.not.include 'bob'
+        done()
+      setTimeout f, testDelay
 
 
