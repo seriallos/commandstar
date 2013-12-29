@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-0.1.5 - IN PROGRESS
+0.1.5
 -----
 
 This release has a ton of internal changes.  It's very possible that I've broken
@@ -13,6 +13,8 @@ some things that used to work.
     * This is due to a socket file descriptor leak in the starbound server code.
       If you use this feature, be aware that it will eventually cause the
       server to crash once the server has reached the open file limit.
+    * More info, discussion, and a possible fix on the starbound forums:
+      http://community.playstarbound.com/index.php?threads/crash-bug-unreleased-socket-files-too-many-open-files.54833/
 * Ignores chat lines that start with # (Starlight admin prefix)
 
 **Fixes/Tweaks**
