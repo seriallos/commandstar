@@ -13,6 +13,7 @@ class StarboundServer extends EventEmitter
   log: null
 
   status: null
+  version: null
   players: []
   worlds: []
   chat: []
@@ -26,6 +27,7 @@ class StarboundServer extends EventEmitter
     checkFrequency: 60
     watchInterval: 100
     maxChatSize: 100
+    serverChatName: 'SERVER'
 
   constructor: ( opts ) ->
 
@@ -44,6 +46,7 @@ class StarboundServer extends EventEmitter
     @checkFrequency = opts.checkFrequency ? @defaultOpts.checkFrequency
     @watchInterval = opts.watchInterval ? @defaultOpts.watchInterval
     @maxChatSize = opts.maxChatSize ? @defaultOpts.maxChatSize
+    @serverChatName = opts.serverChatName ? @defaultOpts.serverChatName
 
     @players = []
     @worlds = []
@@ -135,6 +138,13 @@ class StarboundServer extends EventEmitter
     }
     return _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
 
+  isPublic: ->
+    isPublic = false
+    for password in @config.serverPasswords
+      if '' == password
+        isPublic = true
+    return isPublic
+
   # --- State Management --- #
 
   clearPlayers: ->
@@ -178,6 +188,9 @@ class StarboundServer extends EventEmitter
     w = _.defaults attrs, w
     @worlds.push w
 
+  addServerChat: ( what, whn, live ) ->
+    @handleChat @serverChatName, what, whn, live
+
   # --- Event Emitting and Handilng --- #
 
   handleStart: ( whn, why, live ) ->
@@ -187,6 +200,7 @@ class StarboundServer extends EventEmitter
       @status = ServerMonitor::STATUS_UP
       if live
         @emit 'start', whn, why
+      @addServerChat 'Started!', whn, live
 
   handleStop: ( whn, why, live ) ->
     @clearPlayers()
@@ -195,6 +209,12 @@ class StarboundServer extends EventEmitter
       @status = ServerMonitor::STATUS_DOWN
       if live
         @emit 'stop', whn, why
+      @addServerChat 'Stopped!', whn, live
+
+  handleChat: ( who, what, whn, live ) ->
+    @addChat who, what, whn
+    if live
+      @emit 'chat', who, what, whn
 
   # --- Backend Event Management --- #
 
@@ -205,19 +225,19 @@ class StarboundServer extends EventEmitter
       @handleStop new Date(), 'monitor', true
 
   onLogChat: ( who, what, whn, live ) =>
-    @addChat who, what, whn
-    if live
-      @emit 'chat', who, what, whn
+    @handleChat who, what, whn, live
 
   onLogPlayerConnect: ( playerId, live ) =>
     @addPlayer playerId
     if live
       @emit 'playerConnect', playerId
+    @addServerChat "#{playerId} joined the server.", new Date(), live
 
   onLogPlayerDisconnect: ( playerId, live ) =>
     @removePlayer playerId
     if live
       @emit 'playerDisconnect', playerId
+    @addServerChat "#{playerId} left the server.", new Date(), live
 
   onLogServerStart: ( whn, live ) =>
     @handleStart whn, 'log', live
@@ -236,8 +256,10 @@ class StarboundServer extends EventEmitter
       @emit 'worldUnload', world
 
   onLogServerVersion: ( version, live ) =>
+    @version = version
     if live
       @emit 'version', version
+    @addServerChat "Server version is #{version}", new Date(), live
 
   onLogCrash: ( data, whn, live ) =>
     @handleStop whn, 'log crash', live
