@@ -28,6 +28,7 @@ class StarboundServer extends EventEmitter
     watchInterval: 100
     maxChatSize: 100
     serverChatName: 'SERVER'
+    ignoreChatPrefixes: '/#'
 
   constructor: ( opts ) ->
 
@@ -47,6 +48,8 @@ class StarboundServer extends EventEmitter
     @watchInterval = opts.watchInterval ? @defaultOpts.watchInterval
     @maxChatSize = opts.maxChatSize ? @defaultOpts.maxChatSize
     @serverChatName = opts.serverChatName ? @defaultOpts.serverChatName
+    @ignoreChatPrefixes =
+      opts.ignoreChatPrefixes ? @defaultOpts.ignoreChatPrefixes
 
     @players = []
     @worlds = []
@@ -157,14 +160,19 @@ class StarboundServer extends EventEmitter
     idx = @players.indexOf playerName
     @players.splice idx, 1
 
+  shouldIgnoreChat: ( message ) ->
+    prefixIgnoreRegex = new RegExp '^['+@ignoreChatPrefixes+']'
+    return message.match prefixIgnoreRegex
+
   addChat: ( who, what, whn ) ->
-    msg =
-      who: who
-      what: what
-      when: whn
-    @chat.push msg
-    if @chat.length > @maxChatSize
-      @chat = @chat.slice -( @maxChatSize )
+    if not @shouldIgnoreChat what
+      msg =
+        who: who
+        what: what
+        when: whn
+      @chat.push msg
+      if @chat.length > @maxChatSize
+        @chat = @chat.slice -( @maxChatSize )
 
   clearWorlds: ->
     @worlds = []
