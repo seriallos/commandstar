@@ -7,4 +7,4 @@ set -e
 build/lint.sh
 
 # run mocha tests
-node_modules/mocha/bin/mocha
+node_modules/mocha/bin/mocha -R spec
