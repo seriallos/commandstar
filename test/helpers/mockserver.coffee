@@ -1,6 +1,7 @@
 fs = require 'fs'
 util = require 'util'
 net = require 'net'
+_ = require 'underscore'
 
 class MockServer
 
@@ -138,7 +139,7 @@ class MockServer
     if not @running
       throw new Error "writeLine called while MockServer is stopped"
     fs.writeSync @logHandle, "#{line}\n"
-    fs.fsync @logHandle
+    fs.fsyncSync @logHandle
 
   logConnectPlayer: ( playerId, playerName ) ->
     msg = util.format @LINE_PLAYER_CONNECT, playerName, playerId
@@ -166,6 +167,15 @@ class MockServer
     @writeLine @LINE_SEGFAULT
 
   loadWorld: ( sector, x, y, z, planet, satellite ) ->
+    # check to see if first arg is actually an object
+    if sector?.sector?
+      o = _.clone sector
+      sector = o.sector
+      x = o.x
+      y = o.y
+      z = o.z
+      planet = o.planet
+      satellite = o.satellite
     if satellite
       satellite = ":#{satellite}"
     else
@@ -174,6 +184,15 @@ class MockServer
     @writeLine msg
 
   unloadWorld: ( sector, x, y, z, planet, satellite ) ->
+    # check to see if first arg is actually an object
+    if sector?.sector?
+      o = _.clone sector
+      sector = o.sector
+      x = o.x
+      y = o.y
+      z = o.z
+      planet = o.planet
+      satellite = o.satellite
     if satellite
       satellite = ":#{satellite}"
     else
