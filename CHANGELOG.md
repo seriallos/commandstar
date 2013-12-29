@@ -4,6 +4,9 @@ CHANGELOG
 0.1.5 - IN PROGRESS
 -----
 
+This release has a ton of internal changes.  It's very possible that I've broken
+some things that used to work.
+
 **New**
 
 * Server status check is available but defaults OFF
@@ -14,17 +17,20 @@ CHANGELOG
 
 **Fixes/Tweaks**
 
+* Player list and world list should clear out when server restarts
+* All colors codes should be filtered out.  For example, ^#cyan;
 * Reading old chat is easier now.  You won't get bounced to new messages when
   they show up. (Thanks to **malobre** for initial code!)
 * Fixes bug where active systems would disappear on change
 
 **Technical**
 
-* Fairly major refactor codebase
+* Major codebase refactor
     * starboundserver/server.coffee manages the log watcher and network monitor
     * Moved a bunch of files/dirs around for better organization
         * server.coffee is now lib/commandstar.coffee
         * classes/ is now lib/
+* Bunch more tests
 
 0.1.4
 -----
