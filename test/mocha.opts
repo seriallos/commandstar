@@ -2,3 +2,4 @@
 --timeout 1s
 --reporter min
 --require should
+--growl
