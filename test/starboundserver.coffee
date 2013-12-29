@@ -10,6 +10,7 @@ describe 'StarboundServer', ->
     logFile: '/tmp/log'
     checkStatus: true
     checkFrequency: 999
+    maxChatSize: 22
 
   it 'should use sane defaults', ->
     server = new StarboundServer()
@@ -22,6 +23,7 @@ describe 'StarboundServer', ->
     server.should.have.property "configPath", defaultConfigPath
     server.should.have.property "checkStatus", false
     server.should.have.property "checkFrequency", 60
+    server.should.have.property "maxChatSize", 100
 
   it 'should allow option overrides', ->
     server = new StarboundServer badOpts
@@ -32,6 +34,7 @@ describe 'StarboundServer', ->
     server.should.have.property "logFile", badOpts.logFile
     server.should.have.property "checkStatus", badOpts.checkStatus
     server.should.have.property "checkFrequency", badOpts.checkFrequency
+    server.should.have.property "maxChatSize", badOpts.maxChatSize
 
     opts =
       binPath: "/foo/bin"
@@ -205,6 +208,13 @@ describe 'StarboundServer State - MockServer Tests', ->
   mockserv = null
   server = null
   testDelay = 5
+  testWorld =
+    sector: 'charlie'
+    x: '1'
+    y: '2'
+    z: '3'
+    planet: '77'
+    satellite: '88'
 
   beforeEach ( done ) ->
     mockserv = new MockServer()
@@ -289,5 +299,104 @@ describe 'StarboundServer State - MockServer Tests', ->
         server.players.should.not.include 'bob'
         done()
       setTimeout f, testDelay
+
+  it 'should log recent chat', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on 'chat', ( who, what, whn, live ) ->
+      chatLen = server.chat.length
+      lastMsg = server.chat[ chatLen - 1 ]
+      chatLen.should.equal 1
+      lastMsg.should.have.property 'who', 'dave'
+      lastMsg.should.have.property 'what', 'hello'
+      done()
+    server.init ( err ) ->
+      mockserv.logChat 'dave', 'hello'
+
+  it 'should only keep configurable amount of chat messages', ( done ) ->
+    opts = mockserv.getOpts()
+    opts.maxChatSize = 1
+    numMsgs = 0
+    server = new StarboundServer opts
+    server.on 'chat', ( who, what, whn ) ->
+      numMsgs += 1
+      if numMsgs == 3
+        chatLen = server.chat.length
+        lastMsg = server.chat[ chatLen - 1 ]
+        chatLen.should.equal 1
+        lastMsg.should.have.property 'who', 'dave'
+        lastMsg.should.have.property 'what', 'bang'
+        done()
+    server.init ( err ) ->
+      mockserv.logChat 'dave', 'hello'
+      mockserv.logChat 'dave', 'world'
+      mockserv.logChat 'dave', 'bang'
+
+  it 'should add world on load', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on 'worldLoad', ( world ) ->
+      server.worlds.should.have.length 1
+      w = server.worlds[ server.worlds.length - 1 ]
+      w.should.have.property 'sector', testWorld.sector
+      w.should.have.property 'x', testWorld.x
+      w.should.have.property 'y', testWorld.y
+      w.should.have.property 'z', testWorld.z
+      w.should.have.property 'planet', testWorld.planet
+      w.should.have.property 'satellite', testWorld.satellite
+      w.should.have.property 'active', true
+      done()
+    server.init ( err ) ->
+      mockserv.loadWorld testWorld
+
+  it 'should set world to inactive on unload', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on 'worldLoad', ( world ) ->
+      server.worlds.should.have.length 1
+      w = server.worlds[ server.worlds.length - 1 ]
+    server.on 'worldUnload', ( world ) ->
+      server.worlds.should.have.length 1
+      w = server.worlds[ server.worlds.length - 1 ]
+      w.should.have.property 'active', false
+      done()
+    server.init ( err ) ->
+      mockserv.loadWorld testWorld
+      mockserv.unloadWorld testWorld
+
+  it 'should clear worlds after status change', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    loadFired = false
+    server.on 'worldLoad', ( world ) ->
+      loadFired = true
+      server.worlds.should.have.length 1
+    server.on 'stop', ->
+      loadFired.should.be.true
+      server.worlds.should.have.length 0
+      done()
+    server.init ( err ) ->
+      mockserv.loadWorld testWorld
+      # delay server stop to let the load event fire
+      f = ->
+        mockserv.stop()
+      setTimeout f, testDelay
+
+  it 'should clear worlds after server crash', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    loadFired = false
+    server.on 'worldLoad', ( world ) ->
+      loadFired = true
+      server.worlds.should.have.length 1
+    server.on 'crash', ->
+      loadFired.should.be.true
+      server.worlds.should.have.length 0
+      done()
+    server.init ( err ) ->
+      mockserv.loadWorld testWorld
+      # delay server stop to let the load event fire
+      f = ->
+        mockserv.logSegfault()
+      setTimeout f, testDelay
+
+
+
+
 
 

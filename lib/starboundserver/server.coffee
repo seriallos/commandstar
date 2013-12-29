@@ -1,6 +1,7 @@
 root = exports ? this
 fs = require 'fs'
 net = require 'net'
+_ = require 'underscore'
 {EventEmitter} = require 'events'
 
 {ServerMonitor} = require './monitor.coffee'
@@ -24,6 +25,7 @@ class StarboundServer extends EventEmitter
     checkStatus: false
     checkFrequency: 60
     watchInterval: 100
+    maxChatSize: 100
 
   constructor: ( opts ) ->
 
@@ -41,6 +43,7 @@ class StarboundServer extends EventEmitter
     # convert seconds to milliseconds
     @checkFrequency = opts.checkFrequency ? @defaultOpts.checkFrequency
     @watchInterval = opts.watchInterval ? @defaultOpts.watchInterval
+    @maxChatSize = opts.maxChatSize ? @defaultOpts.maxChatSize
 
     @players = []
     @worlds = []
@@ -116,6 +119,22 @@ class StarboundServer extends EventEmitter
     log.on 'serverVersion', @onServerVersion
     log.on 'serverCrash', @onCrash
 
+  # --- Utility Access --- #
+
+  activeWorlds: ->
+    worlds = _.where @worlds, { active: true }
+    # TODO: This limits to active SYSTEMS, not planets/satellites
+    worlds = _.uniq worlds, ( item, key, list ) ->
+      JSON.stringify( _.pick item, 'sector', 'x', 'y' )
+    sectorOrder = {
+      'alpha': 1
+      'beta':  2
+      'gamma': 3
+      'delta': 4
+      'sectorx': 5
+    }
+    return _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
+
   # --- State Management --- #
 
   clearPlayers: ->
@@ -128,8 +147,36 @@ class StarboundServer extends EventEmitter
     idx = @players.indexOf playerName
     @players.splice idx, 1
 
+  addChat: ( who, what, whn ) ->
+    msg =
+      who: who
+      what: what
+      when: whn
+    @chat.push msg
+    if @chat.length > @maxChatSize
+      @chat = @chat.slice -( @maxChatSize )
+
   clearWorlds: ->
     @worlds = []
+
+  updateWorld: ( world, attrs ) ->
+    w = _.findWhere @worlds, world
+
+    if not w
+      # not currently in the list.
+      # prep the temp object for insertion
+      w = _.clone world
+    else
+      # previously in the list.
+      # Remove it from the list, it will be re-added with new attributes below
+      @worlds = _.without( @worlds, w )
+
+    # apply attributes, put back in the list.
+    # note that i'm using defaults in sort of a "reverse" usage
+    # attributes passed in are important, previous values are used if not
+    # in the attributes
+    w = _.defaults attrs, w
+    @worlds.push w
 
   # --- Event Management --- #
 
@@ -142,6 +189,7 @@ class StarboundServer extends EventEmitter
         @onServerStart( new Date(), true )
 
   onChat: ( who, what, whn, live ) =>
+    @addChat who, what, whn
     if live
       @emit 'chat', who, what, whn
 
@@ -170,10 +218,12 @@ class StarboundServer extends EventEmitter
       @emit 'stop', whn
 
   onWorldLoad: ( world, live ) =>
+    @updateWorld world, { active: true }
     if live
       @emit 'worldLoad', world
 
   onWorldUnload: ( world, live ) =>
+    @updateWorld world, { active: false }
     if live
       @emit 'worldUnload', world
 
