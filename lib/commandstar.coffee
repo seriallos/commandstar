@@ -5,7 +5,6 @@ config = require 'config'
 _ = require 'underscore'
 
 {StarboundServer} = require './starboundserver/server.coffee'
-{ServerLog} = require './starboundserver/log.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
 
@@ -28,7 +27,6 @@ if config.irc
   ircClient.addListener 'registered', (message) ->
     console.log "Connected to IRC #{config.irc.server}:#{config.irc.channel}"
     ircClient.join config.irc.channel
-
 
 # TODO: Pull this into a module or something
 notifyHipchat = ( msg ) ->
@@ -57,6 +55,7 @@ starserver = new StarboundServer({
   checkStatus: config.features.serverStatus
   checkFrequency: config.serverStatus.checkFrequency
   maxChatSize: config.maxRecentChatMessages
+  ignoreChatPrefixes: config.ignoreChatPrefixes
 })
 
 starserver.init ( err ) ->
@@ -64,171 +63,59 @@ starserver.init ( err ) ->
     console.log err
     process.exit( 1 )
 
-serverLog = new ServerLog( {
-  logFile: config.starbound.logFile
-} )
-
-serverLog.init ( ) ->
-  # nothing to do here
-
-# TODO: wrap all this state tracking in StarboundServer or some other module
-recentChat = []
-playersOnline = []
-gWorlds = []
-serverVersion = null
-
-pushRecentChat = ( message ) ->
-  recentChat.push message
-  # keep last N messages if recent chat is too big
-  if recentChat.length > config.maxRecentChatMessages
-    recentChat = recentChat.slice -(config.maxRecentChatMessages)
-
-getActiveWorlds = ->
-  worlds = _.where gWorlds, { active: true }
-  # TODO: This limits to active SYSTEMS, not planets/satellites
-  worlds = _.uniq worlds, ( item, key, list ) ->
-    JSON.stringify( _.pick item, 'sector', 'x', 'y' )
-  sectorOrder = {
-    'alpha': 1
-    'beta':  2
-    'gamma': 3
-    'delta': 4
-    'sectorx': 5
-  }
-  t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
-
-shouldIgnoreChat = ( message ) ->
-  prefixIgnoreRegex = new RegExp '^['+config.ignoreChatPrefixes+']'
-  return message.match prefixIgnoreRegex
-
-serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
+starserver.on "chat", ( who, what, chatWhen ) ->
   msg =
     who: who
     what: what
     when: chatWhen
-  # ignore slash commands
-  if not shouldIgnoreChat what
-    pushRecentChat msg
-    if fromActiveLog
-      io.sockets.emit 'chat', msg
-      notifyHipchat "#{who}: #{what}"
-      notifyIrc "#{who}: #{what}"
+  io.sockets.emit 'chat', msg
+  notifyHipchat "#{who}: #{what}"
+  notifyIrc "#{who}: #{what}"
 
-starserver.on 'statusChange', ( status ) ->
-  io.sockets.emit 'serverStatus', { status: status }
-  # reset global state if server has gone down
-  if status <= 0
-    playersOnline = []
-    activeWorlds = {}
+starserver.on "start", ( chatWhen, why ) ->
+  io.sockets.emit 'serverStatus', { status: 1 }
+  io.sockets.emit 'playerCount', { playersOnline: starserver.players }
+  data = { worlds: starserver.activeWorlds() }
+  io.sockets.emit 'worlds', data
 
-serverLog.on "serverStart", ( chatWhen, fromActiveLog ) ->
-  msg = { who: 'SERVER', what: 'Started!', when: chatWhen }
-  pushRecentChat msg
-  playersOnline = []
-  activeWorlds = {}
-  if fromActiveLog
-    io.sockets.emit 'chat', msg
-    io.sockets.emit 'serverStatus', { status: 1 }
-    notifyHipchat "Server has started!"
-    notifyIrc "Server has started!"
+starserver.on "stop", ( chatWhen, why ) ->
+  io.sockets.emit 'serverStatus', { status: 0 }
+  io.sockets.emit 'playerCount', { playersOnline: starserver.players }
+  data = { worlds: starserver.activeWorlds() }
+  io.sockets.emit 'worlds', data
 
-serverLog.on "serverStop", ( chatWhen, fromActiveLog ) ->
-  msg = { who: 'SERVER', what: 'Stopping!', when: chatWhen }
-  pushRecentChat msg
-  playersOnline = []
-  activeWorlds = {}
-  if fromActiveLog
-    io.sockets.emit 'chat', msg
-    io.sockets.emit 'serverStatus', { status: 0 }
-    notifyHipchat "Server has stopped!"
-    notifyIrc "Server has stopped!"
+starserver.on "version", ( version ) ->
+  io.sockets.emit 'serverVersion', { version: starserver.version }
 
-serverLog.on 'serverCrash', ( crashLine, whn, fromActiveLog ) ->
-  msg = { who: 'SERVER', what: 'Crashed!', when: chatWhen }
-  pushRecentChat msg
-  playersOnline = []
-  activeWorlds = {}
-  if fromActiveLog
-    io.sockets.emit 'chat', msg
-    io.sockets.emit 'serverStatus', { status: 0 }
-    notifyHipchat "Server has crashed!"
-    notifyIrc "Server has crashed!"
+starserver.on "playerConnect", ( playerId ) ->
+  io.sockets.emit 'playerCount', { playersOnline: starserver.players }
 
-serverLog.on "serverVersion", ( version, fromActiveLog ) ->
-  serverVersion = version
-  io.sockets.emit 'serverVersion', { version: serverVersion }
+starserver.on "playerDisconnect", ( playerId ) ->
+  io.sockets.emit 'playerCount', { playersOnline: starserver.players }
 
-serverLog.on "playerConnect", ( playerId, fromActiveLog ) ->
-  playersOnline.push playerId
-  txt = playerId + ' joined the server.'
-  msg = { who: 'SERVER', what: txt, when: new Date() }
-  pushRecentChat msg
-  if fromActiveLog
-    io.sockets.emit 'playerCount', { playersOnline: playersOnline }
-    io.sockets.emit 'chat', msg
-    notifyHipchat "#{playerId} joined the server"
-    notifyIrc "#{playerId} joined the server"
-
-serverLog.on "playerDisconnect", ( playerId, fromActiveLog ) ->
-  idx = playersOnline.indexOf playerId
-  playersOnline.splice idx, 1
-  txt = playerId + ' left the server.'
-  msg = { who: 'SERVER', what: txt, when: new Date() }
-  pushRecentChat msg
-  if fromActiveLog
-    io.sockets.emit 'playerCount', { playersOnline: playersOnline }
-    io.sockets.emit 'chat', msg
-    notifyHipchat "#{playerId} left the server"
-    notifyIrc "#{playerId} left the server"
-
-serverLog.on "worldLoad", ( worldInfo, fromActiveLog ) ->
+starserver.on "worldLoad", ( worldInfo ) ->
   # gate all system functionality on a feature flag
   if config.features.activeSystems
-    world = _.findWhere gWorlds, worldInfo
+    data = { worlds: starserver.activeWorlds() }
+    io.sockets.emit 'worlds', data
 
-    if not world
-      world = _.clone worldInfo
-      world.active = true
-      gWorlds.push world
-    else
-      world.active = true
-
-    if fromActiveLog
-      data = { worlds: getActiveWorlds() }
-      io.sockets.emit 'worlds', data
-
-serverLog.on "worldUnload", ( worldInfo, fromActiveLog ) ->
+starserver.on "worldUnload", ( worldInfo ) ->
   # gate all system functionality on a feature flag
   if config.features.activeSystems
-    world = _.findWhere gWorlds, worldInfo
-
-    if world
-      # remove the world from the list
-      gWorlds = _.without( gWorlds, world )
-      # re-add with active false
-      world.active = false
-      gWorlds.push world
-
-    if fromActiveLog
-      data = { worlds: getActiveWorlds() }
-      io.sockets.emit 'worlds', data
-
+    data = { worlds: starserver.activeWorlds() }
+    io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
-  isPublic = false
-  for password in starserver.config.serverPasswords
-    if '' == password
-      isPublic = true
   resData =
     serverName: config.serverName
     serverDesc: config.serverDescription
     status: starserver.status
     gamePort: starserver.config.gamePort
-    playersOnline: playersOnline
-    activeWorlds: getActiveWorlds()
-    version: serverVersion
+    playersOnline: starserver.players
+    activeWorlds: starserver.activeWorlds()
+    version: starserver.version
     maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
-    public: isPublic
+    public: starserver.isPublic()
     css: config.customCss
     features: config.features
   res.send resData
@@ -238,16 +125,16 @@ getServerStatus = ( req, res, next ) ->
 # change with malobre
 getPlayerList = (req, res, next) ->
   plist = []
-  for i of playersOnline
-    plist.push(nickname: playersOnline[i])
+  for i of starserver.players
+    plist.push(nickname: starserver.players[i])
   resData =
-    playercount: playersOnline.length
+    playercount: starserver.players.length
     playerlist: plist
   res.send resData
   next()
 
 getChat = ( req, res, next ) ->
-  res.send recentChat
+  res.send starserver.chat
   return next()
 
 server = restify.createServer()
