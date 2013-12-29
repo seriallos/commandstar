@@ -56,6 +56,7 @@ starserver = new StarboundServer({
   logFile: config.starbound.logFile
   checkStatus: config.features.serverStatus
   checkFrequency: config.serverStatus.checkFrequency
+  maxChatSize: config.maxRecentChatMessages
 })
 
 starserver.init ( err ) ->
