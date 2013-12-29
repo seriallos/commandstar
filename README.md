@@ -7,7 +7,7 @@ The best server resource for your players!
 
 [![Build Status](https://travis-ci.org/seriallos/commandstar.png)](https://travis-ci.org/seriallos/commandstar)
 
-Currently works for: **Offended Koala**
+Currently works for: **Angry Koala**
 
 Visit the [Demo Server!](http://commandstar.munshot.com:8080/)
 
