@@ -97,8 +97,9 @@ getActiveWorlds = ->
   }
   t = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
 
-isSlashCommand = ( message ) ->
-  message[0] == '/'
+shouldIgnoreChat = ( message ) ->
+  prefixIgnoreRegex = new RegExp '^['+config.ignoreChatPrefixes+']'
+  return message.match prefixIgnoreRegex
 
 serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
   msg =
@@ -106,7 +107,7 @@ serverLog.on "chat", ( who, what, chatWhen, fromActiveLog ) ->
     what: what
     when: chatWhen
   # ignore slash commands
-  if not isSlashCommand what
+  if not shouldIgnoreChat what
     pushRecentChat msg
     if fromActiveLog
       io.sockets.emit 'chat', msg

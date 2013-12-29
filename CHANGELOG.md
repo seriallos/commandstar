@@ -6,6 +6,12 @@ CHANGELOG
 
 **New**
 
+* Server status check is available but defaults OFF
+    * This is due to a socket file descriptor leak in the starbound server code.
+      If you use this feature, be aware that it will eventually cause the
+      server to crash once the server has reached the open file limit.
+* Ignores chat lines that start with # (Starlight admin prefix)
+
 **Fixes/Tweaks**
 
 * Reading old chat is easier now.  You won't get bounced to new messages when
