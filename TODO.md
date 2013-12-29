@@ -1,6 +1,7 @@
 Things I can possibly do
 
 * Persist state to local JSON files to handle restarts
+  * Largely to support captain's log
 * Config validation
 * Error reports back to the mothership
   * Opt-in
@@ -18,7 +19,7 @@ Things I can possibly do
 * Look into showing colors in commandstar output
 * Tests for REST Endpoints
 * Tests for web sockets
-* Browser testing for CSS/updates/etc
+* Headless browser testing for CSS/updates/etc
 
 Things when tech exists
 
