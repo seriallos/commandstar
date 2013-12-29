@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Make sure we cd to the commandstar directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
 # make sure node_modules are up to date
 # don't install dev dependencies by default
 # only report errors
