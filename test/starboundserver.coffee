@@ -143,7 +143,8 @@ describe 'StarboundServer Events - MockServer Tests', ->
 
   it 'should emit "crash" event on live server segfault', ( done ) ->
     server = new StarboundServer mockserv.getOpts()
-    server.on "crash", ( crashLine, whn ) ->
+    server.on "stop", ( whn, why ) ->
+      why.should.equal 'log crash'
       done()
     server.init ( ) ->
       f = ( ) -> mockserv.logSegfault()
@@ -195,7 +196,7 @@ describe 'StarboundServer Events - MockServer Tests', ->
     eventsFired = 0
     server = new StarboundServer mockserv.getOpts()
     server.init ( err ) ->
-      server.on 'stop', ( whn ) ->
+      server.on 'stop', ( whn, why ) ->
         eventsFired += 1
       mockserv.logServerStop()
       mockserv.stop()
@@ -367,8 +368,9 @@ describe 'StarboundServer State - MockServer Tests', ->
     server.on 'worldLoad', ( world ) ->
       loadFired = true
       server.worlds.should.have.length 1
-    server.on 'stop', ->
+    server.on 'stop', ( whn, why ) ->
       loadFired.should.be.true
+      why.should.equal 'monitor'
       server.worlds.should.have.length 0
       done()
     server.init ( err ) ->
@@ -384,9 +386,10 @@ describe 'StarboundServer State - MockServer Tests', ->
     server.on 'worldLoad', ( world ) ->
       loadFired = true
       server.worlds.should.have.length 1
-    server.on 'crash', ->
+    server.on 'stop', (whn, why) ->
       loadFired.should.be.true
       server.worlds.should.have.length 0
+      why.should.equal 'log crash'
       done()
     server.init ( err ) ->
       mockserv.loadWorld testWorld
