@@ -1,4 +1,4 @@
 --compilers coffee:coffee-script
 --timeout 1s
---reporter spec
+--reporter min
 --require should
