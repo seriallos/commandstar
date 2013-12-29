@@ -1,8 +1,5 @@
 Things I can possibly do
 
-* Decompose server.coffee
-    * Tests for server state maintenance
-    * Tests for REST endpoints
 * Persist state to local JSON files to handle restarts
 * Config validation
 * Error reports back to the mothership
@@ -19,6 +16,9 @@ Things I can possibly do
 * Adapter system for notifications
     * Don't want to load hipchat/IRC for admins not using them
 * Look into showing colors in commandstar output
+* Tests for REST Endpoints
+* Tests for web sockets
+* Browser testing for CSS/updates/etc
 
 Things when tech exists
 
