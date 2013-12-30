@@ -29,6 +29,7 @@ class StarboundServer extends EventEmitter
     maxChatSize: 100
     serverChatName: 'SERVER'
     ignoreChatPrefixes: '/#'
+    db: null
 
   constructor: ( opts ) ->
 
@@ -50,6 +51,7 @@ class StarboundServer extends EventEmitter
     @serverChatName = opts.serverChatName ? @defaultOpts.serverChatName
     @ignoreChatPrefixes =
       opts.ignoreChatPrefixes ? @defaultOpts.ignoreChatPrefixes
+    @db = opts.db ? @defaultOpts.db
 
     @players = []
     @worlds = []

@@ -3,6 +3,7 @@ socketio = require 'socket.io'
 fs = require 'fs'
 config = require 'config'
 _ = require 'underscore'
+Datastore = require 'nedb'
 
 {StarboundServer} = require './starboundserver/server.coffee'
 HipChat = require 'node-hipchat'
@@ -46,6 +47,17 @@ notifyIrc = ( msg ) ->
   if ircClient
     ircClient.say config.irc.channel, msg
 
+db = {}
+
+dbOpts =
+  players:
+    filename: config.datastore.dataPath + "/players.db"
+  worlds:
+    filename: config.datastore.dataPath + "/worlds.db"
+
+for dbName, dbConfig of dbOpts
+  db[ dbName ] = new Datastore dbConfig
+
 starserver = new StarboundServer({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
@@ -56,6 +68,7 @@ starserver = new StarboundServer({
   checkFrequency: config.serverStatus.checkFrequency
   maxChatSize: config.maxRecentChatMessages
   ignoreChatPrefixes: config.ignoreChatPrefixes
+  db: db
 })
 
 starserver.init ( err ) ->
