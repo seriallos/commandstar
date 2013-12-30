@@ -267,7 +267,6 @@ class StarboundServer extends EventEmitter
     @version = version
     if live
       @emit 'version', version
-    @addServerChat "Server version is #{version}", new Date(), live
 
   onLogCrash: ( data, whn, live ) =>
     @handleStop whn, 'log crash', live
