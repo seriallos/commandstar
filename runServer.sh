@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 # Make sure we cd to the commandstar directory
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
