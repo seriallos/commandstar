@@ -10,7 +10,8 @@
     "js-yaml": "2.1.3",
     "coffee-script": "1.6.3",
     "underscore": "1.5.2",
-    "irc": "0.3.6"
+    "irc": "0.3.6",
+    "nedb": "0.9.3"
   },
   "devDependencies": {
     "mocha": "1.15.1",
