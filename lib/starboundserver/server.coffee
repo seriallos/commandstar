@@ -165,14 +165,13 @@ class StarboundServer extends EventEmitter
     return message.match prefixIgnoreRegex
 
   addChat: ( who, what, whn ) ->
-    if not @shouldIgnoreChat what
-      msg =
-        who: who
-        what: what
-        when: whn
-      @chat.push msg
-      if @chat.length > @maxChatSize
-        @chat = @chat.slice -( @maxChatSize )
+    msg =
+      who: who
+      what: what
+      when: whn
+    @chat.push msg
+    if @chat.length > @maxChatSize
+      @chat = @chat.slice -( @maxChatSize )
 
   clearWorlds: ->
     @worlds = []
@@ -220,9 +219,10 @@ class StarboundServer extends EventEmitter
       @addServerChat 'Stopped!', whn, live
 
   handleChat: ( who, what, whn, live ) ->
-    @addChat who, what, whn
-    if live
-      @emit 'chat', who, what, whn
+    if not @shouldIgnoreChat what
+      @addChat who, what, whn
+      if live
+        @emit 'chat', who, what, whn
 
   # --- Backend Event Management --- #
 
