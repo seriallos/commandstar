@@ -165,7 +165,7 @@ getWorldsPopular = ( req, res, next ) ->
       v = world.numLoads ? 0
       return -v
     sorted = _.sortBy worlds, sortByVisits
-    res.send sorted[0..1]
+    res.send sorted[0..9]
     next()
 
 getPlayers = ( req, res, next ) ->
