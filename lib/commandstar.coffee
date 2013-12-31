@@ -159,6 +159,15 @@ getWorlds = ( req, res, next ) ->
     res.send worlds
     next()
 
+getWorldsPopular = ( req, res, next ) ->
+  starserver.allWorlds ( worlds ) ->
+    sortByVisits = ( world ) ->
+      v = world.numLoads ? 0
+      return -v
+    sorted = _.sortBy worlds, sortByVisits
+    res.send sorted[0..1]
+    next()
+
 getPlayers = ( req, res, next ) ->
   starserver.allPlayers ( players ) ->
     res.send players
@@ -193,12 +202,16 @@ server.get '/', ( req, res, next ) ->
     next()
 
 server.get( '/server/status', getServerStatus )
+
 server.get( '/server/chat', getChat )
+
 server.get( '/server/players', getPlayers )
+
 server.get( '/server/players/online', getPlayersOnline )
 server.get( '/server/playerList', getPlayersOnline )
 
 server.get( '/server/worlds', getWorlds )
+server.get( '/server/worlds/popular', getWorldsPopular )
 
 ioOpts =
   'log level': 1
