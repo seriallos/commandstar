@@ -3,6 +3,7 @@ socketio = require 'socket.io'
 fs = require 'fs'
 config = require 'config'
 _ = require 'underscore'
+Datastore = require 'nedb'
 
 {StarboundServer} = require './starboundserver/server.coffee'
 HipChat = require 'node-hipchat'
@@ -46,6 +47,25 @@ notifyIrc = ( msg ) ->
   if ircClient
     ircClient.say config.irc.channel, msg
 
+db = {}
+
+dbOpts =
+  players:
+    filename: config.datastore.dataPath + "/players.db"
+    autoload: true
+  worlds:
+    filename: config.datastore.dataPath + "/worlds.db"
+    autoload: true
+
+for dbName, dbConfig of dbOpts
+  db[ dbName ] = new Datastore dbConfig
+
+db.players.count {}, ( err, count ) ->
+  console.log "Players Seen: #{count}"
+
+db.worlds.count {}, ( err, count ) ->
+  console.log "Worlds Seen: #{count}"
+
 starserver = new StarboundServer({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
@@ -56,6 +76,7 @@ starserver = new StarboundServer({
   checkFrequency: config.serverStatus.checkFrequency
   maxChatSize: config.maxRecentChatMessages
   ignoreChatPrefixes: config.ignoreChatPrefixes
+  db: db
 })
 
 starserver.init ( err ) ->
@@ -106,24 +127,29 @@ starserver.on "worldUnload", ( worldInfo ) ->
     io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
-  resData =
-    serverName: config.serverName
-    serverDesc: config.serverDescription
-    status: starserver.status
-    gamePort: starserver.config.gamePort
-    playersOnline: starserver.players
-    activeWorlds: starserver.activeWorlds()
-    version: starserver.version
-    maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
-    public: starserver.isPublic()
-    css: config.customCss
-    features: config.features
-  res.send resData
-  return next()
+  # get world count
+  starserver.allWorldsCount ( worldCount ) ->
+    starserver.allPlayersCount ( playerCount ) ->
+      resData =
+        serverName: config.serverName
+        serverDesc: config.serverDescription
+        status: starserver.status
+        gamePort: starserver.config.gamePort
+        playersOnline: starserver.players
+        activeWorlds: starserver.activeWorlds()
+        version: starserver.version
+        maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
+        worldsExplored: worldCount
+        playersSeen: playerCount
+        public: starserver.isPublic()
+        css: config.customCss
+        features: config.features
+      res.send resData
+      return next()
 
 # Used by starbound-servers.net.  Don't change data output without confirming
 # change with malobre
-getPlayerList = (req, res, next) ->
+getPlayersOnline = (req, res, next) ->
   plist = []
   for i of starserver.players
     plist.push(nickname: starserver.players[i])
@@ -133,9 +159,28 @@ getPlayerList = (req, res, next) ->
   res.send resData
   next()
 
+getWorlds = ( req, res, next ) ->
+  starserver.allWorlds ( worlds ) ->
+    res.send worlds
+    next()
+
+getWorldsPopular = ( req, res, next ) ->
+  starserver.allWorlds ( worlds ) ->
+    sortByVisits = ( world ) ->
+      v = world.numLoads ? 0
+      return -v
+    sorted = _.sortBy worlds, sortByVisits
+    res.send sorted[0..9]
+    next()
+
+getPlayers = ( req, res, next ) ->
+  starserver.allPlayers ( players ) ->
+    res.send players
+    next()
+
 getChat = ( req, res, next ) ->
   res.send starserver.chat
-  return next()
+  next()
 
 server = restify.createServer()
 server.name = "CommandStar"
@@ -162,9 +207,16 @@ server.get '/', ( req, res, next ) ->
     next()
 
 server.get( '/server/status', getServerStatus )
+
 server.get( '/server/chat', getChat )
-server.get( '/server/playerList', getPlayerList )
-server.get( '/server/players', getPlayerList )
+
+server.get( '/server/players', getPlayers )
+
+server.get( '/server/players/online', getPlayersOnline )
+server.get( '/server/playerList', getPlayersOnline )
+
+server.get( '/server/worlds', getWorlds )
+server.get( '/server/worlds/popular', getWorldsPopular )
 
 ioOpts =
   'log level': 1

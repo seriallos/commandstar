@@ -45,6 +45,14 @@
                 <td>Access</td>
                 <td id="serverAccess"></td>
               </tr>
+              <tr id="playersSeenRow">
+                <td>Players (All-Time)</td>
+                <td id="playersSeen"></td>
+              </tr>
+              <tr id="worldsExploredRow">
+                <td>Worlds Explored</td>
+                <td id="worldsExplored"></td>
+              </tr>
             </table>
           </div>
 
@@ -299,6 +307,12 @@
           $('#apiFooter').hide();
         }
       };
+      var setPlayersSeen = function( playersSeen ) {
+        $('#playersSeen').text( playersSeen );
+      };
+      var setWorldsExplored = function( worldsExplored ) {
+        $('#worldsExplored').text( worldsExplored );
+      };
 
       var apiBase = '';
       var socket = io.connect(apiBase);
@@ -331,6 +345,8 @@
           setActiveWorlds( data.activeWorlds, data.features.activeSystems );
           setMaxPlayers( data.maxPlayers );
           setDisplayApiFooter( data.features.apiFooter );
+          setPlayersSeen( data.playersSeen );
+          setWorldsExplored( data.worldsExplored );
 
           // apply custom CSS
           $.each( data.css, function ( key, cssFile ) {

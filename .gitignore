@@ -24,3 +24,6 @@ mynotes.txt
 !test/helpers/_mockserver
 test/helpers/_mockserver/*
 !test/helpers/_mockserver/placeholder
+
+# ignore the data directory
+data/

@@ -1,6 +1,38 @@
 CHANGELOG
 =========
 
+0.1.6 - In Progress
+-------------------
+
+This may be another unstable release.  NeDB is a brand new dependency that I've
+only been able to test on my own low-pop servers.
+
+Note: Server status should be usable soon as the socket leak has been fixed for
+the next Starbound release.  (Forum link)[socket-leak-fix-forum]
+
+[socket-leak-fix-forum]: http://community.playstarbound.com/index.php?threads/crash-bug-unreleased-socket-files-too-many-open-files.54833/page-2#post-1624126
+
+**New**
+
+* Show total worlds explored and total players seen (ever) on the server.
+    * These will only start tracking with this new update.
+    * Players are tracked by their game name.
+* Adds several API endpoints
+    * /server/worlds - Returns info on all visited worlds
+    * /server/players - Returns info on all players ever seen
+
+**Fixes/Tweaks**
+
+* runServer.sh should now work from any path (Fixes #11)
+* Fixes bug where slash chat was showing up on the site
+
+**Technical**
+
+* Adds NeDB as a dependency to have a bit of persistence when restarted
+    * Default data path is ./data.  This is configurable.
+    * This will enable moving forward on a bunch of other features.
+    * Using a pure NodeJS library keeps CommandStar easy to install and run.
+
 0.1.5
 -----
 

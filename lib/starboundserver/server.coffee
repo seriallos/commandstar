@@ -29,6 +29,7 @@ class StarboundServer extends EventEmitter
     maxChatSize: 100
     serverChatName: 'SERVER'
     ignoreChatPrefixes: '/#'
+    db: null
 
   constructor: ( opts ) ->
 
@@ -50,6 +51,7 @@ class StarboundServer extends EventEmitter
     @serverChatName = opts.serverChatName ? @defaultOpts.serverChatName
     @ignoreChatPrefixes =
       opts.ignoreChatPrefixes ? @defaultOpts.ignoreChatPrefixes
+    @db = opts.db ? @defaultOpts.db
 
     @players = []
     @worlds = []
@@ -148,6 +150,39 @@ class StarboundServer extends EventEmitter
         isPublic = true
     return isPublic
 
+  allWorldsCount: ( callback ) ->
+    @db.worlds.count {}, ( err, count ) ->
+      if err
+        console.log "Error getting world count"
+        console.log err
+      else
+        callback count
+
+  allWorlds: ( callback ) ->
+    @db.worlds.find {}, ( err, worlds ) ->
+      if err
+        console.log "Error getting popular worlds"
+        console.log err
+      else
+        callback worlds
+
+  allPlayersCount: ( callback ) ->
+    @db.players.count {}, ( err, count ) ->
+      if err
+        console.log "Error counting players"
+        console.log err
+      else
+        callback count
+
+  allPlayers: ( callback ) ->
+    @db.players.find {}, ( err, players ) ->
+      if err
+        console.log "Error getting active players"
+        console.log err
+      else
+        callback players
+
+
   # --- State Management --- #
 
   clearPlayers: ->
@@ -198,6 +233,33 @@ class StarboundServer extends EventEmitter
   addServerChat: ( what, whn, live ) ->
     @handleChat @serverChatName, what, whn, live
 
+  # --- DB helpers --- #
+  # TODO: Decompose this more nicely
+
+  dbUpdatePlayer: ( playerId, change ) ->
+    if @db
+      q =
+        name: playerId
+      @db.players.update q, change, { upsert: true }, ( err, num, upsert ) =>
+        if err
+          console.log "Error updating db.players"
+          console.log err
+
+  dbUpdateWorld: ( world, change ) ->
+    if @db
+      q =
+        sector: world.sector
+        x: world.x
+        y: world.y
+        z: world.z
+        planet: world.planet
+        satellite: world.satellite ? null
+      @db.worlds.update q, change, { upsert: true }, ( err, num, upsert ) ->
+        if err
+          console.log "Error updating world DB"
+          console.log err
+
+
   # --- Event Emitting and Handilng --- #
 
   handleStart: ( whn, why, live ) ->
@@ -205,18 +267,18 @@ class StarboundServer extends EventEmitter
     @clearWorlds()
     if @status != ServerMonitor::STATUS_UP
       @status = ServerMonitor::STATUS_UP
+      @addServerChat 'Started!', whn, live
       if live
         @emit 'start', whn, why
-      @addServerChat 'Started!', whn, live
 
   handleStop: ( whn, why, live ) ->
     @clearPlayers()
     @clearWorlds()
     if @status != ServerMonitor::STATUS_DOWN
       @status = ServerMonitor::STATUS_DOWN
+      @addServerChat 'Stopped!', whn, live
       if live
         @emit 'stop', whn, why
-      @addServerChat 'Stopped!', whn, live
 
   handleChat: ( who, what, whn, live ) ->
     if not @shouldIgnoreChat what
@@ -237,15 +299,25 @@ class StarboundServer extends EventEmitter
 
   onLogPlayerConnect: ( playerId, live ) =>
     @addPlayer playerId
+    @addServerChat "#{playerId} joined the server.", new Date(), live
     if live
       @emit 'playerConnect', playerId
-    @addServerChat "#{playerId} joined the server.", new Date(), live
+      change =
+        $set:
+          lastLogin: new Date()
+        $inc:
+          numLogins: 1
+      @dbUpdatePlayer playerId, change
 
   onLogPlayerDisconnect: ( playerId, live ) =>
     @removePlayer playerId
+    @addServerChat "#{playerId} left the server.", new Date(), live
     if live
       @emit 'playerDisconnect', playerId
-    @addServerChat "#{playerId} left the server.", new Date(), live
+      change =
+        $set:
+          lastLogout: new Date()
+      @dbUpdatePlayer playerId, change
 
   onLogServerStart: ( whn, live ) =>
     @handleStart whn, 'log', live
@@ -257,14 +329,25 @@ class StarboundServer extends EventEmitter
     @updateWorld world, { active: true }
     if live
       @emit 'worldLoad', world
+      change =
+        $set:
+          lastLoaded: new Date()
+        $inc:
+          numLoads: 1
+      @dbUpdateWorld world, change
 
   onLogWorldUnload: ( world, live ) =>
     @updateWorld world, { active: false }
     if live
       @emit 'worldUnload', world
+      change =
+        $set:
+          lastUnloaded: new Date()
+      @dbUpdateWorld world, change
 
   onLogServerVersion: ( version, live ) =>
     @version = version
+    @addServerChat "Server version is #{version}", new Date(), live
     if live
       @emit 'version', version
 

@@ -1,4 +1,11 @@
-{ StarboundServer, ServerLog, MockServer } = require './helpers/index.coffee'
+{
+  StarboundServer,
+  ServerLog,
+  MockServer,
+  Datastore
+} = require './helpers/index.coffee'
+
+_ = require 'underscore'
 
 describe 'StarboundServer', ->
 
@@ -402,7 +409,117 @@ describe 'StarboundServer State - MockServer Tests', ->
       setTimeout f, testDelay
 
 
+describe 'StarboundServer State - Datastore Tests', ->
+
+  # These tests exercise the NeDB persistence layer.  Each test has a mock
+  # server, StarboundServer, and in-memory database setup to make sure the DB is
+  # updated as expected.
+
+  mockserv = null
+  server = null
+  db = null
+
+  makeDb = ->
+    db = {}
+    db.players = new Datastore( { autoload: true } )
+    db.worlds = new Datastore( { autoload: true } )
+    return db
+
+  beforeEach ( done ) ->
+    mockserv = new MockServer()
+    mockserv.start ->
+      db = makeDb()
+      opts = mockserv.getOpts()
+      opts.db = makeDb()
+      server = new StarboundServer opts
+      server.init (err ) ->
+        done()
+
+  afterEach ( done ) ->
+    # make sure watch is cleared if it was started
+    if server
+      server.reset()
+    server = null
+    db = null
+    mockserv.stop ->
+      mockserv = null
+      done()
 
 
+  it 'stores players and num logins in the DB', ( done ) ->
+    mockserv.logConnectPlayer 1, 'alice'
+    mockserv.logConnectPlayer 2, 'bob'
+    mockserv.logDisconnectPlayer 2, 'bob'
+    mockserv.logConnectPlayer 2, 'bob'
+    mockserv.logConnectPlayer 3, 'trevor'
+    # need to wait for IO and log tail to catch up
+    f = ->
+      db.players.find {}, ( err, docs ) ->
+        docs.should.have.length 3
 
+        alice = _.find docs, ( d ) -> d.name == 'alice'
+        alice.should.have.property 'name', 'alice'
+        alice.should.have.property 'numLogins', 1
+        alice.should.have.property 'lastLogin'
+
+        bob = _.find docs, ( d ) -> d.name == 'bob'
+        bob.should.have.property 'name', 'bob'
+        bob.should.have.property 'numLogins', 2
+        bob.should.have.property 'lastLogin'
+        bob.should.have.property 'lastLogout'
+
+        trevor = _.find docs, ( d ) -> d.name == 'trevor'
+        trevor.should.have.property 'name', 'trevor'
+        trevor.should.have.property 'numLogins', 1
+
+        done()
+    setTimeout f, 5
+
+  it 'stores worlds and num loads in the DB', ( done ) ->
+    worldCharlie =
+      sector: 'charlie'
+      x: '1'
+      y: '2'
+      z: '3'
+      planet: '4'
+      satellite: '5'
+    worldEcho =
+      sector: 'echo'
+      x: '-1'
+      y: '-2'
+      z: '-3'
+      planet: '10'
+      satellite: null
+    mockserv.loadWorld worldCharlie
+    mockserv.unloadWorld worldCharlie
+    mockserv.loadWorld worldCharlie
+    mockserv.loadWorld worldEcho
+    # need to wait for IO and log tail to catch up
+    f = ->
+      db.worlds.find {}, ( err, docs ) ->
+        docs.should.have.length 2
+
+        charlie = _.findWhere docs, worldCharlie
+        charlie.should.have.property 'sector', worldCharlie.sector
+        charlie.should.have.property 'x', worldCharlie.x
+        charlie.should.have.property 'y', worldCharlie.y
+        charlie.should.have.property 'z', worldCharlie.z
+        charlie.should.have.property 'planet', worldCharlie.planet
+        charlie.should.have.property 'satellite', worldCharlie.satellite
+        charlie.should.have.property 'numLoads', 2
+        charlie.should.have.property 'lastLoaded'
+        charlie.should.have.property 'lastUnloaded'
+
+        echo = _.findWhere docs, worldEcho
+        echo.should.have.property 'sector', worldEcho.sector
+        echo.should.have.property 'x', worldEcho.x
+        echo.should.have.property 'y', worldEcho.y
+        echo.should.have.property 'z', worldEcho.z
+        echo.should.have.property 'planet', worldEcho.planet
+        echo.should.have.property 'satellite', worldEcho.satellite
+        echo.should.have.property 'numLoads', 1
+        echo.should.have.property 'lastLoaded'
+
+        done()
+    setTimeout f, 5
 
