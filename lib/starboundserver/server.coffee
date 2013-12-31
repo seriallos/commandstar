@@ -207,18 +207,18 @@ class StarboundServer extends EventEmitter
     @clearWorlds()
     if @status != ServerMonitor::STATUS_UP
       @status = ServerMonitor::STATUS_UP
+      @addServerChat 'Started!', whn, live
       if live
         @emit 'start', whn, why
-      @addServerChat 'Started!', whn, live
 
   handleStop: ( whn, why, live ) ->
     @clearPlayers()
     @clearWorlds()
     if @status != ServerMonitor::STATUS_DOWN
       @status = ServerMonitor::STATUS_DOWN
+      @addServerChat 'Stopped!', whn, live
       if live
         @emit 'stop', whn, why
-      @addServerChat 'Stopped!', whn, live
 
   handleChat: ( who, what, whn, live ) ->
     if not @shouldIgnoreChat what
@@ -239,15 +239,37 @@ class StarboundServer extends EventEmitter
 
   onLogPlayerConnect: ( playerId, live ) =>
     @addPlayer playerId
-    if live
-      @emit 'playerConnect', playerId
     @addServerChat "#{playerId} joined the server.", new Date(), live
+    if live
+      console.log "INFO: #{playerId} connected"
+      @emit 'playerConnect', playerId
+      # track existence of player
+      q =
+        name: playerId
+      change =
+        $set:
+          lastLogin: new Date()
+        $inc:
+          numLogins: 1
+      @db.players.update q, change, { upsert: true }, ( err, num, upsert ) =>
+        if err
+          console.log "Error updating db.players on connect"
+          console.log err
 
   onLogPlayerDisconnect: ( playerId, live ) =>
     @removePlayer playerId
-    if live
-      @emit 'playerDisconnect', playerId
     @addServerChat "#{playerId} left the server.", new Date(), live
+    if live
+      console.log "INFO: #{playerId} disconnected"
+      @emit 'playerDisconnect', playerId
+      q =
+        name: playerId
+      change =
+        $set:
+          lastLogout: new Date()
+      @db.players.update q, change, { upsert: true }, ( err, num, upsert ) ->
+        if err
+          console.log err
 
   onLogServerStart: ( whn, live ) =>
     @handleStart whn, 'log', live
@@ -267,9 +289,9 @@ class StarboundServer extends EventEmitter
 
   onLogServerVersion: ( version, live ) =>
     @version = version
+    @addServerChat "Server version is #{version}", new Date(), live
     if live
       @emit 'version', version
-    @addServerChat "Server version is #{version}", new Date(), live
 
   onLogCrash: ( data, whn, live ) =>
     @handleStop whn, 'log crash', live
