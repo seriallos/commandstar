@@ -154,9 +154,14 @@ getPlayerList = (req, res, next) ->
   res.send resData
   next()
 
+getAllWorlds = ( req, res, next ) ->
+  starserver.allWorlds ( worlds ) ->
+    res.send worlds
+    next()
+
 getChat = ( req, res, next ) ->
   res.send starserver.chat
-  return next()
+  next()
 
 server = restify.createServer()
 server.name = "CommandStar"
@@ -186,6 +191,8 @@ server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
 server.get( '/server/playerList', getPlayerList )
 server.get( '/server/players', getPlayerList )
+
+server.get( '/server/worlds', getAllWorlds )
 
 ioOpts =
   'log level': 1

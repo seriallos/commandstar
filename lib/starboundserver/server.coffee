@@ -150,6 +150,23 @@ class StarboundServer extends EventEmitter
         isPublic = true
     return isPublic
 
+  allWorlds: ( callback ) ->
+    @db.worlds.find {}, ( err, worlds ) ->
+      if err
+        console.log "Error getting popular worlds"
+        console.log err
+      else
+        callback worlds
+
+  allPlayers: ( callback ) ->
+    @db.players.find {}, ( err, players ) ->
+      if err
+        console.log "Error getting active players"
+        console.log err
+      else
+        callback players
+
+
   # --- State Management --- #
 
   clearPlayers: ->
