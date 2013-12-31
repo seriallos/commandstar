@@ -220,7 +220,7 @@ class StarboundServer extends EventEmitter
         y: world.y
         z: world.z
         planet: world.planet
-        satellite: world.satellite
+        satellite: world.satellite ? null
       @db.worlds.update q, change, { upsert: true }, ( err, num, upsert ) ->
         if err
           console.log "Error updating world DB"
