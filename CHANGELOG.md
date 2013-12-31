@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-0.1.6 - In Progress
--------------------
+0.1.6
+-----
 
 This may be another unstable release.  NeDB is a brand new dependency that I've
 only been able to test on my own low-pop servers.
