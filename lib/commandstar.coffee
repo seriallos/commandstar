@@ -144,7 +144,7 @@ getServerStatus = ( req, res, next ) ->
 
 # Used by starbound-servers.net.  Don't change data output without confirming
 # change with malobre
-getPlayerList = (req, res, next) ->
+getPlayersOnline = (req, res, next) ->
   plist = []
   for i of starserver.players
     plist.push(nickname: starserver.players[i])
@@ -154,9 +154,14 @@ getPlayerList = (req, res, next) ->
   res.send resData
   next()
 
-getAllWorlds = ( req, res, next ) ->
+getWorlds = ( req, res, next ) ->
   starserver.allWorlds ( worlds ) ->
     res.send worlds
+    next()
+
+getPlayers = ( req, res, next ) ->
+  starserver.allPlayers ( players ) ->
+    res.send players
     next()
 
 getChat = ( req, res, next ) ->
@@ -189,10 +194,11 @@ server.get '/', ( req, res, next ) ->
 
 server.get( '/server/status', getServerStatus )
 server.get( '/server/chat', getChat )
-server.get( '/server/playerList', getPlayerList )
-server.get( '/server/players', getPlayerList )
+server.get( '/server/players', getPlayers )
+server.get( '/server/players/online', getPlayersOnline )
+server.get( '/server/playerList', getPlayersOnline )
 
-server.get( '/server/worlds', getAllWorlds )
+server.get( '/server/worlds', getWorlds )
 
 ioOpts =
   'log level': 1
