@@ -1,6 +1,6 @@
 {
   "name": "commandstar",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "dependencies": {
     "restify": "2.6.0",
     "tail": "0.3.2",

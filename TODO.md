@@ -1,7 +1,5 @@
 Things I can possibly do
 
-* Persist state to local JSON files to handle restarts
-  * Largely to support captain's log
 * Config validation
 * Error reports back to the mothership
   * Opt-in
