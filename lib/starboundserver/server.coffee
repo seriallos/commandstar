@@ -150,6 +150,14 @@ class StarboundServer extends EventEmitter
         isPublic = true
     return isPublic
 
+  allWorldsCount: ( callback ) ->
+    @db.worlds.count {}, ( err, count ) ->
+      if err
+        console.log "Error getting world count"
+        console.log err
+      else
+        callback count
+
   allWorlds: ( callback ) ->
     @db.worlds.find {}, ( err, worlds ) ->
       if err
@@ -157,6 +165,14 @@ class StarboundServer extends EventEmitter
         console.log err
       else
         callback worlds
+
+  allPlayersCount: ( callback ) ->
+    @db.players.count {}, ( err, count ) ->
+      if err
+        console.log "Error counting players"
+        console.log err
+      else
+        callback count
 
   allPlayers: ( callback ) ->
     @db.players.find {}, ( err, players ) ->

@@ -127,20 +127,25 @@ starserver.on "worldUnload", ( worldInfo ) ->
     io.sockets.emit 'worlds', data
 
 getServerStatus = ( req, res, next ) ->
-  resData =
-    serverName: config.serverName
-    serverDesc: config.serverDescription
-    status: starserver.status
-    gamePort: starserver.config.gamePort
-    playersOnline: starserver.players
-    activeWorlds: starserver.activeWorlds()
-    version: starserver.version
-    maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
-    public: starserver.isPublic()
-    css: config.customCss
-    features: config.features
-  res.send resData
-  return next()
+  # get world count
+  starserver.allWorldsCount ( worldCount ) ->
+    starserver.allPlayersCount ( playerCount ) ->
+      resData =
+        serverName: config.serverName
+        serverDesc: config.serverDescription
+        status: starserver.status
+        gamePort: starserver.config.gamePort
+        playersOnline: starserver.players
+        activeWorlds: starserver.activeWorlds()
+        version: starserver.version
+        maxPlayers: starserver.config.maxPlayers ? 8 # guess at default?
+        worldsExplored: worldCount
+        playersSeen: playerCount
+        public: starserver.isPublic()
+        css: config.customCss
+        features: config.features
+      res.send resData
+      return next()
 
 # Used by starbound-servers.net.  Don't change data output without confirming
 # change with malobre
