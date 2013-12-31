@@ -24,7 +24,9 @@ Features
 * Real-time server up/down status
 * Active solar systems: sector, X, and Y
 * Server Description
+* Total worlds explored, total players ever seen
 * Easy to install, easy to run
+    * Tested on Win7, OS X, and Linux (Ubuntu)
 * Mobile-friendly design
 * API-compatible with starbound-servers.net
 
@@ -36,7 +38,7 @@ Features
 Requirements
 ============
 
-Tested on Ubuntu 12.04 and Windows 7
+Tested on Ubuntu 12.04, Windows 7, and OS X Mavericks
 
 * Starbound server
 * NodeJS 0.10.x
@@ -77,8 +79,59 @@ You can also download a release tgz or ZIP and skip the github clone process.
 * Double click runServer.bat to start the CommandStar process
 * Visit http://localhost:8080/
 
-Configuration
-=============
+Configuration Files
+===================
+
+Configuration files all live in `config` and can be layered to keep things
+simple.
+
+It's best to not edit default.yaml directly as new configurations may be added
+with new versions of CommandStar.  The best method is to use a hostname-specific
+configuration.
+
+When setting up CommandStar, you'll want to make a config file named after the
+hostname of your machine.  To determine this hostname, do one of the following
+based on your OS:
+
+**Linux**
+
+In a terminal, run the `hostname` command.  It will print out the
+hostname of your machine.  For example:
+
+    $ hostname
+    seriallos-linux
+
+In this example, you would create `config/seriallos-linux.yaml` and put in your
+overrides.
+
+**Windows**
+
+Run `cmd.exe` and run the `hostname` command.  This will show the hostname of
+your machine.  For example:
+
+    C:\Users\seriallos>hostname
+    seriallos-PC
+
+In this example, you would create `config\seriallos-PC.yaml` and put in your
+overrides.
+
+**Directive Overrides**
+
+The hostname-specific configuration file will inherit everything from
+default.yaml.  In this file, you will only need to manage configurations that
+you want to change.
+
+For example, if you just want to change the server name and description, you can
+make a file that only contains the following lines:
+
+    serverName: My Starbound Server
+
+    serverDescription: Welcome!
+
+That's all that needs to be in your hostname-specific YAML file!
+
+Configuration Options
+=====================
 
 **serverName**
 
