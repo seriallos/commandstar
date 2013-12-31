@@ -52,11 +52,19 @@ db = {}
 dbOpts =
   players:
     filename: config.datastore.dataPath + "/players.db"
+    autoload: true
   worlds:
     filename: config.datastore.dataPath + "/worlds.db"
+    autoload: true
 
 for dbName, dbConfig of dbOpts
   db[ dbName ] = new Datastore dbConfig
+
+db.players.count {}, ( err, count ) ->
+  console.log "Players Seen: #{count}"
+
+db.worlds.count {}, ( err, count ) ->
+  console.log "Worlds Seen: #{count}"
 
 starserver = new StarboundServer({
   binPath: config.starbound.binPath
