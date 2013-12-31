@@ -60,12 +60,6 @@ dbOpts =
 for dbName, dbConfig of dbOpts
   db[ dbName ] = new Datastore dbConfig
 
-db.players.count {}, ( err, count ) ->
-  console.log "Players Seen: #{count}"
-
-db.worlds.count {}, ( err, count ) ->
-  console.log "Worlds Seen: #{count}"
-
 starserver = new StarboundServer({
   binPath: config.starbound.binPath
   assetsPath: config.starbound.assetsPath
