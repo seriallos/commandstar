@@ -110,4 +110,4 @@ hipchat:
 #  password:
 
 datastore:
-  dataPath: './data'
+  dataPath: /data

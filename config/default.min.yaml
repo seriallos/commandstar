@@ -51,3 +51,6 @@ hipchat:
 #  channel: "#starbound"
 #  user:
 #  password:
+
+datastore:
+  dataPath: ./data
