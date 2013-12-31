@@ -102,6 +102,25 @@ Paths for assets, executables, and whatnot.
 * starbound.logFile: Full path to 'starbound_server.log'
 * starbound.configFile: Full path to 'starbound.config'
 
+**features**
+
+Toggle features on and off.
+
+* features.serverStatus: Enables a "heartbeat" check on the server port to see
+  if the server is up..  Default is false
+* features.activeSystems: Enables the "Active Systems" panel on the website and
+  supporting APIs.  Default is true
+* features.apiFooter: Enables the API links in the footer of the web page.
+  Default is true
+
+**ignoreChatPrefixes**
+
+List of characters that should be ignored when at the start of a chat line.
+Defaults to /#
+
+* / is for all normal slash commands
+* # is the admin chat channel for the server wrapper Starrybound
+
 **listenPort**
 
 Port that the HTTP server binds to.  Defaults to 8080.
@@ -116,6 +135,13 @@ Number of chat messages to keep (default 100)
 
 Setting this too high can vastly increase initial page load time and bloat
 memory usage.
+
+**serverStatus**
+
+Configurations for the server status feature
+
+* serverStatus.checkFrequency: How often to check the game server port, in
+  seconds.  Default is 300 seconds.
 
 **customCss**
 
