@@ -28,7 +28,9 @@ Features
 * Easy to install, easy to run
     * Tested on Win7, OS X, and Linux (Ubuntu)
 * Mobile-friendly design
-* API-compatible with starbound-servers.net
+
+Also note that CommandStar plays nicely with other server tools as it runs
+completely independently of the Starbound server (and server wrappers).
 
 **Upcoming**
 
@@ -42,6 +44,10 @@ Tested on Ubuntu 12.04, Windows 7, and OS X Mavericks
 
 * Starbound server
 * NodeJS 0.10.x
+
+CommandStar must run on the same host as the Starbound server as it requires
+direct access to the server log files.  NFS probably won't work as it uses file
+watching code that needs to be on the same filesystem.
 
 Installation
 ============
