@@ -241,35 +241,35 @@ class StarboundServer extends EventEmitter
     @addPlayer playerId
     @addServerChat "#{playerId} joined the server.", new Date(), live
     if live
-      console.log "INFO: #{playerId} connected"
       @emit 'playerConnect', playerId
-      # track existence of player
-      q =
-        name: playerId
-      change =
-        $set:
-          lastLogin: new Date()
-        $inc:
-          numLogins: 1
-      @db.players.update q, change, { upsert: true }, ( err, num, upsert ) =>
-        if err
-          console.log "Error updating db.players on connect"
-          console.log err
+      if @db
+        # track existence of player
+        q =
+          name: playerId
+        change =
+          $set:
+            lastLogin: new Date()
+          $inc:
+            numLogins: 1
+        @db.players.update q, change, { upsert: true }, ( err, num, upsert ) =>
+          if err
+            console.log "Error updating db.players on connect"
+            console.log err
 
   onLogPlayerDisconnect: ( playerId, live ) =>
     @removePlayer playerId
     @addServerChat "#{playerId} left the server.", new Date(), live
     if live
-      console.log "INFO: #{playerId} disconnected"
       @emit 'playerDisconnect', playerId
-      q =
-        name: playerId
-      change =
-        $set:
-          lastLogout: new Date()
-      @db.players.update q, change, { upsert: true }, ( err, num, upsert ) ->
-        if err
-          console.log err
+      if @db
+        q =
+          name: playerId
+        change =
+          $set:
+            lastLogout: new Date()
+        @db.players.update q, change, { upsert: true }, ( err, num, upsert ) ->
+          if err
+            console.log err
 
   onLogServerStart: ( whn, live ) =>
     @handleStart whn, 'log', live
