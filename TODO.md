@@ -18,6 +18,8 @@ Things I can possibly do
 * Tests for REST Endpoints
 * Tests for web sockets
 * Headless browser testing for CSS/updates/etc
+* Code snippet / image generator for server up/down
+    * Make it super easy to embed status on another page
 
 Things when tech exists
 
