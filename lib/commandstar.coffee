@@ -5,6 +5,17 @@ config = require 'config'
 _ = require 'lodash'
 Datastore = require 'nedb'
 
+ConfigValidator = require './configValidator.coffee'
+
+# TODO: Wait until config check is complete to fire everything up
+cv = new ConfigValidator config
+cv.check ( valid, errors ) ->
+  if not valid
+    console.log "Errors in configuration:"
+    for err in errors
+      console.log "* #{err}"
+    process.exit 1
+
 StarboundServer = require './starboundserver/server.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
