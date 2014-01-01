@@ -1,4 +1,3 @@
-root = exports ? this
 net = require 'net'
 _ = require 'underscore'
 {EventEmitter} = require 'events'
@@ -66,4 +65,4 @@ class ServerMonitor extends EventEmitter
     clearInterval @watchIntervalId
     @watchIntervalId = null
 
-root.ServerMonitor = ServerMonitor
+module.exports = ServerMonitor

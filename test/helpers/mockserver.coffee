@@ -200,4 +200,4 @@ class MockServer
     msg = util.format @LINE_WORLD_UNLOAD, sector, x, y, z, planet, satellite
     @writeLine msg
 
-exports.MockServer = MockServer
+module.exports = MockServer

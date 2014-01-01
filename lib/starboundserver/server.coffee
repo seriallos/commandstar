@@ -1,11 +1,10 @@
-root = exports ? this
 fs = require 'fs'
 net = require 'net'
 _ = require 'underscore'
 {EventEmitter} = require 'events'
 
-{ServerMonitor} = require './monitor.coffee'
-{ServerLog} = require './log.coffee'
+ServerMonitor = require './monitor.coffee'
+ServerLog = require './log.coffee'
 
 class StarboundServer extends EventEmitter
 
@@ -354,4 +353,4 @@ class StarboundServer extends EventEmitter
   onLogCrash: ( data, whn, live ) =>
     @handleStop whn, 'log crash', live
 
-root.StarboundServer = StarboundServer
+module.exports = StarboundServer

@@ -1,5 +1,3 @@
-root = exports ? this
-
 {EventEmitter} = require 'events'
 {Tail} = require 'tail'
 fs = require 'fs'
@@ -191,4 +189,4 @@ class ServerLog extends EventEmitter
     else
       return false
 
-root.ServerLog = ServerLog
+module.exports = ServerLog

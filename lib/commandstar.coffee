@@ -5,7 +5,7 @@ config = require 'config'
 _ = require 'underscore'
 Datastore = require 'nedb'
 
-{StarboundServer} = require './starboundserver/server.coffee'
+StarboundServer = require './starboundserver/server.coffee'
 HipChat = require 'node-hipchat'
 irc = require 'irc'
 
