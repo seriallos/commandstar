@@ -5,7 +5,7 @@
   Datastore
 } = require './helpers/index.coffee'
 
-_ = require 'underscore'
+_ = require 'lodash'
 
 describe 'StarboundServer', ->
 

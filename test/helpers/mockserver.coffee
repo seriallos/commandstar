@@ -1,7 +1,7 @@
 fs = require 'fs'
 util = require 'util'
 net = require 'net'
-_ = require 'underscore'
+_ = require 'lodash'
 
 class MockServer
 

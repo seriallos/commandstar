@@ -1,6 +1,6 @@
 fs = require 'fs'
 net = require 'net'
-_ = require 'underscore'
+_ = require 'lodash'
 {EventEmitter} = require 'events'
 
 ServerMonitor = require './monitor.coffee'

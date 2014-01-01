@@ -1,5 +1,5 @@
 net = require 'net'
-_ = require 'underscore'
+_ = require 'lodash'
 {EventEmitter} = require 'events'
 
 class ServerMonitor extends EventEmitter

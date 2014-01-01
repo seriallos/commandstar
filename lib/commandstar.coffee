@@ -2,7 +2,7 @@ restify = require 'restify'
 socketio = require 'socket.io'
 fs = require 'fs'
 config = require 'config'
-_ = require 'underscore'
+_ = require 'lodash'
 Datastore = require 'nedb'
 
 StarboundServer = require './starboundserver/server.coffee'
