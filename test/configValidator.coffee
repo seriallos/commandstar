@@ -1,7 +1,13 @@
 { ConfigValidator } = require './helpers/index.coffee'
 
-testConfig =
+goodConfig =
 
 describe 'ConfigValidator', ->
-  it 'verifies starbound paths exist', ( done ) ->
-    cv = new ConfigValidator testConfig
+  testConfig = null
+
+  beforeEach ( done ) ->
+    done()
+
+  it 'verifies starbound paths are set', ( done ) ->
+    cv = new ConfigValidator goodConfig
+    done()
