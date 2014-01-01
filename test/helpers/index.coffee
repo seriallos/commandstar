@@ -4,6 +4,7 @@ StarboundServer = require "#{codeDir}/starboundserver/server.coffee"
 ServerLog = require "#{codeDir}/starboundserver/log.coffee"
 ServerMonitor = require "#{codeDir}/starboundserver/monitor.coffee"
 MockServer = require "./mockserver.coffee"
+ConfigValidator = require "#{codeDir}/configValidator.coffee"
 Datastore = require 'nedb'
 
 root = module.exports ? this
@@ -13,3 +14,4 @@ root.ServerLog = ServerLog
 root.ServerMonitor = ServerMonitor
 root.MockServer = MockServer
 root.Datastore = Datastore
+root.ConfigValidator = ConfigValidator
