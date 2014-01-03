@@ -56,3 +56,8 @@ hipchat:
   user: Server
   color: yellow
   notify: false
+
+# --- Player Locations ---
+# Parses ClientContext files to display current system.
+# Set to false if you don't want to display this info.
+displayPlayerLocations: true
