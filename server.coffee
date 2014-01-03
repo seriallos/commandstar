@@ -47,7 +47,7 @@ serverLog.init ( ) ->
 
 # this is just an example placeholder. there's probably a better way to do this
 ###
-if displayPlayerLocations
+if config.starbound.displayPlayerLocations
   clientContext = new ClientContext({
     dataPath: config.starbound.dataPath
   })
