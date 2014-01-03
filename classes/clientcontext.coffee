@@ -6,7 +6,6 @@ jParser = require '../node_modules/binary-format/src/jparser.js'
 chokidar = require 'chokidar'
 starClientContext = require('./clientcontext_template.coffee').starClientContext
 
-
 class ClientContext extends EventEmitter
 
   constructor: ( opts ) ->
