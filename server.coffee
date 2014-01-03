@@ -6,6 +6,7 @@ _ = require 'underscore'
 
 {ServerInfo} = require './classes/serverinfo.coffee'
 {ServerLog} = require './classes/serverlog.coffee'
+{ClientContext} = require './classes/clientcontext.coffee'
 HipChat = require 'node-hipchat'
 
 if config.hipchat?.token
@@ -43,6 +44,26 @@ serverLog = new ServerLog( {
 
 serverLog.init ( ) ->
   # nothing to do here
+
+# this is just an example placeholder. there's probably a better way to do this
+###
+if displayPlayerLocations
+  clientContext = new ClientContext({
+    dataPath: config.starbound.dataPath
+  })
+
+  clientContext.init () ->
+    # nothing to see here...
+
+  clientContext.on "contextInitial", (clientUUID, location) ->
+    console.log clientUUID
+    console.log location
+
+
+  clientContext.on "contextChange", (clientUUID, location) ->
+    console.log clientUUID
+    console.log location
+###
 
 # TODO: wrap all this state tracking in ServerInfo or some other module
 recentChat = []
