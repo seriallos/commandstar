@@ -293,3 +293,28 @@ describe 'ServerLog using MockServer', ->
         testWorld.satellite
       )
       setTimeout f, writeDelay
+
+  it 'should emit event on player uuid line from previous log', ( done ) ->
+    eventFired = false
+    mockserv.logPlayerUuid 'seriallos', '32a3dc1eef39131740a1d6b559b80031'
+    log = new ServerLog mockserv.getOpts()
+    log.init ( ) ->
+      eventFired.should.be.true
+      done()
+    log.on "playerUuid", ( playerName, playerUuid, fromActiveLog ) ->
+      eventFired = true
+      playerName.should.equal 'seriallos'
+      playerUuid.should.equal '32a3dc1eef39131740a1d6b559b80031'
+      fromActiveLog.should.be.false
+
+  it 'should emit events on player disconnect from the log tail', ( done ) ->
+    log = new ServerLog mockserv.getOpts()
+    log.on "playerUuid", ( playerName, playerUuid, fromActiveLog ) ->
+      playerName.should.equal 'seriallos'
+      playerUuid.should.equal '32a3dc1eef39131740a1d6b559b80031'
+      fromActiveLog.should.be.true
+      done()
+    log.init ( ) ->
+      f = ( ) ->
+        mockserv.logPlayerUuid 'seriallos', '32a3dc1eef39131740a1d6b559b80031'
+      setTimeout f, writeDelay

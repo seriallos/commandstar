@@ -47,6 +47,8 @@ class ServerLog extends EventEmitter
 
   LINE_SERVER_SEGFAULT: /^Error: Segfault Encountered!/
 
+  LINE_PLAYER_UUID: /^Info: UUID Log: <(.*)> \((.*)\)\s*$/
+
   logTail = null
 
   constructor: ( opts ) ->
@@ -124,6 +126,10 @@ class ServerLog extends EventEmitter
     if @isServerCrashLine data
       @emit 'serverCrash', data, whn, fromActiveLog
 
+    uuidData = @parsePlayerUuidLine data
+    if uuidData
+      @emit 'playerUuid', uuidData.name, uuidData.uuid, fromActiveLog
+
   isChatLine: ( line ) ->
     return line.match @LINE_CHAT_REGEX
 
@@ -186,6 +192,16 @@ class ServerLog extends EventEmitter
     matches = line.match @LINE_SERVER_VERSION_REGEX
     if matches
       return matches[1]
+    else
+      return false
+
+  parsePlayerUuidLine: ( line ) ->
+    matches = line.match @LINE_PLAYER_UUID
+    if matches
+      ret =
+        name: matches[ 1 ]
+        uuid: matches[ 2 ]
+      return ret
     else
       return false
 

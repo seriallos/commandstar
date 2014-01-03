@@ -31,6 +31,8 @@ class MockServer
 
   LINE_SEGFAULT: "Error: Segfault Encountered!"
 
+  LINE_PLAYER_UUID: "Info: UUID Log: <%s> (%s)"
+
   configData:
     "audioChannels" : 2,
     "authHostname" : "auth.playstarbound.com",
@@ -165,6 +167,10 @@ class MockServer
 
   logSegfault: ->
     @writeLine @LINE_SEGFAULT
+
+  logPlayerUuid: ( name, uuid ) ->
+    msg = util.format @LINE_PLAYER_UUID, name, uuid
+    @writeLine msg
 
   loadWorld: ( sector, x, y, z, planet, satellite ) ->
     # check to see if first arg is actually an object
