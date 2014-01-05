@@ -129,6 +129,17 @@ describe 'StarboundServer Events - MockServer Tests', ->
       f = ( ) -> mockserv.logDisconnectPlayer 1, 'dave'
       setTimeout f, writeDelay
 
+  it 'should emit "playerUuid" event on plaer UUID log line', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.on "playerUuid", ( name, uuid ) ->
+      name.should.equal 'seriallos'
+      uuid.should.equal '32a3dc1eef39131740a1d6b559b80031'
+      done()
+    server.init ( err ) ->
+      f = ( ) ->
+        mockserv.logPlayerUuid 'seriallos', '32a3dc1eef39131740a1d6b559b80031'
+      setTimeout f, writeDelay
+
   it 'should emit "chat" event on live player chat', ( done ) ->
     server = new StarboundServer mockserv.getOpts()
     server.on "chat", ( who, what, whn ) ->
@@ -306,6 +317,19 @@ describe 'StarboundServer State - MockServer Tests', ->
         server.players.should.have.length 0
         server.players.should.not.include 'alice'
         server.players.should.not.include 'bob'
+        done()
+      setTimeout f, testDelay
+
+  it 'should track player UUIDs', ( done ) ->
+    server = new StarboundServer mockserv.getOpts()
+    server.init ( err ) ->
+      seriUuid = '32a3dc1eef39131740a1d6b559b80031'
+      mockserv.logPlayerUuid 'seriallos',seriUuid
+      mockserv.logPlayerUuid 'bob', '1234abcd'
+      f = ( ) ->
+        # make sure players logged in are tracked
+        server.uuids.should.have.property 'seriallos', seriUuid
+        server.uuids.should.have.property 'bob', '1234abcd'
         done()
       setTimeout f, testDelay
 

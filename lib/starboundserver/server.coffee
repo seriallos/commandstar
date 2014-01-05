@@ -14,6 +14,7 @@ class StarboundServer extends EventEmitter
   status: null
   version: null
   players: []
+  uuids: {}     # TODO: combine this with players
   worlds: []
   chat: []
 
@@ -119,6 +120,7 @@ class StarboundServer extends EventEmitter
     log.on 'chat', @onLogChat
     log.on 'playerConnect', @onLogPlayerConnect
     log.on 'playerDisconnect', @onLogPlayerDisconnect
+    log.on 'playerUuid', @onLogPlayerUuid
     log.on 'serverStart', @onLogServerStart
     log.on 'serverStop', @onLogServerStop
     log.on 'worldLoad', @onLogWorldLoad
@@ -317,6 +319,12 @@ class StarboundServer extends EventEmitter
         $set:
           lastLogout: new Date()
       @dbUpdatePlayer playerId, change
+
+  onLogPlayerUuid: ( playerId, playerUuid, live ) =>
+    @uuids[ playerId ] = playerUuid
+    if live
+      @emit 'playerUuid', playerId, playerUuid
+      # start watching clientcontext file?
 
   onLogServerStart: ( whn, live ) =>
     @handleStart whn, 'log', live
