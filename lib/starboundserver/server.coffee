@@ -140,9 +140,18 @@ class StarboundServer extends EventEmitter
     log.on 'serverCrash', @onLogCrash
 
   # ----------------------------------------------------------------------
-  # --- Client Context Setup
+  # --- Client Context Methods
 
-
+  getClientContext: ( playerUuid, callback ) ->
+    ccPath = @dataPath + "/#{playerUuid}.clientcontext"
+    opts =
+      dataPath: @dataPath
+    cc = new ClientContext opts
+    cc.loadFile ccPath, ( err, uuid, data ) ->
+      if err
+        callback( err, null )
+      else
+        callback( null, data )
 
   # ----------------------------------------------------------------------
   # --- Utility Access
@@ -350,6 +359,14 @@ class StarboundServer extends EventEmitter
     @uuids[ playerId ] = playerUuid
 
     # TODO: start watching clientcontext file
+    @getClientContext playerUuid, ( err, data ) ->
+      if err
+        #console.log "Context error:"
+        #console.log err
+      else
+        console.log "Context data-----------"
+        console.log data
+        console.log data.celestialLog.currentSystem
 
     if live
       @emit 'playerUuid', playerId, playerUuid
