@@ -80,7 +80,8 @@ class StarboundServer extends EventEmitter
       @log.stopWatching()
       @log = null
 
-  # --- Server Config Setup --- #
+  # ----------------------------------------------------------------------
+  # --- Server Config Setup
 
   loadServerConfig: ( next ) ->
     configFile = @configPath
@@ -94,7 +95,8 @@ class StarboundServer extends EventEmitter
         @config = JSON.parse data
         next( null )
 
-  # --- Server Monitor Setup --- #
+  # ----------------------------------------------------------------------
+  # --- Server Monitor Setup
 
   loadServerMonitor: ( next ) ->
     monitorOpts =
@@ -112,7 +114,8 @@ class StarboundServer extends EventEmitter
   setupMonitorEvents: ( monitor ) ->
     monitor.on 'statusChange', @onMonitorStatusChange
 
-  # --- Server Log Setup --- #
+  # ----------------------------------------------------------------------
+  # --- Server Log Setup
 
   loadServerLog: ( next ) ->
     logOpts =
@@ -136,9 +139,13 @@ class StarboundServer extends EventEmitter
     log.on 'serverVersion', @onLogServerVersion
     log.on 'serverCrash', @onLogCrash
 
-  # --- Client Context Setup --- #
+  # ----------------------------------------------------------------------
+  # --- Client Context Setup
 
-  # --- Utility Access --- #
+
+
+  # ----------------------------------------------------------------------
+  # --- Utility Access
 
   activeWorlds: ->
     worlds = _.where @worlds, { active: true }
@@ -194,7 +201,8 @@ class StarboundServer extends EventEmitter
         callback players
 
 
-  # --- State Management --- #
+  # ----------------------------------------------------------------------
+  # --- State Management
 
   clearPlayers: ->
     @players = []
@@ -244,7 +252,8 @@ class StarboundServer extends EventEmitter
   addServerChat: ( what, whn, live ) ->
     @handleChat @serverChatName, what, whn, live
 
-  # --- DB helpers --- #
+  # ----------------------------------------------------------------------
+  # --- DB helpers
   # TODO: Decompose this more nicely
 
   dbUpdatePlayer: ( playerId, change ) ->
@@ -271,7 +280,8 @@ class StarboundServer extends EventEmitter
           console.log err
 
 
-  # --- Event Emitting and Handilng --- #
+  # ----------------------------------------------------------------------
+  # --- Event Emitting and Handilng
 
   handleStart: ( whn, why, live ) ->
     @clearPlayers()
@@ -299,7 +309,8 @@ class StarboundServer extends EventEmitter
       if live
         @emit 'chat', who, what, whn
 
-  # --- Backend Event Management --- #
+  # ----------------------------------------------------------------------
+  # --- Backend Event Management
 
   onMonitorStatusChange: ( status ) =>
     if status == ServerMonitor::STATUS_UP
