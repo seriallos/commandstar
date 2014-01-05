@@ -18,26 +18,41 @@ class ClientContext extends EventEmitter
 
   init: ( next ) ->
     fs.readdir @dataPath, (err, files) =>
-      for file in files when file.match /\.clientcontext$/
-        ccFile = @dataPath + file
-        @loadFile ccFile, ( uuid, data ) =>
-          @emit "contextInitial", uuid, data
+      if err
+        @emit 'error', err
+      else
+        for file in files when file.match /\.clientcontext$/
+          ccFile = @dataPath + file
+          @loadFile ccFile, ( loadErr,  uuid, data ) =>
+            if loadErr
+              @emit 'error', loadErr
+            else
+              @emit "contextInitial", uuid, data
 
     @watcher = chokidar.watch(@dataPath, { persistent: true })
     @watcher
       .on('change', (path) =>
-        @loadFile path, ( uuid, data ) =>
-          @emit "contextChange", uuid, data)
+        @loadFile path, ( err, uuid, data ) =>
+          if err
+            @emit 'error', err
+          else
+            @emit "contextChange", uuid, data)
       .on('add', (path) =>
-        @loadFile path, ( uuid, data ) =>
-          @emit "contextInitial", uuid, data)
+        @loadFile path, ( err, uuid, data ) =>
+          if err
+            @emit 'error', err
+          else
+            @emit "contextInitial", uuid, data)
 
   # expects full path
   loadFile: ( file, next ) ->
     if file.match /\.clientcontext$/
       clientUUID = file.replace(".clientcontext","")
       fs.readFile file, (err, data) =>
-        next clientUUID, @parseData data
+        if err
+          next( err, null, null )
+        else
+          next( null, clientUUID, @parseData( data ) )
 
   parseData: ( data ) ->
     view = new jDataView(data, undefined, undefined, false)
