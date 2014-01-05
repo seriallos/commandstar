@@ -32,7 +32,6 @@ class ClientContext extends EventEmitter
         @loadFile path, ( uuid, data ) =>
           @emit "contextInitial", uuid, data)
 
-
   # expects full path
   loadFile: ( file, next ) ->
     if file.match /\.clientcontext$/
@@ -41,7 +40,6 @@ class ClientContext extends EventEmitter
         next clientUUID, @parseData data
 
   parseData: ( data ) ->
-    console.log data
     view = new jDataView(data, undefined, undefined, false)
     parser = new jParser(view, starClientContext).parse('context')
 
