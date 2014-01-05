@@ -5,6 +5,7 @@ _ = require 'lodash'
 
 ServerMonitor = require './monitor.coffee'
 ServerLog = require './log.coffee'
+ClientContext = require './clientcontext.coffee'
 
 class StarboundServer extends EventEmitter
 
@@ -15,6 +16,7 @@ class StarboundServer extends EventEmitter
   version: null
   players: []
   uuids: {}     # TODO: combine this with players
+  clientcontexts: {}
   worlds: []
   chat: []
 
@@ -78,6 +80,8 @@ class StarboundServer extends EventEmitter
       @log.stopWatching()
       @log = null
 
+  # --- Server Config Setup --- #
+
   loadServerConfig: ( next ) ->
     configFile = @configPath
     fs.readFile configFile, 'utf8', ( err, data ) =>
@@ -89,6 +93,8 @@ class StarboundServer extends EventEmitter
       else
         @config = JSON.parse data
         next( null )
+
+  # --- Server Monitor Setup --- #
 
   loadServerMonitor: ( next ) ->
     monitorOpts =
@@ -103,6 +109,11 @@ class StarboundServer extends EventEmitter
     else
       next()
 
+  setupMonitorEvents: ( monitor ) ->
+    monitor.on 'statusChange', @onMonitorStatusChange
+
+  # --- Server Log Setup --- #
+
   loadServerLog: ( next ) ->
     logOpts =
       logFile: @logFile
@@ -112,9 +123,6 @@ class StarboundServer extends EventEmitter
     @setupLogEvents @log
     @log.init ->
       next()
-
-  setupMonitorEvents: ( monitor ) ->
-    monitor.on 'statusChange', @onMonitorStatusChange
 
   setupLogEvents: ( log ) ->
     log.on 'chat', @onLogChat
@@ -127,6 +135,8 @@ class StarboundServer extends EventEmitter
     log.on 'worldUnload', @onLogWorldUnload
     log.on 'serverVersion', @onLogServerVersion
     log.on 'serverCrash', @onLogCrash
+
+  # --- Client Context Setup --- #
 
   # --- Utility Access --- #
 
@@ -265,6 +275,7 @@ class StarboundServer extends EventEmitter
 
   handleStart: ( whn, why, live ) ->
     @clearPlayers()
+    # stop watching client contexts
     @clearWorlds()
     if @status != ServerMonitor::STATUS_UP
       @status = ServerMonitor::STATUS_UP
@@ -274,6 +285,7 @@ class StarboundServer extends EventEmitter
 
   handleStop: ( whn, why, live ) ->
     @clearPlayers()
+    # stop watching client contexts
     @clearWorlds()
     if @status != ServerMonitor::STATUS_DOWN
       @status = ServerMonitor::STATUS_DOWN
@@ -313,6 +325,9 @@ class StarboundServer extends EventEmitter
   onLogPlayerDisconnect: ( playerId, live ) =>
     @removePlayer playerId
     @addServerChat "#{playerId} left the server.", new Date(), live
+
+    # TODO: stop watching clientcontext
+
     if live
       @emit 'playerDisconnect', playerId
       change =
@@ -322,6 +337,9 @@ class StarboundServer extends EventEmitter
 
   onLogPlayerUuid: ( playerId, playerUuid, live ) =>
     @uuids[ playerId ] = playerUuid
+
+    # TODO: start watching clientcontext file
+
     if live
       @emit 'playerUuid', playerId, playerUuid
       # start watching clientcontext file?
