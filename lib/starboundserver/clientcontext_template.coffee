@@ -47,7 +47,7 @@ starClientContext =
     planetaryBodyNumber: 'int32',
     satelliteBodyNumber: 'int32'
 
-  celestialLog: 
+  celestialLog:
     dataStreamSize: 'vlqu',
     numRecentlyVisited: 'vlqu'
     numSectors: 'vlqu',
@@ -57,7 +57,7 @@ starClientContext =
     currentSystem: 'worldCoordinate',
     homeWorld: 'worldCoordinate'
 
-  context: 
+  context:
     header: ['string', 6],
     version: ['uint32', true],
     dataStreamLength: 'vlqu',
@@ -65,4 +65,4 @@ starClientContext =
     entityTeamDamage: 'entityTeamDamage',
     celestialLog: 'celestialLog'
 
-exports.starClientContext = starClientContext
+module.exports = starClientContext

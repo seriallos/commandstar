@@ -1,10 +1,9 @@
-root = exports ? this
-
 {EventEmitter} = require 'events'
 fs = require 'fs'
-jParser = require '../node_modules/binary-format/src/jparser.js'
+# TODO: Better way to get up to node modules
+jParser = require '../../node_modules/binary-format/src/jparser.js'
 chokidar = require 'chokidar'
-starClientContext = require('./clientcontext_template.coffee').starClientContext
+starClientContext = require './clientcontext_template.coffee'
 
 class ClientContext extends EventEmitter
 
@@ -46,4 +45,4 @@ class ClientContext extends EventEmitter
     view = new jDataView(data, undefined, undefined, false)
     parser = new jParser(view, starClientContext).parse('context')
 
-root.ClientContext = ClientContext
+module.exports = ClientContext
