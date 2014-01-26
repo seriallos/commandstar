@@ -10,24 +10,32 @@ class MockServer
   logFile:   null
   logHandle: null
 
-  # Info: Client 'Seriallos' <1> (209.6.253.90:61374) connected
-  LINE_PLAYER_CONNECT: "Info: Client '%s' <%s> (0.0.0.0:0) connected"
+  # Info: UniverseServer: Client 'Spacefinger' <1> (209.6.253.90:56534) \
+  # connected
+  LINE_PLAYER_CONNECT: "Info: UniverseServer: Client '%s' <%s> (0.0.0.0:0)" \
+                       +" connected"
 
-  # Info: Reaping client 'Seriallos' <4> (209.6.253.90:49294) connection
-  LINE_PLAYER_DISCONNECT: "Info: Reaping client '%s' <%s> (0.0.0.0:0) "+
-                          "connection"
+  # Info: UniverseServer: Reaping client 'Spacefinger' <1> \
+  # (209.6.253.90:56534) connection
+  LINE_PLAYER_DISCONNECT: "Info: UniverseServer: Reaping client '%s' <%s>" \
+                          + " (0.0.0.0:0) connection"
 
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
   LINE_SERVER_START: "Info: Done loading Star::Root"
   LINE_SERVER_STOP: "Info: Server shutdown gracefully"
 
-  LINE_WORLD_LOAD: "Info: Loading world db for world %s:%s:%s:%s:%s%s"
+  # Info: UniverseServer: Loading world db for world \
+  # alpha:-81190832:95778072:3036738:6:12
+  LINE_WORLD_LOAD: "Info: UniverseServer: Loading world db for world" \
+                   + " %s:%s:%s:%s:%s%s"
 
-  # Info: Shutting down world delta:-35537062:25816799:-18582281:11:6
-  LINE_WORLD_UNLOAD: "Info: Shutting down world %s:%s:%s:%s:%s%s"
+  # Info: UniverseServer: Shutting down world \
+  # alpha:-81190832:95778072:3036738:6:12 due to inactivity
+  LINE_WORLD_UNLOAD: "Info: UniverseServer: Shutting down world" \
+                     + " %s:%s:%s:%s:%s%s"
 
-  # Info: Server version 'Beta v. Offended Koala' '623' '424'
-  LINE_SERVER_VERSION: "Info: Server version '%s' '1' '2'"
+  # Info: Server version 'Beta v. Furious Koala' '635'
+  LINE_SERVER_VERSION: "Info: Server version '%s' '1'"
 
   LINE_SEGFAULT: "Error: Segfault Encountered!"
 
