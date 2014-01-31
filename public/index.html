@@ -4,8 +4,8 @@
     <title>CommandStar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/commandstar.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/commandstar.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -114,11 +114,11 @@
         <h2>API</h2>
 
         <ul>
-          <li><a href="/server/status">Server Status</a></li>
-          <li><a href="/server/chat">Server Chat</a></li>
-          <li><a href="/server/players">Players</a></li>
-          <li><a href="/server/worlds">Worlds</a></li>
-          <li><a href="/server/worlds/popular">Most Active Worlds</a></li>
+          <li><a href="server/status">Server Status</a></li>
+          <li><a href="server/chat">Server Chat</a></li>
+          <li><a href="server/players">Players</a></li>
+          <li><a href="server/worlds">Worlds</a></li>
+          <li><a href="server/worlds/popular">Most Active Worlds</a></li>
         </ul>
       </div>
     </div>
@@ -126,8 +126,8 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
     <script>
       var userNotes = {
       };
@@ -334,7 +334,7 @@
       });
       $(document).ready(function(){
         // load server status
-        $.get( apiBase + "/server/status", function( data ) {
+        $.get( apiBase + "server/status", function( data ) {
           setServerDescription( data.serverDesc );
           setPlayersOnline( data.playersOnline );
           setServerVersion( data.version );
@@ -349,14 +349,14 @@
 
           // apply custom CSS
           $.each( data.css, function ( key, cssFile ) {
-            url = '/css/'+cssFile;
+            url = 'css/'+cssFile;
             link = '<link rel="stylesheet" type="text/css" href='+url+'>';
             $(link).appendTo('head');
           });
         });
 
         // load chat
-        $.get( apiBase + "/server/chat", function( data ) {
+        $.get( apiBase + "server/chat", function( data ) {
           numToShow = 50
           msgs = data.length;
           if( msgs < numToShow ) {
