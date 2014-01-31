@@ -349,7 +349,7 @@
 
           // apply custom CSS
           $.each( data.css, function ( key, cssFile ) {
-            url = '/css/'+cssFile;
+            url = 'css/'+cssFile;
             link = '<link rel="stylesheet" type="text/css" href='+url+'>';
             $(link).appendTo('head');
           });
