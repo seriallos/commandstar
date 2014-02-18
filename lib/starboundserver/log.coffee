@@ -20,7 +20,7 @@ class ServerLog extends EventEmitter
   # (209.6.253.90:56534) connection
   LINE_PLAYER_DISCONNECT_REGEX: ///
     ^Info:\sUniverseServer:\s
-    Reaping\sclient\s'([^']+)'\s<[^>]+>\s\(.*\)\sconnection
+    Reaping\sclient\s'([^>]+)'\s<[^>]+>\s\(.*\)\sconnection
   ///
 
   # Info: UniverseServer: Loading world db for world \
