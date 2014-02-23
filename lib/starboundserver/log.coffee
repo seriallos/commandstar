@@ -16,11 +16,11 @@ class ServerLog extends EventEmitter
     Client\s'([^>]+)'\s<[^>]+>\s\(.*\)\sconnected
   ///
 
-  # Info: UniverseServer: Reaping client 'Spacefinger' <1> \
-  # (209.6.253.90:56534) connection
+  # Info: UniverseServer: Client 'Spacefinger' <1> \
+  # (209.6.253.90:56534) disconnected
   LINE_PLAYER_DISCONNECT_REGEX: ///
     ^Info:\sUniverseServer:\s
-    Reaping\sclient\s'([^>]+)'\s<[^>]+>\s\(.*\)\sconnection
+    Client\s'([^>]+)'\s<[^>]+>\s\(.*\)\sdisconnected
   ///
 
   # Info: UniverseServer: Loading world db for world \
