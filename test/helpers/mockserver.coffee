@@ -15,10 +15,10 @@ class MockServer
   LINE_PLAYER_CONNECT: "Info: UniverseServer: Client '%s' <%s> (0.0.0.0:0)" \
                        +" connected"
 
-  # Info: UniverseServer: Reaping client 'Spacefinger' <1> \
-  # (209.6.253.90:56534) connection
-  LINE_PLAYER_DISCONNECT: "Info: UniverseServer: Reaping client '%s' <%s>" \
-                          + " (0.0.0.0:0) connection"
+  # Info: UniverseServer: Client 'Spacefinger' <1> (209.6.253.90:56534) \
+  # connected
+  LINE_PLAYER_DISCONNECT: "Info: UniverseServer: Client '%s' <%s> (0.0.0.0:0)" \
+                       +" disconnected"
 
   LINE_PLAYER_CHAT: "Info:  <%s> %s"
   LINE_SERVER_START: "Info: Done loading Star::Root"
