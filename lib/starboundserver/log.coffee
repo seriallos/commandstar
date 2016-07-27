@@ -5,33 +5,33 @@ readline = require 'readline'
 
 class ServerLog extends EventEmitter
 
-  LINE_CHAT_REGEX: /^Info:  <([^>]+)> (.*)/
-  LINE_SERVER_START_REGEX: /^Info: Done loading Star::Root/
-  LINE_SERVER_STOP_REGEX: /^Info: Server shutdown gracefully/
+  # [15:42:30.448] [Info] Chat: <Dave> test
+  LINE_CHAT_REGEX: /\[Info\] Chat: <([^>]+)> (.*)/
+  # [15:26:45.834] [Info] Root: Done preparing Root.
+  LINE_SERVER_START_REGEX: /\[Info\] Root: Done preparing Root./
+  # [15:47:44.043] [Info] Server shutdown gracefully
+  LINE_SERVER_STOP_REGEX: /\[Info\] Server shutdown gracefully/
 
-  # Info: UniverseServer: Client 'Spacefinger' <1> (209.6.253.90:56534) \
-  # connected
+  # [15:28:47.523] [Info] UniverseServer: Client 'Dave' <1> (0000:0000:0000:0000:0000:0000:0000:0001) connected
   LINE_PLAYER_CONNECT_REGEX: ///
-    ^Info:\sUniverseServer:\s
+    \[Info\]\sUniverseServer:\s
     Client\s'([^>]+)'\s<[^>]+>\s\(.*\)\sconnected
   ///
 
-  # Info: UniverseServer: Client 'Spacefinger' <1> \
-  # (209.6.253.90:56534) disconnected
+  # [15:42:05.171] [Info] UniverseServer: Client 'Dave' <1> (0000:0000:0000:0000:0000:0000:0000:0001) disconnected for reason:.
   LINE_PLAYER_DISCONNECT_REGEX: ///
-    ^Info:\sUniverseServer:\s
+    \[Info\]\sUniverseServer:\s
     Client\s'([^>]+)'\s<[^>]+>\s\(.*\)\sdisconnected
   ///
 
-  # Info: UniverseServer: Loading world db for world \
-  # alpha:-81190832:95778072:3036738:6:12
+  # [15:42:10.895] [Info] UniverseServer: Loading celestial world 319037651:786784446:-84230925:7:3
   LINE_WORLD_LOAD_REGEX: ///
-    ^Info:\sUniverseServer:\sLoading\sworld\sdb\sfor\sworld\s+
+    \[Info\]\sUniverseServer:\sLoading\scelestial\sworld
     ([^:]+)         # sector
     :([^:]+)        # x
     :([^:]+)        # y
     :([^:]+)        # z
-    :([^:\s]+)        # planet
+    :([^:\s]+)      # planet
     (:([^:\s]+))?   # satellite (not always present)
   ///
 
@@ -48,8 +48,9 @@ class ServerLog extends EventEmitter
   ///
 
   # Info: Server version 'Beta v. Furious Koala' '635'
+  # [15:26:49.875] [Info] Server Version 1.0.2 (macos x86_64) Source ID: 28d3ec461b83391b7b5cb981b031dbeee8437e56 Protocol: 723
   LINE_SERVER_VERSION_REGEX: ///
-    ^Info:\sServer\sversion\s'([^']+)'\s'([^']+)'
+    \[Info\]\sServer\sVersion\s'([^']+)'\s'([^']+)'
   ///
 
   LINE_SERVER_SEGFAULT: /^Error: Segfault Encountered!/
