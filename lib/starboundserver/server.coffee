@@ -129,7 +129,6 @@ class StarboundServer extends EventEmitter
   # --- Utility Access --- #
 
   activeWorlds: ->
-    console.log 'active worlds'
     worlds = _.where @worlds, { active: true }
     # TODO: This limits to active SYSTEMS, not planets/satellites
     worlds = _.uniq worlds, ( item, key, list ) ->
@@ -141,9 +140,7 @@ class StarboundServer extends EventEmitter
       'delta': 4
       'sectorx': 5
     }
-    console.log 'returning active worlds'
     out = _.sortBy( worlds, ( w ) -> sectorOrder[ w.sector ] )
-    console.log out
     return out
 
   isPublic: ->
