@@ -134,9 +134,8 @@ class MockServer
         @cleanup()
         if next
           next()
-    else
-      if next
-        next()
+    else if next
+      next()
 
   cleanup: ( ) ->
     fs.unlinkSync @logFile
@@ -144,7 +143,7 @@ class MockServer
     fs.rmdirSync @serverDir
 
   writeLine: ( line ) ->
-    if not @running
+    unless @running
       throw new Error "writeLine called while MockServer is stopped"
     fs.writeSync @logHandle, "#{line}\n"
     fs.fsyncSync @logHandle
